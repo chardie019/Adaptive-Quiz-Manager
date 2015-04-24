@@ -41,3 +41,10 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+#Josh added Stuff (ignored)
+local/
+nbproject/
+not_synced/
+debug/
+!.gitignore

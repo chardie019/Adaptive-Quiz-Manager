@@ -1,0 +1,3 @@
+deny from all
+
+# no one should look in here from the web

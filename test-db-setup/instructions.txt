@@ -1,0 +1,18 @@
+#‎start‬ mysql service
+# login to mysql with root access
+C:\xampp\mysql\bin\mysql -u root -p
+
+‪#‎setup‬ db
+CREATE DATABASE aqm;
+CREATE USER 'aqm'@'localhost' IDENTIFIED BY 'jc66882Dxc9D';
+GRANT ALL PRIVILEGES ON aqm.* TO 'aqm'@'%' WITH GRANT OPTION;
+
+#test table for the test-php page
+CREATE TABLE test
+(
+ID int NOT NULL AUTO_INCREMENT,
+FirstName varchar(255),
+LastName varchar(255),
+Age INT,
+PRIMARY KEY (ID)
+);
