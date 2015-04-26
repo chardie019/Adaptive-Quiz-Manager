@@ -110,7 +110,8 @@ class DB {
         public function delete($col, $data, $table) {
             $cars = array($data);
             $stmt = self::$connection->prepare("delete from $table where $col = ?;") or die('Problem preparing query');
-        $stmt->execute($data);  //send the values separately
+        $stmt->execute($cars);  //send the values separately
+ 
         return $results = self::$connection->lastInsertID(); //return the ID of the user in the database.
     }
 }
