@@ -1,0 +1,8 @@
+#single path here, due to differnt path separators in Linux (:) to Windows (;)
+# Actually not used after all due to absolute paths needed (from C drive (Win) and linux (/data/www/html/scci/aqm)
+#not portable then :(
+#php_value include_path ./new-site/includes
+
+php_value display_errors On
+
+#Other configuration options are made in config.php (in includes)

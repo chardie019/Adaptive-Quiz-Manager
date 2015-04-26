@@ -43,7 +43,8 @@ class DB {
     function __construct ($TINA = false) {
         
         $options = array(
-            PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
+            //PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8mb4' COLLATE 'utf8mb4_unicode_ci' ",
+            PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8",
             PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION
         );
         if (!$TINA) { //false - default
@@ -107,7 +108,7 @@ class DB {
     }
  
         public function delete($col, $data, $table) {
-            $data = [$data];
+            $cars = array($data);
             $stmt = self::$connection->prepare("delete from $table where $col = ?;") or die('Problem preparing query');
         $stmt->execute($data);  //send the values separately
         return $results = self::$connection->lastInsertID(); //return the ID of the user in the database.

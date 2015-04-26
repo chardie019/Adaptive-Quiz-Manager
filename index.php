@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
 <!-- include php files here -->
-<?php require_once("/includes/config.php"); ?>
+<?php require_once("./includes/config.php"); ?>
 <!-- end of php file inclusion -->
  
  
@@ -31,7 +31,7 @@
  
 <p>
  
-Welcome This might customised depending user type?
+Welcome This might customized depending user type?
  
 </p>
 
@@ -47,7 +47,6 @@ Welcome This might customised depending user type?
 Root Dir: <?php echo (ROOT_DIR); ?>
 <br />
 Root url: <?php echo (ROOT_URL); ?>
-<br />
 
 </p>
 
