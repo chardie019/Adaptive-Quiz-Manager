@@ -24,6 +24,13 @@ include_once("DbLogic.php");
 
 include_once("styles.php");
 
+//set global settings
+mb_internal_encoding(); //set internal utf-8 encoding
+mb_http_output();       //mb_* string functions must still be used
+header('Content-Type: text/html; charset=UTF-8');
+
+//note: when echo-ing html other language, use  echo (htmlentities($string));
+
 
 
 

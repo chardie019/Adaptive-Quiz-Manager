@@ -6,6 +6,4 @@
  * and open the template in the editor.
  */
 
-//setups everything the person
-//uses auth.php (stub for real CSU connect)
-include("authLogic.php");
+//dummy auth file
