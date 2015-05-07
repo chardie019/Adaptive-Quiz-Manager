@@ -1,10 +1,5 @@
 <!DOCTYPE html>
 
-<!-- include php files here -->
-<?php require_once("./includes/config.php"); ?>
-<!-- end of php file inclusion -->
- 
- 
 <head>
 
  
