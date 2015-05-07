@@ -5,8 +5,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-?>
-<!doctype html>
-<body>
 
-</body>
+// include php files here 
+require_once("/includes/config.php");
+// end of php file inclusion
+
+//html
+include("help-view.php");

@@ -1,29 +1,14 @@
-<!DOCTYPE html>
+<?php
 
-<!-- include php files here -->
-<?php require("/includes/config.php"); ?>
-<!-- end of php file inclusion -->
-<head>
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<link rel="stylesheet" type="text/css" href="<?php echo(SITE_STYLES_LOCATION) ?>/style.css" media="screen" />
-<title>Title</title>
-</head>
-    <body>
-        <div id="wrapper">
-            <?php include('header.php'); ?>
+/* 
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 
-            <?php include('nav.php'); ?>
-<div id="content">
-<h1>Administration</h1>
-<p>
-Welcome to admin! 
-<br /><br />
-<a href="<?php echo(ROOT_URL) ?>/index.php">Go to homepage</a>
+// include php files here 
+require_once("/includes/config.php");
+// end of php file inclusion
 
-</p>
-</div> <!-- end #content -->
-<?php include('sidebar.php'); ?>
-<?php include('footer.php'); ?>
-        </div> <!-- End #wrapper -->
-    </body>
-</html>
+//html
+include("admin-view.php");

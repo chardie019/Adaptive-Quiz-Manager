@@ -11,4 +11,4 @@ require_once("/includes/config.php");
 // end of php file inclusion
 
 //html
-include("index-view.php");
+include("edit-quiz-view.php");

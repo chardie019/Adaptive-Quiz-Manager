@@ -17,8 +17,8 @@ and open the template in the editor.
         <p> Below is a list of the current records on the table: <br />
         To Delete a row, select one and click delete down below.
         <br />
-        To setup your database, see mysql instructions <a href="<?php echo(ROOT_URL) ?>/test-db-setup/instructions.txt" target="_blank">here</a></p>
-        <h3> To go back, <a href="<?php echo(ROOT_URL) ?>/index.php">click here</a> </h3>
+        To setup your database, see mysql instructions <a href="<?php echo(CONFIG_ROOT_URL) ?>/test-db-setup/instructions.txt" target="_blank">here</a></p>
+        <h3> To go back, <a href="<?php echo(CONFIG_ROOT_URL) ?>/index.php">click here</a> </h3>
             <form action="" method="post">
             <table border=1>
             <tr><th>Select</th><th>id</th><th>First</th><th>Last</th><th>Age</th></tr>

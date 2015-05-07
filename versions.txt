@@ -1,0 +1,12 @@
+version 3
+overall make over
+changed to controller and views separate
+with views (html) in their own folder thus can chnage which html is rendered
+eg take-quiz without an id passed, renders quiz list
+
+version 2 25-4-2015
+db chnages from harry and josh
+changed to PDO to support different databases
+
+version 1 when?
+intal upload

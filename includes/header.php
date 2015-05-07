@@ -1,6 +1,6 @@
 <div id="header">
     <div id="logo">
-        <img src="<?php echo(SITE_STYLES_LOCATION) ?>/logo.png" />
+        <img src="<?php echo(CONFIG_STYLES_LOCATION) ?>/logo.png" />
         
     </div>
  

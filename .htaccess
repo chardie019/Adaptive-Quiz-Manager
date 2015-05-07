@@ -5,4 +5,52 @@
 
 php_value display_errors On
 
+#rewrite engine must be working
+RewriteEngine On
+Options -MultiViews
+
+
+# 404 Page - not work
+ErrorDocument 404 /aqm/404.php
+
+
+
+# Do not process images or CSS files further      #
+RewriteRule \.(css|jpe?g|gif|png)$ - [L]
+
+#only change url if file not exist
+RewriteCond %{REQUEST_FILENAME} !-f
+
+#only change url if directory not exist
+RewriteCond %{REQUEST_FILENAME} !-d
+
+#remove php extenstion (2 levels deep)
+# eg <site>/index/theID?order=down 
+#  = <site>/index.php?quiz=theID&order=down
+RewriteRule ^([^/]+)/([^/]+)/?$ $1.php?quiz=$2 [NC,QSA,L]
+
+#remove php extenstion (1 level deep)
+# eg <site>/index
+#  = <site>/index.php
+RewriteCond %{REQUEST_FILENAME}.php -f [NC]
+RewriteRule ^([^\.]+)$ $1.php [NC,QSA,L]
+
+#remove php extenstion (1 level deep) with quiz ID
+# eg <site>/12345
+#  = <site>/index.php?quiz=12345
+RewriteRule ^([^/\.]+)/?$ index.php?quiz=$1 [NC,QSA,L]
+
+#many level deep - not used
+# eg <site>/12345/12345
+#  = <site>/index.php?quiz=12345/12345
+#RewriteRule ^([^\.]+)$ index.php?quiz=$1 [NC,QSA,L]
+
+
+
+#guide to flags
+# NC - No Case
+# L - Last to match
+# QSA - Query String Append, adds quaery to the urls after rewrite
+
+
 #Other configuration options are made in config.php (in includes)
