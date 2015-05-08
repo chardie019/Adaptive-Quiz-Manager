@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 
-<head>
+<?php
+// include php files to do with view
+require_once("includes/config.php");
+// end of php file inclusion
+?>
 
+<head>
  
-<link rel="stylesheet" type="text/css" href="<?php echo(CONFIG_STYLES_LOCATION) ?>/style.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="<?php echo(STYLES_LOCATION) ?>/style.css" media="screen" />
  
-<title>1stWebDesigner PHP Template</title>
+<title>404 - <?php echo (STYLES_SITE_NAME); ?></title>
  
 </head>
  

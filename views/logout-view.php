@@ -11,26 +11,26 @@ require_once("includes/config.php");
  
 <link rel="stylesheet" type="text/css" href="<?php echo(STYLES_LOCATION) ?>/style.css" media="screen" />
  
-<title>Help - <?php echo (STYLES_SITE_NAME); ?></title>
+<title>Home - <?php echo (STYLES_SITE_NAME); ?></title>
  
 </head>
  
     <body>
  
         <div id="wrapper">
-            <?php include('header.php'); ?>
 
-            <?php include('nav.php'); ?>
-
- 
 <div id="content">
  
-<h1>Help</h1>
+<h1>Logged out</h1>
 
+<p>
+    You have been logged out of the <?php echo (STYLES_SITE_NAME); ?> System.
+    <br /><br />
+    You you like to <a href="<?php echo(CONFIG_ROOT_URL); ?>">login in</a> again?
+
+</p>
 </div> <!-- end #content -->
  
-
-<?php include('sidebar.php'); ?>
  
 <?php include('footer.php'); ?>
  

@@ -19,7 +19,16 @@ border-top:1px solid #ccc;
  
 */
 #header #logo {
+    position: relative;
+    border: 0.15em solid rgb(229, 113, 0);
+    background-color: rgb(233, 172, 0);
+}
 
+#header #logo p {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin: 0.5em;
 }
 
 #header h2 {

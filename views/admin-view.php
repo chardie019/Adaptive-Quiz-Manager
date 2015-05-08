@@ -1,9 +1,15 @@
 <!DOCTYPE html>
 
+<?php
+// include php files to do with view
+require_once("includes/config.php");
+// end of php file inclusion
+?>
+
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<link rel="stylesheet" type="text/css" href="<?php echo(CONFIG_STYLES_LOCATION) ?>/style.css" media="screen" />
-<title>Title</title>
+<link rel="stylesheet" type="text/css" href="<?php echo(STYLES_LOCATION) ?>/style.css" media="screen" />
+<title>Administration - <?php echo (STYLES_SITE_NAME); ?></title>
 </head>
     <body>
         <div id="wrapper">
