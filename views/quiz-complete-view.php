@@ -9,6 +9,7 @@ require_once("includes/config.php");
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" type="text/css" href="<?php echo(STYLES_LOCATION) ?>/style.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="<?php echo(STYLES_LOCATION) ?>/take-quiz-style.css" media="screen" />
 <title>Quiz Complete- <?php echo (STYLES_SITE_NAME); ?></title>
 </head>
  
@@ -26,7 +27,11 @@ require_once("includes/config.php");
 
  
 <p>
- 
+    <img src="<?php echo($questionData["IMAGE"]) ?>" />
+    <?php echo ($questionData["QUESTION"]); ?>
+    
+    <br />
+ <br />
 <a href="<?php echo(CONFIG_ROOT_URL) ?>/index.php">Go to homepage</a>
  
 </p>

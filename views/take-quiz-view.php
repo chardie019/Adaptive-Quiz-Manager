@@ -9,6 +9,7 @@ require_once("includes/config.php");
 <head>
  
 <link rel="stylesheet" type="text/css" href="<?php echo(STYLES_LOCATION) ?>/style.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="<?php echo(STYLES_LOCATION) ?>/take-quiz-style.css" media="screen" />
  
 <title>Take Quiz - <?php echo (STYLES_SITE_NAME); ?></title>
  
@@ -30,17 +31,27 @@ require_once("includes/config.php");
 Parms: <?php print_r($_GET); ?>
 
 </p>
-
- 
+<p> 
+    <img src="<?php echo($questionData["IMAGE"]) ?>" />
+    
+Quiz ID: <?php echo ($_SESSION["QUIZ_CURRENT_QUIZ_ID"]); ?>
+<br />
+Question: <?php echo ($questionData["QUESTION"]); ?>
 <p>
  Please choose an answer:
 </p>
-<form action="<?php echo(CONFIG_ROOT_URL) ?>/quiz-complete.php">
-<input type="radio" name="answer" value="1">Blah Blah Blah Blah Blah Blah <br>
-<input type="radio" name="answer" value="2">Blah Blah Blah Blah Blah Blah <br>
-<input type="radio" name="answer" value="3">Blah Blah Blah Blah Blah Blah <br>
-<input type="radio" name="answer" value="3">Blah Blah Blah Blah Blah Blah
-<br />
+<form action="" method="post"> 
+<?php 
+foreach ($answerData as $answerRow) {
+                //$result = array_values($oneResult); //convert from assocative array to numeric(normal) array
+                echo ("<label>");
+                    echo ("<input type=\"radio\" name=\"answer\" value=\"" . $answerRow["LINK"] . "\" />");
+                    echo ($answerRow["ANSWER"]);
+                echo ("</label>");
+                echo ("<br />");
+            }
+?>
+    <br />
 <input type="submit" value="Submit">
 </form>
 

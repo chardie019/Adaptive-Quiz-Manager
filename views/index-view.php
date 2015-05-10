@@ -30,7 +30,7 @@ require_once("includes/config.php");
 
 
 <p>
-<a href="<?php echo (CONFIG_ROOT_URL); ?>/take-quiz/myquizid">Take a quiz (/take-quiz/myquizid)</a>
+<a href="<?php echo (CONFIG_ROOT_URL); ?>/take-quiz/1">Take a quiz (/take-quiz/1)</a>
 <br /><br />
 <a href="<?php echo (CONFIG_ROOT_URL); ?>/take-quiz">Quiz List (/take-quiz)</a>
 <br /><br />

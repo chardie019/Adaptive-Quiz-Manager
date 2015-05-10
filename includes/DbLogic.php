@@ -14,7 +14,7 @@
                 "firstName" => $firstName,
                 "lastName" => $lastName,
             );
-            $resultLine = $DbClass->select("test", $data);
+            $resultLine = $DbClass->select("*", "test", $data);
             
             
             $i = 0;
@@ -59,7 +59,7 @@ class DB {
     //Select rows from the database.
     //returns a full row or rows from $table using $where as the where clause.
     //return value is an associative array with column names as keys.
-    public function select($table, $dataArray, $singleRow=false) {
+    public function select($columns, $table, $dataArray, $singleRow=True) {
         if (!is_string ($table)) {
             die("A string was not passed to the Select function on DB class");
         }
@@ -69,11 +69,35 @@ class DB {
             $where .= "$column = :$column";
         }
         
-        $stmt = self::$connection->prepare("SELECT * FROM $table WHERE " . $where . ";") or die('Problem preparing query');
+        $stmt = self::$connection->prepare("SELECT $columns FROM $table WHERE " . $where . ";") or die('Problem preparing query');
         $stmt->execute($dataArray);
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        if ($singleRow) {   //true
-            $results = array_values($results[0]);   //return normal array instead
+        if ($singleRow && ($results)) {   //true and are actaully results
+            //$results = array_values($results[0]);   //return normal array instead
+            $results = $results[0];   //return normal array instead
+        }
+        return $results;
+    }
+    
+        public function selectWithColumns($column, $table, $dataArray, $whereColumn, $singleRow=True) {
+        if (!is_string ($table)) {
+            die("A string was not passed to the selectWithColumns( function on DB class");
+        }
+        $where = "";
+        foreach ($dataArray as $column => $value) {      //$value not used - it's in $data
+            $where .= ($where == "") ? "" : " AND ";
+            $where .= "$column = :$column";
+        }
+        foreach ($whereColumn as $column => $value) {      //build coloumn where query
+            $where .= ($where == "") ? "" : " AND ";
+            $where .= "$column = $value";
+        }
+        $stmt = self::$connection->prepare("SELECT $column FROM $table WHERE " . $where . ";") or die('Problem preparing query');
+        $stmt->execute($dataArray);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if ($singleRow && ($results)) {   //true and are actaully results
+            //$results = array_values($results[0]);   //return normal array instead
+            $results = $results[0];   //return normal array instead
         }
         return $results;
     }

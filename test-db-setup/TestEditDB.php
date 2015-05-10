@@ -1,4 +1,9 @@
 <?php include("ProcessSubmission.php"); ?>
+
+
+
+
+
 <!DOCTYPE html>
 <!--
 To change this license header, choose License Headers in Project Properties.
@@ -57,6 +62,9 @@ and open the template in the editor.
                 <input type="submit" name="add" value="Add">
                 <span class="error"><br /><?php echo $ageError ?></span>
             </form>
+        <br />
+        <br />
+        <a href="../"> Back to Home Page</a>
             
         </p>
     </body>
