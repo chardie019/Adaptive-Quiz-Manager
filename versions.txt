@@ -1,3 +1,7 @@
+### version 5.1 - 10-5-2015  - R function, db example ###
+==josh added OR function in dbLogic
+-see example in test-db-setup on how to use it.
+
 ### version 5 - 10-5-2015  - Draft Take a quiz ###
 ===Connor:
 made ERD digram

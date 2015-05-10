@@ -102,6 +102,43 @@ class DB {
         return $results;
     }
     
+        public function selectWithColumnsOr($column, $table, $dataArray, $whereColumn, $dataArrayOr, $whereColumnOr, $singleRow=True) {
+        if (!is_string ($table)) {
+            die("A string was not passed to the selectWithColumns( function on DB class");
+        }
+        $where = "";
+        foreach ($dataArray as $columnTemp => $value) {      //$value not used - it's in $data
+            $where .= ($where == "") ? "" : " AND ";
+            $where .= "$columnTemp = :$columnTemp";
+        }
+        foreach ($whereColumn as $columnTemp => $value) {      //build coloumn where query
+            $where .= ($where == "") ? "" : " AND ";
+            $where .= "$columnTemp = $value";
+        }
+        var_dump ($where);
+        $dataArrayMerged = array_merge($dataArray, $dataArrayOr);
+        $where .= " OR (";
+        $firstrun = true;
+        foreach ($dataArrayOr as $columnTemp => $value) {      //$value not used - it's in $data
+            $where .= ($firstrun == true) ? "" : " AND ";
+            $firstrun = false;
+            $where .= "$columnTemp = :$columnTemp";
+        }
+        foreach ($whereColumnOr as $columnTemp => $value) {      //where colown OR
+            $where .= ($where == "") ? "" : " AND ";
+            $where .= "$columnTemp = $value";
+        }
+        $where .= ")";
+        $stmt = self::$connection->prepare("SELECT $column FROM $table WHERE " . $where . ";") or die('Problem preparing query');
+        $stmt->execute($dataArrayMerged);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if ($singleRow && ($results)) {   //true and are actaully results
+            //$results = array_values($results[0]);   //return normal array instead
+            $results = $results[0];   //return normal array instead
+        }
+        return $results;
+    }
+    
     public function selectAll($table) {
         if (!is_string ($table)) {
             die("A string was not passed to the SelectAll function on DB class");
