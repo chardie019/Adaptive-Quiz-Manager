@@ -8,6 +8,7 @@ require_once("includes/config.php");
 $dbLogic = new DB();
 $uid = 'jsmith04';
     //where coloumns
+/*
     $dataArray = array(
         "IS_PUBLIC" => "1"
         );
@@ -24,6 +25,21 @@ $uid = 'jsmith04';
 foreach ($answerID as $answerRow) {
     echo ($answerRow["QUIZ_NAME"]);
 }
+*/
 
+    $dataArray = array(
+        "IS_PUBLIC" => "0",
+        "user_USERNAME" => "$uid"
+        );
+    $columnWhere = array(
+        "Quiz_QUIZ_ID" => "QUIZ_ID"
+    );
+    ($answerID = $dbLogic->selectWithColumns("QUIZ_NAME, QUIZ_ID", "quiz, taker", $dataArray, $columnWhere, false));
+    //QUIZ_ID needed as you can put it in the URL maybe?
+
+//to print these (loops as many as there are results):
+foreach ($answerID as $answerRow) {
+    echo ($answerRow["QUIZ_NAME"]);
+}
 //html
 include("quiz-list-view.php");

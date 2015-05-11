@@ -84,13 +84,13 @@ class DB {
             die("A string was not passed to the selectWithColumns( function on DB class");
         }
         $where = "";
-        foreach ($dataArray as $column => $value) {      //$value not used - it's in $data
+        foreach ($dataArray as $columnTemp => $valueTemp) {      //$value not used - it's in $data
             $where .= ($where == "") ? "" : " AND ";
-            $where .= "$column = :$column";
+            $where .= "$columnTemp = :$columnTemp";
         }
-        foreach ($whereColumn as $column => $value) {      //build coloumn where query
+        foreach ($whereColumn as $columnTemp => $valueTemp) {      //build coloumn where query
             $where .= ($where == "") ? "" : " AND ";
-            $where .= "$column = $value";
+            $where .= "$columnTemp = $valueTemp";
         }
         $stmt = self::$connection->prepare("SELECT $column FROM $table WHERE " . $where . ";") or die('Problem preparing query');
         $stmt->execute($dataArray);
