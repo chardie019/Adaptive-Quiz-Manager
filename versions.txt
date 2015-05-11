@@ -1,3 +1,9 @@
+### version 5.1.1 - 10-5-2015  - Select distinct, OR function addedd ###
+==Josh:
+Select distinct, OR function addedd  for Harry
+==harry:
+draft (extreme) for quiz list
+
 ### version 5.1 - 10-5-2015  - R function, db example ###
 ==josh added OR function in dbLogic
 -see example in test-db-setup on how to use it.
