@@ -4,11 +4,11 @@ define ("USERLOGIC_ON_LOGIN_PAGE", "SET");       //Arrived
 if(session_id() == '') { //if redirected from another place
     session_start();
 }
-if ($_SERVER['REQUEST_METHOD'] === "POST") { 
+if ($_SERVER['REQUEST_METHOD'] === "POST") {
     $_SESSION['USERLOGIC_UID_IS_SET'] = "SET";
     //die ("-=----");
     $_SESSION["username"] = filter_input(INPUT_POST, "username");
-    header('Location: index.php');
+    header('Location: ' . $_SESSION["REQUEST_URI"]);    //go back to requested page (recorded vai userLogic)
     exit;
 }
 ?>

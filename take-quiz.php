@@ -1,9 +1,8 @@
 <?php
 
 /* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * TO-DO
+ * track which question the user is up up
  */
 
 // include php files here 
@@ -28,8 +27,23 @@ function prepareViewPage() {
     return $dbLogic->select("*", "answer", $data, false);
 }
 
-
 if ($_SERVER['REQUEST_METHOD'] === "POST") { //next question
+
+    $quizConfirmPosted = filter_input(INPUT_POST, "confirmQuiz");
+    $quizConfirmIdPosted = filter_input(INPUT_POST, "confirmQuizId");
+    $quizNotConfirmPosted = filter_input(INPUT_POST, "notConfirmQuiz");
+    if ($quizConfirmPosted != "") {
+        $_SESSION["QUIZ_CONFIRMED"] = $quizConfirmIdPosted;
+        header('Location: '.$_SERVER['REQUEST_URI']);   
+        stop(); //refresh the page an rerun script
+    }
+    if ($quizNotConfirmPosted != "") {
+        $_SESSION["QUIZ_CONFIRMED"] = ""; //not confirmed anymore
+        echo ("notconfirm");
+        header('Location: ' . CONFIG_ROOT_URL . '/take-quiz');   
+        stop(); //refresh the page an rerun script (with no quiz this time)
+    }
+    //otherwise continue
     $answerPosted = filter_input(INPUT_POST, "answer");
     $dbLogic = new DB();
     //check answer is legit and belongs the same quiz
@@ -65,6 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //next question
         
     }
 } else {                                    //start quiz
+
     //stub for getting quiz id
     //if ID is passed- load take quiz, otherwise load quiz-list
     $quizIdRequested = filter_input(INPUT_GET, "quiz");
@@ -79,10 +94,13 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //next question
         $data = array(
                     "QUIZ_ID" => $quizIdRequested
                 );
-
-        $quizIdDb = $dbLogic->select("*", "quiz", $data);
-        if (count($quizIdDb) > 0){  //success - it exists
-            $_SESSION["QUIZ_CURRENT_QUIZ_ID"] = $quizIdDb["QUIZ_ID"];
+        $quizData = $dbLogic->select("*", "quiz", $data);
+        if (count($quizData) > 0){  //success - it exists
+            $_SESSION["QUIZ_CURRENT_QUIZ_ID"] = $quizData["QUIZ_ID"];
+            if ((!isset($_SESSION["QUIZ_CONFIRMED"])) || ($_SESSION["QUIZ_CONFIRMED"] != $_SESSION["QUIZ_CURRENT_QUIZ_ID"])) {    //same quiz and is confirmed
+                include ("quiz-description.php");
+            } else {                                                                   // straight to the actual quiz
+                //find quiestion now
             $data = array(
                         "Quiz_QUIZ_ID" => $_SESSION["QUIZ_CURRENT_QUIZ_ID"]
                     );
@@ -92,6 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //next question
             $answerData = prepareViewPage(); 
             //html
             include("take-quiz-view.php");
+            }
         }else {                     //fail, no result
             //display the not found page
             header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");

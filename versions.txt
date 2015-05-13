@@ -1,4 +1,11 @@
-### version 5.1.1 - 10-5-2015  - Select distinct, OR function addedd ###
+### version 5.1.3 - 11-5-2015  - dblogic logic error ###
+==josh: made mockup "pre-quiz" page for harry
+also, made the stub login page forward to requested url instead of homepage
+
+### version 5.1.2 - 11-5-2015  - dblogic logic error ###
+==josh: fixed misakte using same variable
+
+### version 5.1.1 - 11-5-2015  - Select distinct, OR function addedd ###
 ==Josh:
 Select distinct, OR function addedd  for Harry
 ==harry:
