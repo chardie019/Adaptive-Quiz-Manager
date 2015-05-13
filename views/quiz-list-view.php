@@ -5,7 +5,7 @@
 require_once("includes/config.php");
 // end of php file inclusion
 ?>
- 
+<html>
 <head>
 
  
@@ -27,7 +27,22 @@ require_once("includes/config.php");
  
 <h1>Quiz List (to be replaced by harry)</h1>
 
- 
+
+<!-- quiz-description not created yet, submit leads to 404 -->
+<form action="quiz-description.php" method="post" name="getQuiz">
+    <br />
+    <select name="quizList">
+    <?php
+        foreach ($answerID as $answerRow) {
+            echo "<option value = ".($answerRow["QUIZ_ID"])."> ".$answerRow["QUIZ_NAME"]."</option>";
+        }
+    ?>
+    </select>
+    <br />
+    <br />
+    <input type="submit" value="Select Quiz" />
+</form>
+
 <p>
  Parms: <?php print_r($_GET); ?> <br />
  <br />

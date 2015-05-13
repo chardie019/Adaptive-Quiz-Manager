@@ -210,5 +210,28 @@ class DB {
  
         return $results = self::$connection->lastInsertID(); //return the ID of the user in the database.
     }
+    
+    public function selectQuiz($column, $table, $dataArray, $whereColumn, $singleRow=True) {
+        if (!is_string ($table)) {
+            die("A string was not passed to the selectWithColumns( function on DB class");
+        }
+        $where = "";
+        foreach ($dataArray as $columnTemp => $valueTemp) {      //$value not used - it's in $data
+            $where .= ($where == "") ? "" : " OR ";             //Or here not AND, allows select quiz criteria to execute properly
+            $where .= "$columnTemp = :$columnTemp";
+        }
+        foreach ($whereColumn as $columnTemp => $valueTemp) {      //build coloumn where query
+            $where .= ($where == "") ? "" : " AND ";
+            $where .= "$columnTemp = $valueTemp";
+        }
+        $stmt = self::$connection->prepare("SELECT DISTINCT $column FROM $table WHERE " . $where . ";") or die('Problem preparing query');
+        $stmt->execute($dataArray);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if ($singleRow && ($results)) {   //true and are actaully results
+            //$results = array_values($results[0]);   //return normal array instead
+            $results = $results[0];   //return normal array instead
+        }
+        return $results;
+    }
 }
 ?>
