@@ -29,7 +29,7 @@ require_once("includes/config.php");
 
 
 <!-- quiz-description not created yet, submit leads to 404 -->
-<form action="quiz-description.php" method="post" name="getQuiz">
+<form action="<?php echo(CONFIG_ROOT_URL) ?>/quiz-description" method="post" name="getQuiz">
     <br />
     <select name="quizid">
     <?php

@@ -26,7 +26,7 @@ require_once("includes/config.php");
 <p>
     You have been logged out of the <?php echo (STYLES_SITE_NAME); ?> System.
     <br /><br />
-    You you like to <a href="<?php echo(CONFIG_ROOT_URL); ?>">login in</a> again?
+    Would you like to <a href="<?php echo(CONFIG_ROOT_URL); ?>">login in</a> again?
 
 </p>
 </div> <!-- end #content -->

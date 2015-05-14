@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 <?php
 
 /* 
@@ -14,12 +14,9 @@ require_once("includes/config.php");
 //quizData already used so??
 //not sure if there is anything to do here
 
-//html
-include("quiz-description-view.php");
+
 
 //echo($quizData["IMAGE"])
-=======
-<?php
 
 // include php files here 
 require_once("includes/config.php");
@@ -42,9 +39,11 @@ require_once("includes/config.php");
     
     $columns = "*";
 
-    ($answerID = $dbLogic->select($columns, "quiz", $data, true));
-    extract($answerID);
+    ($quizData = $dbLogic->select($columns, "quiz", $data, true));
+    extract($quizData);
     
+    //Set new QUIZ_ID for the session as the id of selected quiz awaiting confirmation
+    $_SESSION['QUIZ_CURRENT_QUIZ_ID'] = $quizData['QUIZ_ID'];
     //html
     include ('quiz-description-view.php');
->>>>>>> origin/master
+

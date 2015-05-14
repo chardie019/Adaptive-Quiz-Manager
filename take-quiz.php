@@ -87,7 +87,8 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //next question
     //html
     if (empty($quizIdRequested)) {
         include("quiz-list.php");
-    } else {
+    } 
+    else {
         $dbLogic = new DB();
 
         //find the quiz

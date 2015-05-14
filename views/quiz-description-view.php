@@ -5,7 +5,7 @@
 require_once("includes/config.php");
 // end of php file inclusion
 ?>
-<<<<<<< HEAD
+
  
 <head>
  
@@ -26,7 +26,7 @@ require_once("includes/config.php");
  
 <div id="content">
  
-<h1>Confirmation - Take Quiz (to be replaced by harry)</h1>
+<h1>Confirmation - <?php echo ($quizData['QUIZ_NAME']); ?> </h1>
 
 <p>
 Parms: <?php print_r($_GET); ?>
@@ -37,16 +37,20 @@ Parms: <?php print_r($_GET); ?>
     
 Quiz ID: <?php echo ($_SESSION["QUIZ_CURRENT_QUIZ_ID"]); ?>
 <br />
-Description: <?php echo ($quizData["DESCRIPTION"]); ?>
+Description: <?php echo ($quizData['DESCRIPTION']); ?>
+<br />
+
 </p>
-<form action="" method="post"> 
+
+<!-- Quiz confirmed, user and form are sent to /take-quiz/QUIZ_CURRENT_QUIZ_ID, which is question 1 of quiz-->
+<form action="<?php echo(CONFIG_ROOT_URL)."/take-quiz/".$_SESSION['QUIZ_CURRENT_QUIZ_ID']?>" method="post"> 
 <?php echo ("<input type=\"hidden\" name=\"confirmQuizId\" value=\"" . $_SESSION['QUIZ_CURRENT_QUIZ_ID'] . "\" />"); ?>
 <input type="submit" name="confirmQuiz" value="Enter">
 </form>
 
 
-<form action="" method="post"> 
-<input type="submit" name="notConfirmQuiz" value="Get Me Outta Here!">
+<form action="<?php echo(CONFIG_ROOT_URL) ?>/take-quiz" method="post"> 
+<input type="submit" name="notConfirmQuiz" value="Return to Quiz List">
 </form>
 
 
@@ -62,21 +66,4 @@ Description: <?php echo ($quizData["DESCRIPTION"]); ?>
     </body>
  
 </html>
-=======
 
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title></title>
-    </head>
-    <body>
-        <?php
-        echo"<table border=2>";
-        echo "<tr><td>Quiz Id</td><td>".$answerID["QUIZ_ID"]."</td></tr>";
-        echo "<tr><td>Quiz Name</td><td>".$answerID["QUIZ_NAME"]."</td></tr>";
-        echo "<tr><td>Public</td><td>".$answerID["IS_PUBLIC"]."</td></tr>";
-        echo"</table>";
-        ?>
-    </body>
-</html>
->>>>>>> origin/master
