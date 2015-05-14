@@ -44,6 +44,7 @@ require_once("includes/config.php");
     
     //Set new QUIZ_ID for the session as the id of selected quiz awaiting confirmation
     $_SESSION['QUIZ_CURRENT_QUIZ_ID'] = $quizData['QUIZ_ID'];
+    
     //html
     include ('quiz-description-view.php');
 

@@ -32,9 +32,15 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //next question
     $quizConfirmPosted = filter_input(INPUT_POST, "confirmQuiz");
     $quizConfirmIdPosted = filter_input(INPUT_POST, "confirmQuizId");
     $quizNotConfirmPosted = filter_input(INPUT_POST, "notConfirmQuiz");
+    $quizSelected = filter_input(INPUT_POST, "selectQuiz");
+
+    if ($quizSelected != ""){
+        include('quiz-description.php');       
+        exit();//Loads quiz-description-view into take-quiz, keeps same URL
+    }           
     if ($quizConfirmPosted != "") {
         $_SESSION["QUIZ_CONFIRMED"] = $quizConfirmIdPosted;
-        header('Location: '.$_SERVER['REQUEST_URI']);   
+        header('Location: '. CONFIG_ROOT_URL . '/take-quiz/'.$_SESSION["QUIZ_CONFIRMED"]);   
         stop(); //refresh the page an rerun script
     }
     if ($quizNotConfirmPosted != "") {

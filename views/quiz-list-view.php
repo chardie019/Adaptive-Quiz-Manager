@@ -29,7 +29,7 @@ require_once("includes/config.php");
 
 
 <!-- quiz-description not created yet, submit leads to 404 -->
-<form action="<?php echo(CONFIG_ROOT_URL) ?>/quiz-description" method="post" name="getQuiz">
+<form action="" method="post">
     <br />
     <select name="quizid">
     <?php
@@ -40,7 +40,8 @@ require_once("includes/config.php");
     </select>
     <br />
     <br />
-    <input type="submit" value="Select Quiz" />
+    <?php echo "<input type=\"hidden\" name=\"selectQuizId\" value=". ($answerRow["QUIZ_ID"])." />"?>
+    <input type="submit" name="selectQuiz" value="Select Quiz" />
 </form>
 
 

@@ -43,13 +43,13 @@ Description: <?php echo ($quizData['DESCRIPTION']); ?>
 </p>
 
 <!-- Quiz confirmed, user and form are sent to /take-quiz/QUIZ_CURRENT_QUIZ_ID, which is question 1 of quiz-->
-<form action="<?php echo(CONFIG_ROOT_URL)."/take-quiz/".$_SESSION['QUIZ_CURRENT_QUIZ_ID']?>" method="post"> 
-<?php echo ("<input type=\"hidden\" name=\"confirmQuizId\" value=\"" . $_SESSION['QUIZ_CURRENT_QUIZ_ID'] . "\" />"); ?>
+<form action="" method="post"> 
+<?php echo "<input type=\"hidden\" name=\"confirmQuizId\" value=\"" . $_SESSION['QUIZ_CURRENT_QUIZ_ID'] . "\" />"; ?>
 <input type="submit" name="confirmQuiz" value="Enter">
 </form>
 
 
-<form action="<?php echo(CONFIG_ROOT_URL) ?>/take-quiz" method="post"> 
+<form action="" method="post"> 
 <input type="submit" name="notConfirmQuiz" value="Return to Quiz List">
 </form>
 
