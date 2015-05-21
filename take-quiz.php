@@ -74,6 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //next question
         $questionData = $dbLogic->select("*", "question", $data);
         $answerData = prepareViewPage();
         if (!empty($answerData) > 0){ //are there answers or is this the end of the quiz?
+            include("record-answer.php");
             include("take-quiz-view.php");
         } else {
             include("quiz-complete.php");
