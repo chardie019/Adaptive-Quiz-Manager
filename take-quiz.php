@@ -21,9 +21,9 @@ function prepareViewPage() {
     }
             
     $data = array(
-        "question_QUESTION_ID" => $questionData["QUESTION_ID"]
+        "Question_QUESTION_ID" => $questionData["QUESTION_ID"]
     );
-    //find this question's answers
+    //find this questions's answers
     return $dbLogic->select("*", "answer", $data, false);
 }
 
@@ -58,8 +58,8 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //next question
         "QUIZ_ID"           => $_SESSION["QUIZ_CURRENT_QUESTION"]
     );
     $whereColoumn = array(
-        "question_QUESTION_ID"  => "QUESTION_ID",
-        "quiz_QUIZ_ID"          => "QUIZ_ID"
+        "Question_QUESTION_ID"  => "QUESTION_ID",
+        "Quiz_QUIZ_ID"          => "QUIZ_ID"
     );
 
     $answerID = $dbLogic->selectWithColumns("ANSWER_ID", "answer, question, quiz", $data, $whereColoumn);
@@ -108,9 +108,9 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //next question
             if ((!isset($_SESSION["QUIZ_CONFIRMED"])) || ($_SESSION["QUIZ_CONFIRMED"] != $_SESSION["QUIZ_CURRENT_QUIZ_ID"])) {    //same quiz and is confirmed
                 include ("quiz-description.php");
             } else {                                                                   // straight to the actual quiz
-                //find question now
+                //find quiestion now
             $data = array(
-                        "quiz_QUIZ_ID" => $_SESSION["QUIZ_CURRENT_QUIZ_ID"]
+                        "Quiz_QUIZ_ID" => $_SESSION["QUIZ_CURRENT_QUIZ_ID"]
                     );
             //find first question - we assume first in table is the first
             $questionData = $dbLogic->select("*", "question", $data);
