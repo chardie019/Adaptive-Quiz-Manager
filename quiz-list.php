@@ -16,7 +16,7 @@ $uid = 'jsmith04';
         "user_USERNAME" => "$uid"
         );
     $columnWhere = array(
-        "Quiz_QUIZ_ID" => "QUIZ_ID"
+        "quiz_QUIZ_ID" => "QUIZ_ID"
     );
     ($answerID = $dbLogic->selectQuiz("QUIZ_NAME, QUIZ_ID", "quiz, taker", $dataArray, $columnWhere, false));
     //QUIZ_ID needed as you can put it in the URL maybe?
@@ -44,7 +44,7 @@ $dataArray = array(
         "user_USERNAME" => "$uid"
         );
     $columnWhere = array(
-        "Quiz_QUIZ_ID" => "QUIZ_ID"
+        "quiz_QUIZ_ID" => "QUIZ_ID"
     );
     ($answerID = $dbLogic->selectQuiz("QUIZ_NAME, QUIZ_ID", "quiz, taker", $dataArray, $columnWhere, false));
     //QUIZ_ID needed as you can put it in the URL maybe?
