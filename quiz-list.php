@@ -1,69 +1,54 @@
-<!DOCTYPE html>
 
-<!-- include php files here -->
-<?php require_once("/includes/config.php"); ?>
-<!-- end of php file inclusion -->
- 
- 
-<head>
+<?php
 
- 
-<link rel="stylesheet" type="text/css" href="<?php echo(SITE_STYLES_LOCATION) ?>/style.css" media="screen" />
- 
-<title>Select Quiz</title>
- 
-</head>
- 
-    <body>
- 
-        <div id="wrapper">
-            <?php include('header.php'); ?>
+// include php files here 
+require_once("includes/config.php");
+// end of php file inclusion
 
-            <?php include('nav.php'); ?>
 
- 
-<div id="content">
- 
-<h1>Heading1</h1>
+$dbLogic = new DB();
+$uid = 'jsmith04';
+    //where coloumns
 
- 
-<p>
- 
-Welcome This might customised depending user type?
-<br/><br/>
- How to chose different quiz?
-<br />
-dynamic? eg www.example.com?quiz=ITC105
-<br />
-or? www.example.com/quiz/ITC105
-<br/>
-so it's like example.com/Controller/View/Action
 
-<br/>
-<br/>
-Would need .htaccess rewrite though (what wordpress uses)
-</p>
+    $dataArray = array(
+        "IS_PUBLIC" => "0",
+        "user_USERNAME" => "$uid"
+        );
+    $columnWhere = array(
+        "quiz_QUIZ_ID" => "QUIZ_ID"
+    );
+    ($answerID = $dbLogic->selectQuiz("QUIZ_NAME, QUIZ_ID", "quiz, taker", $dataArray, $columnWhere, false));
+    //QUIZ_ID needed as you can put it in the URL maybe?
 
-<ol>
-    <li><a href="take-quiz.php">Quiz 1 </a></li>
-    <li><a href="take-quiz.php">Quiz 2 </a></li>
-    <li><a href="take-quiz.php">Quiz 3 </a></li>
-    <li><a href="take-quiz.php">Quiz 4 </a></li>
+//to print these (loops as many as there are results):
+//foreach ($answerID as $answerRow) {
+//    echo ($answerRow["QUIZ_NAME"]);
+//}
+//html
     
-</ol>
+include("quiz-list-view.php");
 
 
+/*
+
+// include php files here 
+require_once("includes/config.php");
+// end of php file inclusion
 
 
-</div> <!-- end #content -->
- 
+$dbLogic = new DB();
+$uid = ($_SESSION["username"]);
+$dataArray = array(
+        "IS_PUBLIC" => "1",
+        "user_USERNAME" => "$uid"
+        );
+    $columnWhere = array(
+        "quiz_QUIZ_ID" => "QUIZ_ID"
+    );
+    ($answerID = $dbLogic->selectQuiz("QUIZ_NAME, QUIZ_ID", "quiz, taker", $dataArray, $columnWhere, false));
+    //QUIZ_ID needed as you can put it in the URL maybe?
 
-<?php include('sidebar.php'); ?>
- 
-<?php include('footer.php'); ?>
- 
-        </div> <!-- End #wrapper -->
- 
-    </body>
- 
-</html>
+//html
+include("quiz-list-view.php");
+*/

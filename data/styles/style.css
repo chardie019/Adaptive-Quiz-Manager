@@ -19,7 +19,16 @@ border-top:1px solid #ccc;
  
 */
 #header #logo {
-min-height: 276px;
+    position: relative;
+    border: 0.15em solid rgb(229, 113, 0);
+    background-color: rgb(233, 172, 0);
+}
+
+#header #logo p {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin: 0.5em;
 }
 
 #header h2 {
@@ -32,7 +41,7 @@ margin: 0;
     width: 90%;
     height: 40px;
     margin: 0px auto;
-    font-size: 25px;
+    font-size: 1em;
     //margin-top: 20px;
     padding-top: 15px;
     border-radius: 5px; 

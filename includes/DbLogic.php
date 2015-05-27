@@ -14,7 +14,7 @@
                 "firstName" => $firstName,
                 "lastName" => $lastName,
             );
-            $resultLine = $DbClass->select("test", $data);
+            $resultLine = $DbClass->select("*", "test", $data);
             
             
             $i = 0;
@@ -43,7 +43,8 @@ class DB {
     function __construct ($TINA = false) {
         
         $options = array(
-            PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
+            //PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8mb4' COLLATE 'utf8mb4_unicode_ci' ",
+            PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8",
             PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION
         );
         if (!$TINA) { //false - default
@@ -58,21 +59,118 @@ class DB {
     //Select rows from the database.
     //returns a full row or rows from $table using $where as the where clause.
     //return value is an associative array with column names as keys.
-    public function select($table, $data, $singleRow=false) {
+    public function select($columns, $table, $dataArray, $singleRow=True) {
         if (!is_string ($table)) {
             die("A string was not passed to the Select function on DB class");
         }
-        $results = array();
-        
         $where = "";
-        foreach ($data as $column => $value) {
+        foreach ($dataArray as $column => $value) {      //$value not used - it's in $data
             $where .= ($where == "") ? "" : " AND ";
             $where .= "$column = :$column";
         }
         
-        $stmt = self::$connection->prepare("SELECT * FROM $table WHERE " . $where . ";") or die('Problem preparing query');
-        $stmt->execute($data);
+        $stmt = self::$connection->prepare("SELECT $columns FROM $table WHERE " . $where . ";") or die('Problem preparing query');
+        $stmt->execute($dataArray);
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if ($singleRow && ($results)) {   //true and are actaully results
+            //$results = array_values($results[0]);   //return normal array instead
+            $results = $results[0];   //return normal array instead
+        }
+        return $results;
+    }
+    
+        public function selectWithColumns($column, $table, $dataArray, $whereColumn, $singleRow=True) {
+        if (!is_string ($table)) {
+            die("A string was not passed to the selectWithColumns( function on DB class");
+        }
+        $where = "";
+        foreach ($dataArray as $columnTemp => $valueTemp) {      //$value not used - it's in $data
+            $where .= ($where == "") ? "" : " AND ";
+            $where .= "$columnTemp = :$columnTemp";
+        }
+        foreach ($whereColumn as $columnTemp => $valueTemp) {      //build coloumn where query
+            $where .= ($where == "") ? "" : " AND ";
+            $where .= "$columnTemp = $valueTemp";
+        }
+        $stmt = self::$connection->prepare("SELECT $column FROM $table WHERE " . $where . ";") or die('Problem preparing query');
+        $stmt->execute($dataArray);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if ($singleRow && ($results)) {   //true and are actaully results
+            //$results = array_values($results[0]);   //return normal array instead
+            $results = $results[0];   //return normal array instead
+        }
+        return $results;
+    }
+    
+        public function selectWithColumnsOr($column, $table, $dataArray, $whereColumn, $dataArrayOr, $whereColumnOr, $singleRow=True) {
+        if (!is_string ($table)) {
+            die("A string was not passed to the selectWithColumns( function on DB class");
+        }
+        $where = "";
+        foreach ($dataArray as $columnTemp => $value) {      //$value not used - it's in $data
+            $where .= ($where == "") ? "" : " AND ";
+            $where .= "$columnTemp = :$columnTemp";
+        }
+        foreach ($whereColumn as $columnTemp => $value) {      //build coloumn where query
+            $where .= ($where == "") ? "" : " AND ";
+            $where .= "$columnTemp = $value";
+        }
+        $dataArrayMerged = array_merge($dataArray, $dataArrayOr);
+        $where .= " OR (";
+        $firstrun = true;
+        foreach ($dataArrayOr as $columnTemp => $value) {      //$value not used - it's in $data
+            $where .= ($firstrun == true) ? "" : " AND ";
+            $firstrun = false;
+            $where .= "$columnTemp = :$columnTemp";
+        }
+        foreach ($whereColumnOr as $columnTemp => $value) {      //where colown OR
+            $where .= ($where == "") ? "" : " AND ";
+            $where .= "$columnTemp = $value";
+        }
+        $where .= ")";
+        $stmt = self::$connection->prepare("SELECT $column FROM $table WHERE " . $where . ";") or die('Problem preparing query');
+        $stmt->execute($dataArrayMerged);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if ($singleRow && ($results)) {   //true and are actaully results
+            //$results = array_values($results[0]);   //return normal array instead
+            $results = $results[0];   //return normal array instead
+        }
+        return $results;
+    }
+    
+    public function selecDistinctWithColumnsOr($column, $table, $dataArray, $whereColumn, $dataArrayOr, $whereColumnOr, $singleRow=True) {
+        if (!is_string ($table)) {
+            die("A string was not passed to the selectWithColumns( function on DB class");
+        }
+        $where = "";
+        foreach ($dataArray as $columnTemp => $value) {      //$value not used - it's in $data
+            $where .= ($where == "") ? "" : " AND ";
+            $where .= "$columnTemp = :$columnTemp";
+        }
+        foreach ($whereColumn as $columnTemp => $value) {      //build coloumn where query
+            $where .= ($where == "") ? "" : " AND ";
+            $where .= "$columnTemp = $value";
+        }
+        $dataArrayMerged = array_merge($dataArray, $dataArrayOr);
+        $where .= " OR (";
+        $firstrun = true;
+        foreach ($dataArrayOr as $columnTemp => $value) {      //$value not used - it's in $data
+            $where .= ($firstrun == true) ? "" : " AND ";
+            $firstrun = false;
+            $where .= "$columnTemp = :$columnTemp";
+        }
+        foreach ($whereColumnOr as $columnTemp => $value) {      //where colown OR
+            $where .= ($where == "") ? "" : " AND ";
+            $where .= "$columnTemp = $value";
+        }
+        $where .= ")";
+        $stmt = self::$connection->prepare("SELECT DISTINCT $column FROM $table WHERE " . $where . ";") or die('Problem preparing query');
+        $stmt->execute($dataArrayMerged);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if ($singleRow && ($results)) {   //true and are actaully results
+            //$results = array_values($results[0]);   //return normal array instead
+            $results = $results[0];   //return normal array instead
+        }
         return $results;
     }
     
@@ -80,7 +178,6 @@ class DB {
         if (!is_string ($table)) {
             die("A string was not passed to the SelectAll function on DB class");
         }
-        $results = array();
         $stmt = self::$connection->prepare("SELECT * FROM $table;") or die('Problem preparing query');
         $stmt->execute();
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -91,10 +188,10 @@ class DB {
     //takes an array of data, where the keys in the array are the column names
     //and the values are the data that will be inserted into those columns.
     //$table is the name of the table.
-    public function insert($data, $table) {
+    public function insert($dataArray, $table) {
         $values = "";
         $columns = "";
-        foreach ($data as $column => $value) { //$value not used, it's in execute
+        foreach ($dataArray as $column => $value) { //$value not used, it's in execute
             $columns .= ($columns == "") ? "" : ", ";
             $columns .= $column;
             $values .= ($values == "") ? "" : ", ";
@@ -102,15 +199,39 @@ class DB {
         }
         
         $stmt = self::$connection->prepare("insert into $table ($columns) values ($values);") or die('Problem preparing query');
-        $stmt->execute($data); //send the values separately
+        $stmt->execute($dataArray); //send the values separately
         return $results = self::$connection->lastInsertID();
     }
  
         public function delete($col, $data, $table) {
-            $data = [$data];
+            $dataArray = array($data);
             $stmt = self::$connection->prepare("delete from $table where $col = ?;") or die('Problem preparing query');
-        $stmt->execute($data);  //send the values separately
+        $stmt->execute($dataArray);  //send the values separately
+ 
         return $results = self::$connection->lastInsertID(); //return the ID of the user in the database.
+    }
+    
+    public function selectQuiz($column, $table, $dataArray, $whereColumn, $singleRow=True) {
+        if (!is_string ($table)) {
+            die("A string was not passed to the selectWithColumns( function on DB class");
+        }
+        $where = "";
+        foreach ($dataArray as $columnTemp => $valueTemp) {      //$value not used - it's in $data
+            $where .= ($where == "") ? "" : " OR ";             //Or here not AND, allows select quiz criteria to execute properly
+            $where .= "$columnTemp = :$columnTemp";
+        }
+        foreach ($whereColumn as $columnTemp => $valueTemp) {      //build coloumn where query
+            $where .= ($where == "") ? "" : " AND ";
+            $where .= "$columnTemp = $valueTemp";
+        }
+        $stmt = self::$connection->prepare("SELECT DISTINCT $column FROM $table WHERE " . $where . ";") or die('Problem preparing query');
+        $stmt->execute($dataArray);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if ($singleRow && ($results)) {   //true and are actaully results
+            //$results = array_values($results[0]);   //return normal array instead
+            $results = $results[0];   //return normal array instead
+        }
+        return $results;
     }
 }
 ?>

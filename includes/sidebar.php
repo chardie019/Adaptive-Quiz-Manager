@@ -1,3 +1,7 @@
+<?php /*
+ * not used
+ * 
+ * 
 <div id="sidebar">
  
 <h3>Navigation</h3>
@@ -22,3 +26,4 @@
     <li><a href="#">Link Here</a></li>
  
 </div> <!-- end #sidebar -->
+*/

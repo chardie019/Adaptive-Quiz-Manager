@@ -1,9 +1,13 @@
 <?php
- 
-$heading='Josh PHP Template';
 
-$footer='Josh Footer';
+define('STYLES_LOCATION', CONFIG_ROOT_URL . "/data/styles");
+define('STYLES_QUIZ_IMAGES_LOCATION', CONFIG_ROOT_URL . "/data/quiz-images");
+define('STYLES_SITE_NAME', "Adaptive Quiz Manager");
 
-define('SITE_STYLES_LOCATION', ROOT_URL . "/data/styles");
+$heading='Adaptive Quiz Manager';
+
+$footer='&copy; Adaptive Quiz Manager';
+
+
 
 ?>

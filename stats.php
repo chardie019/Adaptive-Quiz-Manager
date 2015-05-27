@@ -6,6 +6,9 @@
  * and open the template in the editor.
  */
 
-//setups everything the person
-//uses auth.php (stub for real CSU connect)
-include("auth.php");
+// include php files here 
+require_once("includes/config.php");
+// end of php file inclusion
+
+//html
+include("stats-view.php");
