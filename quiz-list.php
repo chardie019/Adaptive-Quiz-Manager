@@ -12,7 +12,7 @@ $uid = 'jsmith04';
 
 
     $dataArray = array(
-        "IS_PUBLIC" => "0",
+        "IS_PUBLIC" => "1",
         "user_USERNAME" => "$uid"
         );
     $columnWhere = array(

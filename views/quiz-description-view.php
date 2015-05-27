@@ -24,33 +24,40 @@ require_once("includes/config.php");
             <?php include('nav.php'); ?>
 
  
-<div id="content">
+<div id="content-centre">
  
-<h1>Confirmation - <?php echo ($quizData['QUIZ_NAME']); ?> </h1>
+<h1><?php echo ($quizData['QUIZ_NAME']); ?> </h1>
 
-<p>
-Parms: <?php print_r($_GET); ?>
-
-</p>
 <p> 
     <img src="<?php echo($quizData["IMAGE"]) ?>" />
-    
-Quiz ID: <?php echo ($_SESSION["QUIZ_CURRENT_QUIZ_ID"]); ?>
-<br />
-Description: <?php echo ($quizData['DESCRIPTION']); ?>
-<br />
-
+    <br />
+    <br />
+    <span class="label">Quiz ID: </span><?php echo ($_SESSION["QUIZ_CURRENT_QUIZ_ID"]); ?>
+    <br />
+    <br />
+    <span class="label">Description: </span><?php echo ($quiz_description); ?>
+    <br />
+    <br />
+    <span class="label">Number of attempts allowed: </span><?php echo ($no_of_attempts); ?>
+    <br />
+    <br />
+    <span class="label">Are attempts savable: </span><?php echo ($is_savable); ?>
+    <br />
+    <br />
+    <span class="label">Time Limit: </span><?php echo ($time_limit); ?>
+    <br />
+    <br />
 </p>
 
 <!-- Quiz confirmed, user and form are sent to /take-quiz/QUIZ_CURRENT_QUIZ_ID, which is question 1 of quiz-->
 <form action="" method="post"> 
-<?php echo "<input type=\"hidden\" name=\"confirmQuizId\" value=\"" . $_SESSION['QUIZ_CURRENT_QUIZ_ID'] . "\" />"; ?>
-<input type="submit" name="confirmQuiz" value="Enter">
+    <?php echo "<input type=\"hidden\" name=\"confirmQuizId\" value=\"" . $_SESSION['QUIZ_CURRENT_QUIZ_ID'] . "\" />"; ?>
+    <button class="mySubmit" type="submit" name="confirmQuiz" value="Enter">Begin</button>
 </form>
 
 
 <form action="" method="post"> 
-<input type="submit" name="notConfirmQuiz" value="Return to Quiz List">
+    <button class="myReturn" type="submit" name="notConfirmQuiz" value="Return">Return</button>
 </form>
 
 

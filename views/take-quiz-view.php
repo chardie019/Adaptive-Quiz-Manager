@@ -23,7 +23,7 @@ require_once("includes/config.php");
             <?php include('nav.php'); ?>
 
  
-<div id="content">
+<div id="content-centre">
  
 <h1>Take Quiz</h1>
 
@@ -52,7 +52,7 @@ foreach ($answerData as $answerRow) {
             }
 ?>
     <br />
-<input type="submit" value="Submit">
+    <button class="mySubmit" type="submit" value="Submit">Submit</button>
 </form>
 
 

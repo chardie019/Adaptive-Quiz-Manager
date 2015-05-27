@@ -20,14 +20,12 @@ require_once("includes/config.php");
 
 // include php files here 
 require_once("includes/config.php");
-// end of php file inclusion
+
 
 //retrieves QUIZ_ID from quiz-list
 
-
-
 //Create a table of quiz information
-//Don't access $_POST superglobal directly, filter first
+// $_POST filter first
 
   $quizID = filter_input(INPUT_POST,'quizid', FILTER_SANITIZE_STRING);  
   
@@ -45,6 +43,34 @@ require_once("includes/config.php");
     //Set new QUIZ_ID for the session as the id of selected quiz awaiting confirmation
     $_SESSION['QUIZ_CURRENT_QUIZ_ID'] = $quizData['QUIZ_ID'];
     
-    //html
+    //Set null value to appropriate terminology for the view file.
+    if($quizData['DESCRIPTION'] == null){
+        $quiz_description = "None";
+    }
+    else{
+        $quiz_description = $quizData['DESCRIPTION'];
+    }
+    
+    if($quizData['NO_OF_ATTEMPTS'] == null){
+        $no_of_attempts = "Unlimited";
+    }
+    else{
+        $no_of_attempts = $quizData['NO_OF_ATTEMPTS'];
+    }
+        
+    if($quizData['IS_SAVABLE'] == null || $quizData['IS_SAVABLE'] == '0'){
+        $is_savable =  "No";
+    }
+    else{
+        $is_savable = $quizData['IS_SAVABLE'];
+    }
+   
+    if($quizData['TIME_LIMIT'] == '00:00:00' || $quizData['TIME_LIMIT'] == null){
+        $time_limit = "Unlimited";
+    }
+    else{
+        $time_limit = $quizData['TIME_LIMIT'];
+    }
+    //html view
     include ('quiz-description-view.php');
 

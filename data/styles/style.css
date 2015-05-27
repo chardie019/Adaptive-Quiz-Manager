@@ -1,26 +1,35 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 07/05/2015, 4:14:04 PM
+    Author     : Admin
+*/
 
 #wrapper {
-width:960px;
+width:100%;
 background-color:#f8f8f8;
 margin:0 auto;
 border-left:1px solid #ccc;
 border-right:1px solid #ccc;
+font-family: verdana;
 }
- 
-/*
+
+/*background colour doesnt match logo perfectly yet, logo needs updating*/
 #header {
-width:960px;
-height:135px;
+width:100%;
+height:100px;
 margin:0 auto;
-margin-bottom:25px;
-border-bottom:1px solid #ccc;
+background-color: rgb(233, 172, 0);
 border-top:1px solid #ccc;
+color: #404040;
 }
  
-*/
 #header #logo {
     position: relative;
-    border: 0.15em solid rgb(229, 113, 0);
+    /*border: 0.15em solid rgb(229, 113, 0); removes border separating log and nav*/
     background-color: rgb(233, 172, 0);
 }
 
@@ -30,7 +39,6 @@ border-top:1px solid #ccc;
     right: 0;
     margin: 0.5em;
 }
-
 #header h2 {
 padding:10px;
 margin: 0;
@@ -38,37 +46,37 @@ margin: 0;
  
 #nav {
     position: relative;
-    width: 90%;
+    width: 100%;
     height: 40px;
     margin: 0px auto;
-    font-size: 1em;
+    font-size: 1.2em;
     //margin-top: 20px;
-    padding-top: 15px;
-    border-radius: 5px; 
-    background-color: black  ;
+    padding-top: 0px;
+    //border-radius: 5px; 
+    background-color: rgb(233, 172, 0);
     a:link white;
 }
+
 #nav ul
     {
     list-style: none;
     margin:  0;
-    display: table;
-    table-layout: fixed;
     width: 100%;
     padding-left: 0; //remove strange 40px padding
     }
 
 #nav ul li
     {
+    display:  inline;
     list-style: none;
     padding: 0 10px;
-    font-weight: normal;
-    display:table-cell;
+    color: #ffffff;
     text-align: center;
     }
 
 #nav ul li a {
-        color: white;
+        color: #ffffff;
+        text-decoration: none;
     }
 
 /* 
@@ -78,36 +86,147 @@ padding:10px;
 text-decoration:none;
 background-color:#f1f1f1;
 }
- 
+ */
 #nav a:hover {
-background-color:#bababa;
-height:80px;
+background-color:#B0B0B0;
+
 }
- 
-*/
+
+#nav a:active {
+   background-color:#B0B0B0;
+    
+}
+
+
+
 #content {
-width:675px;
+width:auto;
 float:left;
+margin-left: 10%;
+margin-right: 10%;
 padding:10px;
+
 }
- 
-#sidebar {
-width:200px;
-float:right;
-margin-bottom:25px;
+
+/*Creates a thinner middle column*/
+#content-centre{
+position: relative;
+width:50%;
+float:left;
+margin-left: 25%;
+padding: 10px;
+padding-bottom: 75px;
+margin-bottom: 100px;
 }
- 
-#sidebar a {
-text-decoration:none;
+
+#content-centre h1{
+    text-align: center;
 }
- 
-#sidebar li {
-list-style:none;
+
+/*styles the dropdown box on select-quiz-view*/
+select.quiz_list {
+    height:30px;
+    width:400px;
+    border: 2px solid rgb(80,80,80) ;
+    background-color: rgb(208,208,208);
+    font-size: 18px;
+    
 }
- 
+
+/*Submit and Cancel buttons used on site*/
+.mySubmit, .myReturn {
+        position: absolute;
+	background-color:#e9ab00;
+	-moz-border-radius:28px;
+	-webkit-border-radius:28px;
+	border-radius:28px;
+	border:1px solid #808080;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-size:1.2em;
+	padding:16px 31px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #808080;
+}
+
+.mySubmit:hover, .myReturn:hover {
+	background-color:#B0B0B0;
+}
+
+/*Positions buttons in bottom right and left corners of div*/
+.mySubmit{
+    right:0;
+    bottom:0;
+}
+
+.myReturn{
+    left:0;
+    bottom:0;
+}
+
+#buttonborder1, #buttonborder2, #buttonborder3, #buttonborder4, #buttonborder5, #buttonborder6 {
+    border: 1px solid black;
+    border-radius: 4px;
+    width:200px;
+    height:150px;
+    text-align: center;
+    display:inline-block;
+    margin-left: 110px;
+    margin-bottom: 50px;
+    position: relative;
+    font-family: courier new;
+}
+
+/*Background images not yet created*/
+#buttonborder1{
+    background-image: url("takequiz.png");
+} 
+
+#buttonborder2{
+       background-image: url("editquiz.png"); 
+} 
+
+#buttonborder3{
+       background-image: url("createquiz.png");
+} 
+
+#buttonborder4{
+        background-image: url("statistics.png");
+}
+
+#buttonborder5{
+        background-image: url("about.png");
+}
+
+#buttonborder6{
+        background-image: url("help.png");    
+}
+
+a.menu-icons{
+    
+    border-top: 1px solid black;
+    position: absolute;   
+    background-color: rgb(233, 172, 0);
+    font-size: 1.2em;
+    font-family: verdana;
+    color: #ffffff;
+    text-decoration: none;
+    text-align: center;
+    padding: 5px 10px;
+    bottom: 0;
+    right: 0;
+    left: 0; 
+    
+}
+
+.label{
+    font-weight: bold;
+}
+
 #footer {
 clear:both;
-width:960px;
+width:100%;
 height:135px;
 border-top:1px solid #ccc;
 }

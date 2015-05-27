@@ -25,9 +25,34 @@ require_once("includes/config.php");
  
 <div id="content">
  
-<h1>Index</h1>
+<br />    
+<br />
+<br />
 
 
+<div id="buttonborder1">
+    <a class="menu-icons" href="<?php echo (CONFIG_ROOT_URL); ?>/take-quiz" >Take Quiz</a>
+</div>
+
+<div id="buttonborder2">
+    <a class="menu-icons" href="<?php echo (CONFIG_ROOT_URL); ?>/create-quiz" >Create Quiz</a>
+</div>
+
+<div id="buttonborder3">
+    <a class="menu-icons" href="<?php echo(CONFIG_ROOT_URL) ?>/edit-quiz">Edit Quiz</a>
+</div>
+
+<div id="buttonborder4">
+    <a class="menu-icons" href="<?php echo(CONFIG_ROOT_URL) ?>/stats">Statistics</a>
+</div>
+
+<div id="buttonborder5">
+    <a class="menu-icons" href="<?php echo(CONFIG_ROOT_URL) ?>/about">About AQM</a>
+</div>
+
+<div id="buttonborder6">
+    <a class="menu-icons" href="<?php echo(CONFIG_ROOT_URL) ?>/help">Help</a>
+</div>
 
 <p>
 <a href="<?php echo (CONFIG_ROOT_URL); ?>/take-quiz/1">Take a quiz (/take-quiz/1)</a>
@@ -45,11 +70,7 @@ Root Dir: <?php echo (CONFIG_ROOT_DIR); ?>
 Root url: <?php echo (CONFIG_ROOT_URL); ?>
 </p>
 
-<p>
- 
-Quisque pellentesque sodales aliquam. Morbi mollis neque eget arcu egestas non ultrices neque volutpat. Nam at nunc lectus, id vulputate purus. In et turpis ac mauris viverra iaculis. Cras sed elit a purus ultrices iaculis eget sit amet dolor. Praesent ac libero dolor, id viverra libero. Mauris aliquam nibh vitae eros sodales fermentum. Fusce cursus est varius ante vehicula eget ultrices felis eleifend. Nunc pharetra rutrum nibh et lobortis. Morbi vitae venenatis velit.
- 
-</p>
+
 </div> <!-- end #content -->
  
 

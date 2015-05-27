@@ -28,7 +28,7 @@ function prepareViewPage() {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === "POST") { //next question
-
+//Gets hidden inputs from forms and checks their values to detemine what to load into take-quiz.
     $quizConfirmPosted = filter_input(INPUT_POST, "confirmQuiz");
     $quizConfirmIdPosted = filter_input(INPUT_POST, "confirmQuizId");
     $quizNotConfirmPosted = filter_input(INPUT_POST, "notConfirmQuiz");

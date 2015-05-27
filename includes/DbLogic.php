@@ -213,7 +213,7 @@ class DB {
     
     public function selectQuiz($column, $table, $dataArray, $whereColumn, $singleRow=True) {
         if (!is_string ($table)) {
-            die("A string was not passed to the selectWithColumns( function on DB class");
+            die("A string was not passed to the selectQuiz( function on DB class");
         }
         $where = "";
         foreach ($dataArray as $columnTemp => $valueTemp) {      //$value not used - it's in $data
