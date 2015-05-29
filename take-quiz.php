@@ -19,12 +19,19 @@ function prepareViewPage() {
     } else {
         $questionData["IMAGE"] = STYLES_QUIZ_IMAGES_LOCATION . "/" . $questionData["IMAGE"];
     }
-            
+  
     $data = array(
-        "question_QUESTION_ID" => $questionData["QUESTION_ID"]
+        "question_QUESTION_ID" => $questionData["QUESTION_ID"],
+        "quiz_QUIZ_ID" => $_SESSION["QUIZ_CURRENT_QUIZ_ID"],
     );
+    $whereColumn = array(
+        "question_QUESTION_ID"  => "QUESTION_ID",
+        "quiz_QUIZ_ID"          => "QUIZ_ID"
+    );
+        
+
     //find this question's answers
-    return $dbLogic->select("*", "answer", $data, false);
+    return $dbLogic->selectWithColumns("answer.*", "answer, question, quiz", $data, $whereColumn, False);
 }
 
 if ($_SERVER['REQUEST_METHOD'] === "POST") { //next question
@@ -33,6 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //next question
     $quizConfirmIdPosted = filter_input(INPUT_POST, "confirmQuizId");
     $quizNotConfirmPosted = filter_input(INPUT_POST, "notConfirmQuiz");
     $quizSelected = filter_input(INPUT_POST, "selectQuiz");
+    
 
     if ($quizSelected != ""){
         include('quiz-description.php');       
@@ -49,13 +57,14 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //next question
         header('Location: ' . CONFIG_ROOT_URL . '/take-quiz');   
         stop(); //refresh the page an rerun script (with no quiz this time)
     }
+
     //otherwise continue
     $answerPosted = filter_input(INPUT_POST, "answer");
     $dbLogic = new DB();
     //check answer is legit and belongs the same quiz
     $data = array(
-        "LINK"                  => $answerPosted,
-        "QUIZ_ID"           => $_SESSION["QUIZ_CURRENT_QUESTION"]
+        "LINK"              => $answerPosted,
+        "QUIZ_ID"           => $_SESSION["QUIZ_CURRENT_QUIZ_ID"]
     );
     $whereColoumn = array(
         "question_QUESTION_ID"  => "QUESTION_ID",
@@ -63,9 +72,9 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //next question
     );
 
     $answerID = $dbLogic->selectWithColumns("ANSWER_ID", "answer, question, quiz", $data, $whereColoumn);
-    
-    //find the next question
-    if (count($answerID) > 0){  //success - input was legit - answer is valid
+
+    //success - input was legit - answer is valid
+    if (count($answerID) > 0){  
         //get the next question
         $data = array(
             "QUESTION_ID" => $answerPosted
@@ -73,14 +82,15 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //next question
         //find next question
         $questionData = $dbLogic->select("*", "question", $data);
         $answerData = prepareViewPage();
+        
+        //include("record-answer.php");
         if (!empty($answerData) > 0){ //are there answers or is this the end of the quiz?
-            include("record-answer.php");
             include("take-quiz-view.php");
         } else {
             include("quiz-complete.php");
         }
     } else {
-        //display the not found page (for hackers)
+        //display the not found page (for hackers)  
         header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
         include("404.php");
         

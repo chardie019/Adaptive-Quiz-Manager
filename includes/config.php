@@ -36,6 +36,7 @@ include("userLogic.php");
 include_once("dbLogic.php");
 
 include_once("styles.php");
+include_once("commonFunctions.php");
 
 
 

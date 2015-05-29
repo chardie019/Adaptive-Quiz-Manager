@@ -1,4 +1,16 @@
-fix git hub -josh
+### version 5.1.5  - 26/05/2015 - fixes + GUI ###
+===Connor
+record answer draft
+==Harry
+HTML make over
+==Josh
+fixed take quiz (2 quizes work)
+(temp commented disable record answer due to bugs)
+add background on top menu depending on where user is
+SQL file bundled
+
+### version 5.1.4 ###
+github broke many times (does not exist)
 
 ### version 5.1.3 - 11-5-2015  - dblogic logic error ###
 ==josh: made mockup "pre-quiz" page for harry

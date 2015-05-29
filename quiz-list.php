@@ -18,7 +18,7 @@ $uid = 'jsmith04';
     $columnWhere = array(
         "quiz_QUIZ_ID" => "QUIZ_ID"
     );
-    ($answerID = $dbLogic->selectQuiz("QUIZ_NAME, QUIZ_ID", "quiz, taker", $dataArray, $columnWhere, false));
+    ($answerID = $dbLogic->selectDistinct("QUIZ_NAME, QUIZ_ID", "quiz, taker", $dataArray, $columnWhere, false));
     //QUIZ_ID needed as you can put it in the URL maybe?
 
 //to print these (loops as many as there are results):

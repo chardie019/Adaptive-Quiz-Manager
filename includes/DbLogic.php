@@ -79,7 +79,7 @@ class DB {
         return $results;
     }
     
-        public function selectWithColumns($column, $table, $dataArray, $whereColumn, $singleRow=True) {
+    public function selectWithColumns($column, $table, $dataArray, $whereColumn, $singleRow=True) {
         if (!is_string ($table)) {
             die("A string was not passed to the selectWithColumns( function on DB class");
         }
@@ -102,7 +102,7 @@ class DB {
         return $results;
     }
     
-        public function selectWithColumnsOr($column, $table, $dataArray, $whereColumn, $dataArrayOr, $whereColumnOr, $singleRow=True) {
+    public function selectWithColumnsOr($column, $table, $dataArray, $whereColumn, $dataArrayOr, $whereColumnOr, $singleRow=True) {
         if (!is_string ($table)) {
             die("A string was not passed to the selectWithColumns( function on DB class");
         }
@@ -138,7 +138,7 @@ class DB {
         return $results;
     }
     
-    public function selecDistinctWithColumnsOr($column, $table, $dataArray, $whereColumn, $dataArrayOr, $whereColumnOr, $singleRow=True) {
+    public function selectDistinctWithColumnsOr($column, $table, $dataArray, $whereColumn, $dataArrayOr, $whereColumnOr, $singleRow=True) {
         if (!is_string ($table)) {
             die("A string was not passed to the selectWithColumns( function on DB class");
         }
@@ -211,7 +211,7 @@ class DB {
         return $results = self::$connection->lastInsertID(); //return the ID of the user in the database.
     }
     
-    public function selectQuiz($column, $table, $dataArray, $whereColumn, $singleRow=True) {
+    public function selectDistinct($column, $table, $dataArray, $whereColumn, $singleRow=True) {
         if (!is_string ($table)) {
             die("A string was not passed to the selectQuiz( function on DB class");
         }
