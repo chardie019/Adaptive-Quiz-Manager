@@ -7,7 +7,8 @@ require_once("includes/config.php");
 ?>
 <html>
 <head>
-
+    
+<meta charset="utf-8"/>
  
 <link rel="stylesheet" type="text/css" href="<?php echo(STYLES_LOCATION) ?>/style.css" media="screen" />
  
@@ -27,7 +28,7 @@ require_once("includes/config.php");
  
                 <h1>Approved Quiz List </h1>
 
-                <form action="" method="post">
+                <form action="#" method="post">
                     <br />
 
                     

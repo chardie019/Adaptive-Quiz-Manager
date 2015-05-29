@@ -9,6 +9,8 @@ require_once("includes/config.php");
  
 <head>
  
+<meta charset="utf-8"/>
+
 <link rel="stylesheet" type="text/css" href="<?php echo(STYLES_LOCATION) ?>/style.css" media="screen" />
 <link rel="stylesheet" type="text/css" href="<?php echo(STYLES_LOCATION) ?>/take-quiz-style.css" media="screen" />
  
@@ -29,7 +31,7 @@ require_once("includes/config.php");
 <h1><?php echo ($quizData['QUIZ_NAME']); ?> </h1>
 
 <p> 
-    <img src="<?php echo($quizData["IMAGE"]) ?>" />
+    <img alt="<?php $quizData['TIME_LIMIT'] ?>" src="<?php echo($quizData["IMAGE"]) ?>" />
     <br />
     <br />
     <span class="label">Quiz ID: </span><?php echo ($_SESSION["QUIZ_CURRENT_QUIZ_ID"]); ?>
@@ -50,13 +52,13 @@ require_once("includes/config.php");
 </p>
 
 <!-- Quiz confirmed, user and form are sent to /take-quiz/QUIZ_CURRENT_QUIZ_ID, which is question 1 of quiz-->
-<form action="" method="post"> 
+<form action="#" method="post"> 
     <?php echo "<input type=\"hidden\" name=\"confirmQuizId\" value=\"" . $_SESSION['QUIZ_CURRENT_QUIZ_ID'] . "\" />"; ?>
     <button class="mySubmit" type="submit" name="confirmQuiz" value="Enter">Begin</button>
 </form>
 
 
-<form action="" method="post"> 
+<form action="#" method="post"> 
     <button class="myReturn" type="submit" name="notConfirmQuiz" value="Return">Return</button>
 </form>
 

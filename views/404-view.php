@@ -7,6 +7,8 @@ require_once("includes/config.php");
 ?>
 
 <head>
+    
+<meta charset="utf-8"/>
  
 <link rel="stylesheet" type="text/css" href="<?php echo(STYLES_LOCATION) ?>/style.css" media="screen" />
  

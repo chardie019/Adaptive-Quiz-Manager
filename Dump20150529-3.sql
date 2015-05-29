@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `aqm` /*!40100 DEFAULT CHARACTER SET latin1 */;
-USE `aqm`;
 -- MySQL dump 10.13  Distrib 5.6.23, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: aqm
@@ -88,6 +86,7 @@ CREATE TABLE `question` (
   `CONTENT` text NOT NULL,
   `QUESTION` varchar(255) NOT NULL,
   `IMAGE` varchar(255) DEFAULT NULL,
+  `IMAGE_ALT` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`QUESTION_ID`),
   KEY `fk_Question_Quiz1_idx` (`quiz_QUIZ_ID`),
   CONSTRAINT `fk_Question_Quiz1` FOREIGN KEY (`quiz_QUIZ_ID`) REFERENCES `quiz` (`QUIZ_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -100,7 +99,7 @@ CREATE TABLE `question` (
 
 LOCK TABLES `question` WRITE;
 /*!40000 ALTER TABLE `question` DISABLE KEYS */;
-INSERT INTO `question` VALUES (1,1,'SomeContent1','The first Question','1.png'),(2,1,'SomeContent2','The second Question','2.png'),(3,1,'SomeContent3','The Third Question','3.png'),(4,1,'SomeContent4','The forth Question','4.png'),(5,1,'SomeContent5','The Fift Question','5.png'),(6,1,'SomeContent6','The Sixth Question','6.png'),(7,1,'SomeContent7','The Seveth Question','7.png'),(8,1,'SomeContent8','The Eighth Question <br /> (insert quiz specifc remarks) END OF QUIZ','8.png'),(9,2,'SomeContent1','The first Question(quiz 2)','1.png'),(10,2,'SomeContent2','The second Question(quiz 2)','2.png'),(11,2,'SomeContent3','The third Question(quiz 2)','3.png'),(12,2,'SomeContent4','The forth Question(quiz 2)','4.png'),(13,2,'SomeContent5','The fifth Question(quiz 2)','5.png'),(14,2,'SomeContent6','The sixth Question(quiz 2)','6.png'),(15,2,'SomeContent7','The seventh Question(quiz 2)','7.png'),(16,2,'SomeContent8','The eigth Question(quiz 2) END OF QUIZ','8.png');
+INSERT INTO `question` VALUES (1,1,'SomeContent1','The first Question','1.png',NULL),(2,1,'SomeContent2','The second Question','2.png',NULL),(3,1,'SomeContent3','The Third Question','3.png',NULL),(4,1,'SomeContent4','The forth Question','4.png',NULL),(5,1,'SomeContent5','The Fift Question','5.png',NULL),(6,1,'SomeContent6','The Sixth Question','6.png',NULL),(7,1,'SomeContent7','The Seveth Question','7.png',NULL),(8,1,'SomeContent8','The Eighth Question <br /> (insert quiz specifc remarks) END OF QUIZ','8.png',NULL),(9,2,'SomeContent1','The first Question(quiz 2)','1.png',NULL),(10,2,'SomeContent2','The second Question(quiz 2)','2.png',NULL),(11,2,'SomeContent3','The third Question(quiz 2)','3.png',NULL),(12,2,'SomeContent4','The forth Question(quiz 2)','4.png',NULL),(13,2,'SomeContent5','The fifth Question(quiz 2)','5.png',NULL),(14,2,'SomeContent6','The sixth Question(quiz 2)','6.png',NULL),(15,2,'SomeContent7','The seventh Question(quiz 2)','7.png',NULL),(16,2,'SomeContent8','The eigth Question(quiz 2) END OF QUIZ','8.png',NULL);
 /*!40000 ALTER TABLE `question` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -126,6 +125,7 @@ CREATE TABLE `quiz` (
   `DATE_CLOSED` datetime DEFAULT NULL,
   `INTERNAL_DESCRIPTION` varchar(45) DEFAULT NULL,
   `IMAGE` varchar(45) DEFAULT NULL,
+  `IMAGE_ALT` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`QUIZ_ID`),
   UNIQUE KEY `QUIZ_ID_UNIQUE` (`QUIZ_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -137,7 +137,7 @@ CREATE TABLE `quiz` (
 
 LOCK TABLES `quiz` WRITE;
 /*!40000 ALTER TABLE `quiz` DISABLE KEYS */;
-INSERT INTO `quiz` VALUES (1,1,1,'Test Quiz 1',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(2,2,1,'Test Quiz 2',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `quiz` VALUES (1,1,1,'Test Quiz 1',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(2,2,1,'Test Quiz 2',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `quiz` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -263,4 +263,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-05-29 17:05:18
+-- Dump completed on 2015-05-29 23:58:27

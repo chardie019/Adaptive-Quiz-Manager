@@ -7,6 +7,9 @@ require_once("includes/config.php");
 ?>
 
 <head>
+    
+<meta charset="utf-8"/>
+
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" type="text/css" href="<?php echo(STYLES_LOCATION) ?>/style.css" media="screen" />
 <link rel="stylesheet" type="text/css" href="<?php echo(STYLES_LOCATION) ?>/take-quiz-style.css" media="screen" />
@@ -27,7 +30,7 @@ require_once("includes/config.php");
 
  
 <p>
-    <img src="<?php echo($questionData["IMAGE"]) ?>" />
+    <img alt="<?php echo($questionData["IMAGE_ALT"]) ?>" src="<?php echo($questionData["IMAGE"]) ?>" />
     <?php echo ($questionData["QUESTION"]); ?>
     
     <br />

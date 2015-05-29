@@ -7,7 +7,9 @@ require_once("includes/config.php");
 ?>
 
 <head>
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    
+<meta charset="utf-8"/>
+
 <link rel="stylesheet" type="text/css" href="<?php echo(STYLES_LOCATION) ?>/style.css" media="screen" />
 <title>Administration - <?php echo (STYLES_SITE_NAME); ?></title>
 </head>

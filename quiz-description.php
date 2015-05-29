@@ -71,6 +71,11 @@ require_once("includes/config.php");
     else{
         $time_limit = $quizData['TIME_LIMIT'];
     }
+    if (empty($quizData["IMAGE"])){
+        $quizData["IMAGE"] = "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="; //transparent gif
+    } else {
+        $quizData["IMAGE"] = STYLES_QUIZ_IMAGES_LOCATION . "/" . $questionData["IMAGE"];
+    }
     //html view
     include ('quiz-description-view.php');
 

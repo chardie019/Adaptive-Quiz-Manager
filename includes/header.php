@@ -1,6 +1,6 @@
 <div id="header">
     <div id="logo">
-        <img src="<?php echo(STYLES_LOCATION) ?>/logo.png" />
+        <img alt="Logo" src="<?php echo(STYLES_LOCATION) ?>/logo.png" />
         <p> 
             <span class="label">USER: </span><?php echo ($_SESSION["username"]); ?>
             <br />
