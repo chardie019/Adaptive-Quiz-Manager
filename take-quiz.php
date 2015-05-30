@@ -8,6 +8,9 @@
 // include php files here 
 require_once("includes/config.php");
 // end of php file inclusion
+// 
+//Sets Feedback value on take-quiz-view.php to empty for the first question.
+$answerFeedback = ' ';
 
 function prepareViewPage() {
     //declare variables we need access to
@@ -61,9 +64,10 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //next question
     //otherwise continue
     $answerPosted = filter_input(INPUT_POST, "answer");
     $dbLogic = new DB();
+    
     //check answer is legit and belongs the same quiz
     $data = array(
-        "LINK"              => $answerPosted,
+        "ANSWER_ID"              => $answerPosted,
         "QUIZ_ID"           => $_SESSION["QUIZ_CURRENT_QUIZ_ID"]
     );
     $whereColoumn = array(
@@ -71,13 +75,18 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //next question
         "quiz_QUIZ_ID"          => "QUIZ_ID"
     );
 
-    $answerID = $dbLogic->selectWithColumns("ANSWER_ID", "answer, question, quiz", $data, $whereColoumn);
-
+    $answerID = $dbLogic->selectWithColumns("answer.*", "answer, question, quiz", $data, $whereColoumn);
+    
+    if($answerID['FEEDBACK'] != null){
+        $answerFeedback = $answerID['FEEDBACK'];
+    }
+    
+    
     //success - input was legit - answer is valid
     if (count($answerID) > 0){  
         //get the next question
         $data = array(
-            "QUESTION_ID" => $answerPosted
+            "QUESTION_ID" => $answerID['LINK']
         );
         //find next question
         $questionData = $dbLogic->select("*", "question", $data);

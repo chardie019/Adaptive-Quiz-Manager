@@ -34,6 +34,10 @@ Parms: <?php print_r($_GET); ?>
 
 </p>
 <p> 
+    <?php echo $answerFeedback; 
+          echo ("<br />");
+    ?>
+     
     <img alt="<?php echo($questionData["IMAGE_ALT"]) ?>" src="<?php echo($questionData["IMAGE"]) ?>" />
     
 Quiz ID: <?php echo ($_SESSION["QUIZ_CURRENT_QUIZ_ID"]); ?>
@@ -47,7 +51,7 @@ Question: <?php echo ($questionData["QUESTION"]); ?>
 foreach ($answerData as $answerRow) {
                 //$result = array_values($oneResult); //convert from assocative array to numeric(normal) array
                 echo ("<label>");
-                    echo ("<input type=\"radio\" name=\"answer\" value=\"" . $answerRow["LINK"] . "\" />");
+                    echo ("<input type=\"radio\" name=\"answer\" value=\"" . $answerRow["ANSWER_ID"] . "\" />");
                     echo ($answerRow["ANSWER"]);
                 echo ("</label>");
                 echo ("<br />");
