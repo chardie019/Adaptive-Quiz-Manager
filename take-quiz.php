@@ -8,9 +8,6 @@
 // include php files here 
 require_once("includes/config.php");
 // end of php file inclusion
-// 
-//Sets Feedback value on take-quiz-view.php to empty for the first question.
-$answerFeedback = ' ';
 
 function prepareViewPage() {
     //declare variables we need access to
@@ -64,10 +61,9 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //next question
     //otherwise continue
     $answerPosted = filter_input(INPUT_POST, "answer");
     $dbLogic = new DB();
-    
     //check answer is legit and belongs the same quiz
     $data = array(
-        "ANSWER_ID"              => $answerPosted,
+        "LINK"              => $answerPosted,
         "QUIZ_ID"           => $_SESSION["QUIZ_CURRENT_QUIZ_ID"]
     );
     $whereColoumn = array(
@@ -75,27 +71,24 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //next question
         "quiz_QUIZ_ID"          => "QUIZ_ID"
     );
 
-    $answerID = $dbLogic->selectWithColumns("answer.*", "answer, question, quiz", $data, $whereColoumn);
-    
-    if($answerID['FEEDBACK'] != null){
-        $answerFeedback = $answerID['FEEDBACK'];
-    }
-    
-    
+    $answerID = $dbLogic->selectWithColumns("ANSWER_ID", "answer, question, quiz", $data, $whereColoumn);
+
     //success - input was legit - answer is valid
     if (count($answerID) > 0){  
         //get the next question
         $data = array(
-            "QUESTION_ID" => $answerID['LINK']
+            "QUESTION_ID" => $answerPosted
         );
         //find next question
         $questionData = $dbLogic->select("*", "question", $data);
         $answerData = prepareViewPage();
         
-        //include("record-answer.php");
+        include("record-answer.php");
         if (!empty($answerData) > 0){ //are there answers or is this the end of the quiz?
             include("take-quiz-view.php");
         } else {
+            //Sets result session variable back to NULL for more quiz attempts
+            $_SESSION["RESULT_ID"] = NULL;
             include("quiz-complete.php");
         }
     } else {
