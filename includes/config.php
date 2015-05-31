@@ -32,8 +32,9 @@ if(session_id() == '') { //it may of been started eariler eg login file.
 }
 
 //include other config files
-include("userLogic.php");
 include_once("dbLogic.php");
+include("userBean.php");
+include("userLogic.php");
 
 include_once("styles.php");
 include_once("commonFunctions.php");

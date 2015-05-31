@@ -1,3 +1,19 @@
+### version 5.1.5.4  - 31/05/2015 - DB and misc ###
+== Joshua
+- added keywords tables to DB
+- dynamic add user
+- misc changes
+
+
+### version 5.1.5.3  - 31/05/2015 - quiz chnages ###
+== connor
+- record answer changes
+
+### version 5.1.5.2  - 30/05/2015 - quiz changes ###
+== Harry
+- Chnaged value submitted by radio buttons to ANSWER_ID instead of LINK
+- Included code to allow for feedback retrieveal and display
+
 ### version 5.1.5.1  - 26/05/2015 - HTML valid ###
 == josh
 checked and edits to comply with html vadiataor

@@ -29,10 +29,6 @@ require_once("includes/config.php");
  
 <h1>Take Quiz</h1>
 
-<p>
-Parms: <?php print_r($_GET); ?>
-
-</p>
 <p> 
     <?php echo $answerFeedback; 
           echo ("<br />");
@@ -40,8 +36,6 @@ Parms: <?php print_r($_GET); ?>
      
     <img alt="<?php echo($questionData["IMAGE_ALT"]) ?>" src="<?php echo($questionData["IMAGE"]) ?>" />
     
-Quiz ID: <?php echo ($_SESSION["QUIZ_CURRENT_QUIZ_ID"]); ?>
-<br />
 Question: <?php echo ($questionData["QUESTION"]); ?>
 <p>
  Please choose an answer:
