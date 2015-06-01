@@ -27,13 +27,29 @@ require_once("includes/config.php");
 <div id="content">
  
 <h1>Quiz Complete</h1>
-
  
 <p>
     <img alt="<?php echo($questionData["IMAGE_ALT"]) ?>" src="<?php echo($questionData["IMAGE"]) ?>" />
     <?php echo ($questionData["QUESTION"]); ?>
     
     <br />
+ <br />
+<table>
+    <tr><th>Question</th><th>Answer</th><th>Answered At</th></tr>
+    
+ <?php 
+ 
+ foreach ($quizResults as $answerRow) {
+        echo "<tr>";
+        echo "<td> ".$answerRow["question_QUESTION_ID"]."</td>";
+        echo "<td> ".$answerRow["ANSWER"]."</td>";
+        echo "<td> ".$answerRow["ANSWERED_AT"]."</td>";
+        echo "</tr>";
+        }
+        ?>
+    
+</table>
+
  <br />
 <a href="<?php echo(CONFIG_ROOT_URL) ?>">Go to homepage</a>
  

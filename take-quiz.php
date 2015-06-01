@@ -96,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //next question
         if (!empty($answerData) > 0){ //are there answers or is this the end of the quiz?
             include("take-quiz-view.php");
         } else {
-			$_SESSION["RESULT_ID"] = NULL;
+	//Moved $_SESSION["RESULT_ID"] = NULL; to quiz-complete.php needed for result display
             include("quiz-complete.php");
         }
     } else {
