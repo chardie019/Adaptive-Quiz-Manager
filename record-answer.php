@@ -34,7 +34,7 @@ $answerDate = date('Y-m-d H:i:s');
 //if so gets how many times.
 $data2 = array(
        "result_RESULT_ID" => $_SESSION["RESULT_ID"],
-       "question_QUESTION_ID" => $questionData["QUESTION_ID"],
+       "question_QUESTION_ID" => $_SESSION["QUIZ_CURRENT_QUESTION"],
         );
 
 $answeredData = $dbLogic->select("PASS_NO", "result_answer", $data2, false);
@@ -43,7 +43,7 @@ $passNo = count($answeredData) + 1;
 
 $data3 = array(
        "result_RESULT_ID" => $_SESSION["RESULT_ID"],
-       "question_QUESTION_ID" => $questionData["QUESTION_ID"],
+       "question_QUESTION_ID" => $_SESSION["QUIZ_CURRENT_QUESTION"],
        "PASS_NO" => $passNo,
        "ANSWER" => $answerPosted,
        "ANSWERED_AT" => $answerDate,

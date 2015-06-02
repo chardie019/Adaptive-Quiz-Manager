@@ -31,8 +31,10 @@ function prepareViewPage() {
         "question_QUESTION_ID"  => "QUESTION_ID",
         "quiz_QUIZ_ID"          => "QUIZ_ID"
     );
-        
-
+    
+    //Set the current QUESTION_ID to a session varibale for use when storing the answer.    
+    $_SESSION["QUIZ_CURRENT_QUESTION"] = $questionData["QUESTION_ID"];
+    
     //find this question's answers
     return $dbLogic->selectWithColumns("answer.*", "answer, question, quiz", $data, $whereColumn, False);
 }
@@ -61,7 +63,8 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //next question
         stop(); //refresh the page an rerun script (with no quiz this time)
     }
 
-    //otherwise continue
+        
+    //otherwise continue, retrieve user answer from form
     $answerPosted = filter_input(INPUT_POST, "answer");
     $dbLogic = new DB();
     
@@ -77,27 +80,31 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //next question
 
     $answerID = $dbLogic->selectWithColumns("answer.*", "answer, question, quiz", $data, $whereColoumn);
     
+    //Set the feedback to appear on the next question page for the one previously answered
     if($answerID['FEEDBACK'] != null){
         $answerFeedback = $answerID['FEEDBACK'];
     }
     
-    
     //success - input was legit - answer is valid
-    if (count($answerID) > 0){  
+    if (count($answerID) > 0){ 
+        //Call record-answer before a new question ID is set
+            include("record-answer.php");    
+          
         //get the next question
         $data = array(
             "QUESTION_ID" => $answerID['LINK']
-        );
+        );      
         //find next question
         $questionData = $dbLogic->select("*", "question", $data);
         $answerData = prepareViewPage();
         
-        include("record-answer.php");
-        if (!empty($answerData) > 0){ //are there answers or is this the end of the quiz?
+        
+        if (!empty($answerData) > 0){ //are there answers or is this the end of the quiz?      
+      
             include("take-quiz-view.php");
-        } else {
+        } else { 
 	//Moved $_SESSION["RESULT_ID"] = NULL; to quiz-complete.php needed for result display
-            include("quiz-complete.php");
+            include("quiz-complete.php"); 
         }
     } else {
         //display the not found page (for hackers)  

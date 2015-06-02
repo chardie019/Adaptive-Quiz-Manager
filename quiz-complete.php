@@ -17,26 +17,23 @@ $dbLogic = new DB();
 //Get the data from result_answer table
     $data = array(
         "result_RESULT_ID" => $_SESSION["RESULT_ID"]
-        
-        );
-    
-    $quizResults = $dbLogic->select("*", "result_answer", $data, false); 
-    
-
-//Get the data from Answer table using ANSWER value collected from result_answer table
-    
-    /* Doesn't work as quizResults["ANSWER"] contains more than one ID 
-
-    $data2 = array(
-        "ANSWER_ID" => $quizResults["ANSWER"]
-            
     );
+    $whereColumn = array(
+        "RESULT_ID" => "result_RESULT_ID"
+    );
+    $whereColumn2 = array(
+        "QUESTION_ID" => "result_answer.question_QUESTION_ID"
+    );
+    $whereColumn3 = array(
+        "result_answer.ANSWER" => "ANSWER_ID"
+    );
+    
+    $quizResults = $dbLogic->selectWithFourColumns("QUESTION, answer.ANSWER, STARTED_AT, "
+            . "ANSWERED_AT", "result_answer, question, answer, result", $data, 
+            $whereColumn, $whereColumn2, $whereColumn3, false); 
 
-    $quizAnswers = $dblogic->select("ANSWER, FEEDBACK", "answer", $data2, false);
-    extract($quizAnswers);
     
-    */
-    
+ 
     //Moved resetSession to final page so value can be used to retrieve results
     $_SESSION["RESULT_ID"] = NULL;
 //html

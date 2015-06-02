@@ -24,7 +24,7 @@ require_once("includes/config.php");
             <?php include('nav.php'); ?>
 
  
-<div id="content">
+<div id="content-centre">
  
 <h1>Quiz Complete</h1>
  
@@ -33,7 +33,9 @@ require_once("includes/config.php");
     <?php echo ($questionData["QUESTION"]); ?>
     
     <br />
- <br />
+    <br />
+    <h2>Your Results</h2>
+    <div id="results">
 <table>
     <tr><th>Question</th><th>Answer</th><th>Answered At</th></tr>
     
@@ -41,7 +43,7 @@ require_once("includes/config.php");
  
  foreach ($quizResults as $answerRow) {
         echo "<tr>";
-        echo "<td> ".$answerRow["question_QUESTION_ID"]."</td>";
+        echo "<td> ".$answerRow["QUESTION"]."</td>";
         echo "<td> ".$answerRow["ANSWER"]."</td>";
         echo "<td> ".$answerRow["ANSWERED_AT"]."</td>";
         echo "</tr>";
@@ -49,7 +51,7 @@ require_once("includes/config.php");
         ?>
     
 </table>
-
+    </div>
  <br />
 <a href="<?php echo(CONFIG_ROOT_URL) ?>">Go to homepage</a>
  

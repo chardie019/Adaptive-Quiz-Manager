@@ -79,7 +79,7 @@ margin: 0;
         text-decoration: none;
     }
 #nav .selected {
-  background-color: black;
+  background-color: #404040;;
 }
 
 /* 
@@ -94,13 +94,6 @@ background-color:#f1f1f1;
 background-color:#B0B0B0;
 
 }
-
-#nav a:active {
-   background-color:#B0B0B0;
-    
-}
-
-
 
 #content {
 width:auto;
@@ -226,6 +219,29 @@ a.menu-icons{
 .label{
     font-weight: bold;
 }
+
+.feedbackStyle{
+    font-weight: bold;
+    font-style: italic;
+    padding: 30px;
+}
+
+#results table{
+    width: auto;  
+    border: 2px solid black;
+    background-color: rgb(233, 172, 0); 
+}
+#results table th{
+    border: 2px solid black;
+    padding: 5px;
+    background-color:#B0B0B0;
+}
+#results table td{
+    border: 2px solid black;
+    padding: 5px;
+    background-color: #ffffff;
+}
+
 
 #footer {
 clear:both;

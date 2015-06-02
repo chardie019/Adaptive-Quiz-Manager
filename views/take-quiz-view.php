@@ -30,10 +30,12 @@ require_once("includes/config.php");
 <h1>Take Quiz</h1>
 
 <p> 
-    <?php echo $answerFeedback; 
+    <?php echo ("<span class=\"feedbackStyle\">".$answerFeedback."</span>");
+
           echo ("<br />");
     ?>
-     
+     <br />
+     <br />
     <img alt="<?php echo($questionData["IMAGE_ALT"]) ?>" src="<?php echo($questionData["IMAGE"]) ?>" />
     
 Question: <?php echo ($questionData["QUESTION"]); ?>

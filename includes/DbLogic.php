@@ -233,5 +233,36 @@ class DB {
         }
         return $results;
     }
+//Used to retrieve results from required tables
+    public function selectWithFourColumns($column, $table, $dataArray, $whereColumn, $whereColumn2,$whereColumn3,$singleRow=True) {
+        if (!is_string ($table)) {
+            die("A string was not passed to the selectWithColumns( function on DB class");
+        }
+        $where = "";
+        foreach ($dataArray as $columnTemp => $valueTemp) {      //$value not used - it's in $data
+            $where .= ($where == "") ? "" : " AND ";
+            $where .= "$columnTemp = :$columnTemp";
+        }
+        foreach ($whereColumn as $columnTemp => $valueTemp) {      //build coloumn where query
+            $where .= ($where == "") ? "" : " AND ";
+            $where .= "$columnTemp = $valueTemp";
+        }
+        foreach ($whereColumn2 as $columnTemp => $valueTemp) {      //build coloumn where query
+            $where .= ($where == "") ? "" : " AND ";
+            $where .= "$columnTemp = $valueTemp";
+        }
+        foreach ($whereColumn3 as $columnTemp => $valueTemp) {      //build coloumn where query
+            $where .= ($where == "") ? "" : " AND ";
+            $where .= "$columnTemp = $valueTemp";
+        }
+        $stmt = self::$connection->prepare("SELECT $column FROM $table WHERE " . $where . ";") or die('Problem preparing query');
+        $stmt->execute($dataArray);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if ($singleRow && ($results)) {   //true and are actaully results
+            //$results = array_values($results[0]);   //return normal array instead
+            $results = $results[0];   //return normal array instead
+        }
+        return $results;
+    }
 }
 ?>
