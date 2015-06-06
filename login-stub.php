@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
  
 <link rel="stylesheet" type="text/css" href="<?php echo(STYLES_LOCATION) ?>/style.css" media="screen" />
  
-<title>1stWebDesigner PHP Template</title>
+<title>Dev Login - <?php echo (STYLES_SITE_NAME); ?></title>
  
 </head>
  
@@ -40,7 +40,9 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 <p> Please login with your username below </p>
 
 <form action="" method="post">
-                Username <input type="text" name="username"  />&nbsp;
+    <!-- set a test username -->
+    Username <input type="text" name="username" value="testuser" 
+                    onfocus="if(this.value=='testuser'){this.value='';}" onblur="if(this.value==''){this.value='testuser'}" />&nbsp;
                 <input type="submit" name="add" value="Login">
             </form>
 

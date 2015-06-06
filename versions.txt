@@ -1,4 +1,27 @@
-### version 5.1.5.5  - 1/05/2015 - enlarge SQL fields ###
+### version 5.1.7  - 1/06/2015 - CSU Logout added ###
+== Joshua
+- add CSU logout function
+- adjust nav as logout url should link to the non-php version
+- add default timezone to config to avoid apache error (probs good practise anyway)
+- added test username as defult to dev login screen
+- small html edit to maintain validations
+
+### version 5.1.6  - 1/06/2015 - user results ###
+==harry
+- Displays  QUESTION, ANSWER, ANSWERED_AT for basic result summary
+- includes some style edits
+- new function in dblogic to facilitate results retrieval (wasn't
+working with current selectWithColumns method)
+- fixed weird bug in record answer where it was storing the QUESTION_ID
+after it had been updated to the id of the next question instead of
+before
+
+### version 5.1.5.6  - 1/06/2015 - view results ###
+==harry
+-Display reslts on quiz complete page
+-Results could be larger, only gets Data from result_answer
+
+### version 5.1.5.5  - 1/06/2015 - enlarge SQL fields ###
 == Joshua
 make some SQL fields lager
 

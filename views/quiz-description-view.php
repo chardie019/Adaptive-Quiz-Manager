@@ -14,7 +14,7 @@ require_once("includes/config.php");
 <link rel="stylesheet" type="text/css" href="<?php echo(STYLES_LOCATION) ?>/style.css" media="screen" />
 <link rel="stylesheet" type="text/css" href="<?php echo(STYLES_LOCATION) ?>/take-quiz-style.css" media="screen" />
  
-<title>Take Quiz - <?php echo (STYLES_SITE_NAME); ?></title>
+<title>Take Quiz Confirmation - <?php echo (STYLES_SITE_NAME); ?></title>
  
 </head>
  

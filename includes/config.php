@@ -25,6 +25,7 @@ set_include_path(get_include_path() . PATH_SEPARATOR . implode(PATH_SEPARATOR, $
 //set global settings
 mb_internal_encoding(); //set internal utf-8 encoding
 mb_http_output();       //mb_* string functions must still be used
+date_default_timezone_set('Australia/Sydney'); // set default timezone incase system is set to wrong time (and avoid apache error)
 header('Content-Type: text/html; charset=UTF-8');
 
 if(session_id() == '') { //it may of been started eariler eg login file.

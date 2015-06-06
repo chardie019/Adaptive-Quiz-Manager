@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //next question
     $answerID = $dbLogic->selectWithColumns("answer.*", "answer, question, quiz", $data, $whereColoumn);
     
     //Set the feedback to appear on the next question page for the one previously answered
-    if($answerID['FEEDBACK'] != null){
+    if(!empty($answerID['FEEDBACK'])){
         $answerFeedback = $answerID['FEEDBACK'];
     }
     
@@ -112,14 +112,15 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //next question
         include("404.php");
         
     }
-} else {                                    //start quiz
+} else { //GET - start quiz
 
     //stub for getting quiz id
     //if ID is passed- load take quiz, otherwise load quiz-list
     $quizIdRequested = filter_input(INPUT_GET, "quiz");
 
     //html
-    if (empty($quizIdRequested)) {
+    //if no quiz submitted or empty url changed (trailing slash "/" with nothing on the end)
+    if (empty($quizIdRequested) || $quizIdRequested  == ".php") {
         include("quiz-list.php");
     } 
     else {

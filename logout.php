@@ -26,6 +26,11 @@ if (ini_get("session.use_cookies")) {
 // Finally, destroy the session.
 session_destroy();
 
-
+if (empty($_SERVER['uid'])){
+    //logout of dev enironment
+    include("logout-view.php");
+} else {
+    //logout of CSU enironment
+    header("Location: /Shibboleth.sso/Logout");
+}
 //html
-include("logout-view.php");
