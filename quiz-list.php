@@ -7,7 +7,7 @@ require_once("includes/config.php");
 
 
 $dbLogic = new DB();
-$uid = 'jsmith04';
+$uid = $_SESSION["username"];
     //where coloumns
 
 
