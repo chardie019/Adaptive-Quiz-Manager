@@ -1,11 +1,5 @@
 <!DOCTYPE html>
 
-<?php
-// include php files to do with view
-require_once("includes/config.php");
-// end of php file inclusion
-?>
-
 <head>
     
 <meta charset="utf-8"/>
@@ -26,19 +20,13 @@ require_once("includes/config.php");
  
 <div id="content">
  
-<h1>Not found! 404 error</h1>
+<h1>Sorry...</h1>
 
-
+<h3><?php echo($errorMessage); ?></h3>
 
 </div> <!-- end #content -->
- 
-
 <?php include('sidebar.php'); ?>
- 
 <?php include('footer.php'); ?>
- 
         </div> <!-- End #wrapper -->
- 
     </body>
- 
 </html>

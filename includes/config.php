@@ -17,8 +17,10 @@ define( 'CONFIG_ROOT_URL', substr($_SERVER['PHP_SELF'], 0, - (strlen($_SERVER['S
 
 //set include path (so you don't reference other files, just this
 $paths = array(
-    dirname(__FILE__),                  //include directory
-    dirname(__FILE__) . '/../views/'    //views directory
+    dirname(__FILE__),                      //include directory
+    dirname(__FILE__) . '/../views/',       //views directory
+    dirname(__FILE__) . '/../templates/',   //templates directory
+    dirname(__FILE__) . '/../lib/'          //libraries directory
  );
 set_include_path(get_include_path() . PATH_SEPARATOR . implode(PATH_SEPARATOR, $paths));
 
@@ -26,19 +28,42 @@ set_include_path(get_include_path() . PATH_SEPARATOR . implode(PATH_SEPARATOR, $
 mb_internal_encoding(); //set internal utf-8 encoding
 mb_http_output();       //mb_* string functions must still be used
 date_default_timezone_set('Australia/Sydney'); // set default timezone incase system is set to wrong time (and avoid apache error)
-header('Content-Type: text/html; charset=UTF-8');
 
 if(session_id() == '') { //it may of been started eariler eg login file.
     session_start();
 }
 
-//include other config files
-include_once("dbLogic.php");
-include("userBean.php");
-include("userLogic.php");
+//php files needed by all
 
-include_once("styles.php");
+//independant files
 include_once("commonFunctions.php");
+include_once("styles.php");
+
+//include the database
+include_once("dbLogic.php");
+//check database works
+
+    $dbLogic = new DB();
+if ($dbLogic == false || $_SESSION["DB_STATUS"] == 0){
+        
+        if ($_SESSION["DB_REDIRECT"] != 1){
+            $_SESSION["DB_REDIRECT"] = 1; //redirecting
+            header('Location: ' . CONFIG_ROOT_URL . '/404.php');
+            stop();
+        }
+        
+} else {
+
+    //include other config files
+    include_once("userBean.php");
+   include_once("userLogic.php");
+    }
+
+
+
+
+
+
 
 
 

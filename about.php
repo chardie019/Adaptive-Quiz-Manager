@@ -10,5 +10,7 @@
 require_once("includes/config.php");
 // end of php file inclusion
 
-//html
-include("about-view.php");
+
+
+require_once("about-view.php");
+

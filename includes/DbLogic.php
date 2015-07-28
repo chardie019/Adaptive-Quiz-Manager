@@ -39,20 +39,33 @@
 
 class DB {
     private static $connection; //private - no access to outsiders
+    private static $errorMessage;
     
     function __construct ($TINA = false) {
-        
         $options = array(
             //PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8mb4' COLLATE 'utf8mb4_unicode_ci' ",
             PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8",
             PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION
         );
-        if (!$TINA) { //false - default
-            self::$connection = new PDO("mysql:host=localhost;dbname=aqm", "aqm", "jc66882Dxc9D", $options); //$host,$user,$password,$db
-            // "::" is the Scope Resolution Operator aka access class variables
+        try {
+            if (!$TINA) { //false - default
+                self::$connection = new PDO("mysql:host=localhost;dbname=aqm", "aqm", "jc66882Dxc9D", $options); //$host,$user,$password,$db
+                $_SESSION["DB_STATUS"] = 1;
+                // "::" is the Scope Resolution Operator aka access class variables
+            } else {
+                //setup TINA
+                echo "TINA!!!!!";
+            }
+        } catch (PDOException $e) {
+            self::$errorMessage = "There was an error connecting to the database.";
+            $_SESSION["DB_STATUS"] = 0;
+        }
+    }
+    function isError() {
+        if (self::$errorMessage  === NULL){
+            return false;
         } else {
-            //setup TINA
-            echo "TINA!!!!!";
+            return self::$errorMessage;
         }
     }
  

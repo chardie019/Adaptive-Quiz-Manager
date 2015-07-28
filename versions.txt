@@ -1,3 +1,8 @@
+### version 5.2  - 28/07/2015 - Templates ###
+==joshua
+Inital version of the templating system
+added auto-incredment to quiz ID
+
 ### version 5.1.8  - 7/06/2015 - LCAM quiz-list ###
 ==joshua
 chnage quiz list's user to be dynamic

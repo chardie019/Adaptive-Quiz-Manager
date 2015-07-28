@@ -205,7 +205,7 @@ DROP TABLE IF EXISTS `quiz`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `quiz` (
-  `QUIZ_ID` int(11) NOT NULL,
+  `QUIZ_ID` int(11) NOT NULL AUTO_INCREMENT,
   `SHARED_QUIZ_ID` int(11) NOT NULL,
   `VERSION` int(11) NOT NULL,
   `QUIZ_NAME` varchar(255) NOT NULL,
@@ -221,7 +221,7 @@ CREATE TABLE `quiz` (
   `IMAGE_ALT` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`QUIZ_ID`),
   UNIQUE KEY `QUIZ_ID_UNIQUE` (`QUIZ_ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -384,4 +384,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-06-09  0:13:34
+-- Dump completed on 2015-07-28 17:37:12
