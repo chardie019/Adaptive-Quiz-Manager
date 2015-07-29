@@ -20,7 +20,7 @@ font-family: verdana;
 /*background colour doesnt match logo perfectly yet, logo needs updating*/
 #header {
 width:100%;
-height:100px;
+height:120px;
 margin:0 auto;
 background-color: rgb(233, 172, 0);
 border-top:1px solid #ccc;
@@ -51,10 +51,11 @@ margin: 0;
     margin: 0px auto;
     font-size: 1.2em;
     //margin-top: 20px;
-    padding-top: 0px;
+    padding-top: 10px;
+    padding-left: 10px;
     //border-radius: 5px; 
-    background-color: rgb(233, 172, 0);
-    a:link white;
+    background-color: #404040;
+    //a: link white
 }
 
 #nav ul
@@ -79,7 +80,7 @@ margin: 0;
         text-decoration: none;
     }
 #nav .selected {
-  background-color: #404040;;
+  background-color: rgb(233, 172, 0);
 }
 
 /* 
@@ -91,18 +92,79 @@ background-color:#f1f1f1;
 }
  */
 #nav a:hover {
-background-color:#B0B0B0;
+    background-color:#B0B0B0;
 
 }
 
 #content {
-width:auto;
-float:left;
-margin-left: 10%;
-margin-right: 10%;
-padding:10px;
-
+    width:auto;
+    float:left;
+    margin-left: 10%;
+    margin-right: 10%;
+    padding:10px;
 }
+
+/*Styles for Create-Quiz-View double column*/
+#content-create-quiz{
+    position: relative;
+    width:70%;
+    float:left;
+    margin-left: 15%;
+    padding: 10px;
+    padding-bottom: 75px;
+    margin-bottom: 100px;
+}
+
+    #content-create-quiz label{
+        display: inline-block;
+        width: 400px;
+        text-align: left; 
+    }
+
+    #content-create-quiz h1{
+        text-align: center;
+    }
+
+    #content-create-quiz select {
+        height:30px;
+        width:100px;
+        border: 1px solid rgb(80,80,80) ;
+            border-radius: 2px;
+        //background-color: rgb(208,208,208);
+        font-size: 18px;
+        text-align: center;
+    }
+
+    #content-create-quiz input[type=text] {
+        height:25px;
+        width:300px;
+        border: 1px solid rgb(80,80,80) ;
+            border-radius: 2px;
+        //background-color: rgb(208,208,208);
+        font-size: 18px;
+    }
+    
+    #content-create-quiz textarea {
+        border: 1px solid rgb(80,80,80) ;
+            border-radius: 2px;
+        //background-color: rgb(208,208,208);
+        font-size: 18px;
+        vertical-align: top;
+    }
+    
+    .dateOrder{
+        font-size: 75%;
+        color: blue;
+        
+    }
+
+    //Error message styling for create-quiz input
+    //This class is not applying when used in the view??? Cannot update stylesheet ??? Works in view if i change class name to 'label'
+    .inputError{
+    color: red;
+    font-weight: bold;
+}
+
 
 /*Creates a thinner middle column*/
 #content-centre{
