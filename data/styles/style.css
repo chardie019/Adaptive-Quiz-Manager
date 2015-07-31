@@ -50,12 +50,12 @@ margin: 0;
     height: 40px;
     margin: 0px auto;
     font-size: 1.2em;
-    //margin-top: 20px;
+    /*margin-top: 20px; */
     padding-top: 10px;
     padding-left: 10px;
-    //border-radius: 5px; 
+    /*border-radius: 5px; */
     background-color: #404040;
-    //a: link white
+    /*a: link white*/
 }
 
 #nav ul
@@ -63,7 +63,7 @@ margin: 0;
     list-style: none;
     margin:  0;
     width: 100%;
-    padding-left: 0; //remove strange 40px padding
+    padding-left: 0; /*remove strange 40px padding */
     }
 
 #nav ul li
@@ -97,8 +97,6 @@ background-color:#f1f1f1;
 }
 
 #content {
-    width:auto;
-    float:left;
     margin-left: 10%;
     margin-right: 10%;
     padding:10px;
@@ -115,7 +113,7 @@ background-color:#f1f1f1;
     margin-bottom: 100px;
 }
 
-    #content-create-quiz label{
+    #content-create-quiz .label{
         display: inline-block;
         width: 400px;
         text-align: left; 
@@ -128,9 +126,9 @@ background-color:#f1f1f1;
     #content-create-quiz select {
         height:30px;
         width:100px;
-        border: 1px solid rgb(80,80,80) ;
-            border-radius: 2px;
-        //background-color: rgb(208,208,208);
+        border: 1px solid rgb(80,80,80);
+        border-radius: 2px;
+        /*background-color: rgb(208,208,208);*/
         font-size: 18px;
         text-align: center;
     }
@@ -139,15 +137,15 @@ background-color:#f1f1f1;
         height:25px;
         width:300px;
         border: 1px solid rgb(80,80,80) ;
-            border-radius: 2px;
-        //background-color: rgb(208,208,208);
+        border-radius: 2px;
+        /*background-color: rgb(208,208,208);*/
         font-size: 18px;
     }
     
     #content-create-quiz textarea {
         border: 1px solid rgb(80,80,80) ;
-            border-radius: 2px;
-        //background-color: rgb(208,208,208);
+        border-radius: 2px;
+        /*background-color: rgb(208,208,208); */
         font-size: 18px;
         vertical-align: top;
     }
@@ -158,8 +156,7 @@ background-color:#f1f1f1;
         
     }
 
-    //Error message styling for create-quiz input
-    //This class is not applying when used in the view??? Cannot update stylesheet ??? Works in view if i change class name to 'label'
+    /* Error message styling for create-quiz input */
     .inputError{
     color: red;
     font-weight: bold;
@@ -276,10 +273,6 @@ a.menu-icons{
     right: 0;
     left: 0; 
     
-}
-
-.label{
-    font-weight: bold;
 }
 
 .feedbackStyle{

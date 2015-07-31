@@ -11,16 +11,29 @@ require_once("includes/config.php");
 // end of php file inclusion
 
 //Set page error messages blank upon initial loading
-$quizNameError = " ";
-$invalidDateError1 = " ";
-$invalidDateError2 = " ";
-$dayStartError = " ";
-$monthStartError = " ";
-$yearStartError = " ";
-$dayEndError = " ";
-$monthEndError = " ";
-$yearEndError = " ";
-$imageUploadError = " ";
+$quizNameError = "";
+$quizDescriptionError = "";
+$isPublicError = "";
+$noAttemptsError = "";
+$isTimeError = "";
+$isSaveError = "";
+$timeLimitError = "";
+$invalidDateError1 = "";
+$invalidDateError2 = "";
+$dayStartError = "";
+$monthStartError = "";
+$yearStartError = "";
+$dayEndError = "";
+$monthEndError = "";
+$yearEndError = "";
+$imageUploadError = "";
+$quizImageTextError = "";
+
+//Get current system date values in the same format as user entererd them
+$currentDate = getdate(date("U"));
+
+//auto create the years (used for the view only)
+$yearCurrent = $currentDate["year"];
 
 //If form is submitted, run this section of code, otherwise just load the view
 //Get values from submitted form
@@ -41,125 +54,84 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     $yearStart = filter_input(INPUT_POST, "yearStart");
     
     //Validate closing dates entered by user
-   $monthEnd = filter_input(INPUT_POST, "monthEnd");
-   $dayEnd = filter_input(INPUT_POST, "dayEnd");
-   $yearEnd = filter_input(INPUT_POST, "yearEnd");
+    $monthEnd = filter_input(INPUT_POST, "monthEnd");
+    $dayEnd = filter_input(INPUT_POST, "dayEnd");
+    $yearEnd = filter_input(INPUT_POST, "yearEnd");
    
-   //Get image values entered by user
-   $quizImageText = filter_input(INPUT_POST, "quizImageText");
+    //Get image values entered by user
+    $quizImageText = filter_input(INPUT_POST, "quizImageText");
+    //no error yet
+    $error = 0;
     
-   if($quizName == " " || $quizName ==""){
+    if($quizName == " " || $quizName == "" || $quizName == NULL){
         $quizNameError = "Error: You must enter a name for your quiz.";
-        include("create-quiz-view.php");
-        exit();//Loads create-quiz-view into create-quiz.php, keeps same URL
-   }
-   
-   
-    //Ensure only months with 31 days are selected for Opening dates
-    //Ensure February dates are are within the months limits
-    if (($monthStart=="January" || $monthStart=="March" || $monthStart=="May" || 
-            $monthStart=="July"  || $monthStart=="August" || $monthStart=="October" || 
-            $monthStart=="December" && $dayStart=="31") || $monthStart=="February" && $dayStart=="29" || $dayStart=="30" || $dayStart=="31"){
-        //Error on days selected dont match month limits
-        //Load error screen up. 
-        $invalidDateError1 = "Error: Quiz Open month doesn't have that many days.";
-        include("create-quiz-view.php");
-        exit();//Loads create-quiz-view into create-quiz.php, keeps same URL
+        $error = 1;
     }
-    
-    //Ensure only months with 31 days are selected for Closing dates
-    if (($monthEnd=="January" || $monthEnd=="March" || $monthEnd=="May" || 
-            $monthEnd=="July"  || $monthEnd=="August" || $monthEnd=="October" || 
-            $monthEnd=="December" && $dayEnd=="31") || $monthEnd=="February" && $dayEnd=="29" || $dayEnd=="30" || $dayEnd=="31"){
-        //Error on days selected dont match month limits
-        //Load error screen up. 
-        $invalidDateError2 = "Error: Quiz Close month doesn't have that many days.";
-        include("create-quiz-view.php");
-        exit();//Loads create-quiz-view into create-quiz.php, keeps same URL
+    if($quizDescription == " " || $quizDescription == "" || $quizDescription == NULL){
+        $quizDescriptionError = "Error: You must enter a Description for your quiz.";
+        $error = 1;
     }
-    
-    //Ensure date hasnt passed already and is set EQUAL to or AFTER current system date
-    //Get current system date values in the same format as user entererd them
-    
-    $currentDate = getdate(date("U"));
-    
-    //Check START date is set AFTER current system date
-    if($currentDate['year'] == $yearStart){
-        if($currentDate['mon'] == $monthStart){
-            if($currentDate['mday'] <= $dayStart){
-               //Do something, set a flag? Or just have it continue down program?              
-            }
-            else{               
-                //Load up same page, don't insert quiz into the database, stop processes
-                $dayStartError = "Error: Opening date has already passed.";
-                include("create-quiz-view.php");
-                exit();//Loads create-quiz-view into create-quiz.php, keeps same URL
-            }
-        }
-        else if($currentDate['mon'] < $monthStart){           
-              //Do something, set a flag? Or just have it continue down program?   
-            }
-        
-        else{
-            //Load up same page, don't insert quiz into the database, stop processes
-            $monthStartError = "Error: Opening date has already passed.";
-            include("create-quiz-view.php");
-            exit();//Loads create-quiz-view into create-quiz.php, keeps same URL
+    if($isPublic != "1" && $isPublic != "2"){
+        $isPublicError = "Error: You must choose if your quiz is public or private.";
+        $error = 1;
+    }
+    if($noAttempts == NULL || (!is_numeric($noAttempts) && $noAttempts != "Unlimited") 
+        || (is_numeric($noAttempts) && ((int)$noAttempts < 1 || (int)$noAttempts > 10))) {
+        $noAttemptsError = "Error: You must choose the number of attempts.";
+        $error = 1;
+    }
+    if($isTime != "0" && $isTime != "1"){
+        $isTimeError = "Error: You must choose if there a time limit or not.";
+        $error = 1;
+    } elseif ($isTime == "1") { //is timed, then validate the limit
+        if ($timeHours == NULL || !is_numeric($timeHours) || (int)$timeHours < 0 || (int)$timeHours > 5
+            || $timeMinutes == NULL || !is_numeric($timeMinutes) || (int)$timeMinutes < 0 || (int)$timeMinutes > 60){
+            $timeLimitError = "Error: That Time Limit is invalid, please choose hours between 0-5 and minutes under 60.";
+            $error = 1;
         }
     }
-    else if($currentDate['year'] < $yearStart){
-        //Do something, set a flag? Or just have it continue down program?   
+    if($isSave != "1" && $isSave != "0"){
+        $isSaveError = "Error: Please choose whether the quiz can save progress or not.";
+        $error = 1;
     }
-    else{
+    //Check the Start Date
+    if (!is_numeric($dayStart) || !is_numeric($monthStart) || !is_numeric($yearStart) //if form was hacked
+        || !checkdate($monthStart, $dayStart, $yearStart)) {   //or is invalid date
+            //Load error screen up. 
+            $invalidDateError1 = "Error: The Date choosen is invalid, please correct the date.";
+            $error = 1;
+    } else { //is valid entry
+        //Ensure date hasnt passed already and is set EQUAL to or AFTER current system date
 
-        //Load up same page, don't insert quiz into the database, stop processes
-        $yearStartError = "Error: Opening date has already passsed.";
-        include("create-quiz-view.php");
-        exit();//Loads create-quiz-view into create-quiz.php, keeps same URL
+        //Check START date is set to today or AFTER current system date
+        if (new DateTime($yearStart . "-" . $monthStart . "-" . $dayStart) < 
+            new DateTime($currentDate["year"] . "-" . $currentDate["mon"] . "-" . $currentDate["mday"])){ //in the past - Format:yyyy "-" mm "-" dd
+            $invalidDateError1 = "Error: Opening date has already passed.";
+            $error = 1;
+        }  
     }
     
-    //Check whether CLOSE date is after START date (Which also means it's after current date). 
-    if($yearEnd == $yearStart){
-        if($monthEnd == $monthStart){
-            if($dayEnd >= $dayStart){
-                //Do something, set a flag? Or just have it continue down program?   
-            }
-            else{
-                //Load up same page, don't insert quiz into the database, stop processes
-                $dayEndError = "Error: Closing date must be after Opening date.";
-                include("create-quiz-view.php");
-                exit();//Loads create-quiz-view into create-quiz.php, keeps same URL
-            }
-        }
-        else if($monthEnd > $monthStart){  
-            //Do something, set a flag? Or just have it continue down program?   
-            }
-        
-        else{
-            //Load up same page, don't insert quiz into the database, stop processes
-            $monthEndError = "Error: Closing date must be after Opening date.";
-            include("create-quiz-view.php");
-            exit();//Loads create-quiz-view into create-quiz.php, keeps same URL
-        }
+    //Check the End date
+    if (!is_numeric($dayEnd) || !is_numeric($monthEnd) || !is_numeric($yearEnd) //if form was hacked
+        || !checkdate($monthEnd, $dayEnd, $yearEnd)) {   //or is invalid date
+        //Load error screen up.
+        $invalidDateError2 = "Error: The Date choosen is invalid, please correct the date."; 
+        $error = 1;
+    } else {  //is valid entry
+        //Check whether CLOSE date is ON or after START date (Which also means it's after current date).
+        if (new DateTime($yearStart . "-" . $monthStart . "-" . $dayStart) > 
+            new DateTime($yearEnd . "-" . $monthEnd . "-" . $dayEnd)){ //start is past the "end" date - Format:yyyy "-" mm "-" dd
+            $invalidDateError1 = "Error: Closing date must be after Opening date.";
+            $error = 1;
+        } 
     }
-    else if($yearEnd > $yearStart){
-            //Do something, set a flag? Or just have it continue down program?   
-    }
-    else{
-        //Load up same page, don't insert quiz into the database, stop processes
-        $yearEndError = "Error: Closing date must be after Opening date.";
-        include("create-quiz-view.php");
-        exit();//Loads create-quiz-view into create-quiz.php, keeps same URL
-    }   
-    
-
+      
     /*Validate Image upload
      * 
-     *Swap out $target_dir value with your local path for testing, will change it on SCCI server when uploaded
      *Double \\ is needed at the end of path to cancel out the single \ effect leading into "
      * 
      */
-    $target_dir = "C:\Users\Admin\Documents\GitHub\Adaptive-Quiz-Manager\data\quiz-images\\";
+    $target_dir = CONFIG_ROOT_DIR . "\data\quiz-images\\";
     $target_file = $target_dir . basename($_FILES["quizImageUpload"]["name"]);
     $uploadOk = 1;
     $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
@@ -196,71 +168,99 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                 . "- File size is 500kb or less "
                 . "- File must be in .jpg, .png, .jpeg and .gif file types\n"
                 . "- The name of your file may be taken. Try renaming the file ";
-        
-        include("create-quiz-view.php");
-        exit();//Loads create-quiz-view into create-quiz.php, keeps same URL
-        
-    // If image passed all criteria, attempt to upload
-    } else {
-        if (move_uploaded_file($_FILES["quizImageUpload"]["tmp_name"], $target_file)) {
-            echo "The file ". basename( $_FILES["quizImageUpload"]["name"]). " has been uploaded.";
-        } else {
-            $imageUploadError = "Sorry, there was an error uploading your file.";
-            include("create-quiz-view.php");
-            exit();//Loads create-quiz-view into create-quiz.php, keeps same URL
-        }
-    }
-    
-    //Image alt validation needed? Insert here if required
-    
-    
-    $dbLogic = new DB();
-    //Get username for use with Editors table when required
-    $uid = $_SESSION["username"];
-    //Set time limit to 00:00:00 for storing in database if there is NO time limit
-    if($isTime == '0'){
-        $isTime = '00:00:00';
-    }
-    
-    //Set Number of attempts to 0 for storing in database if there are unlimited attempts
-    if($noAttempts == 'Unlimited'){
-        $noAttempts = '0';
-    }
-    
-    //Create String value for dateStart and dateEnd values
-    
-    $dateOpen = $yearStart."-".$monthStart."-".$dayStart." 00:00:00";
-    $dateClose = $yearEnd."-".$monthEnd."-".$dayEnd." 11:59:00";    
-    
-    $dataArray = array(
-        "QUIZ_ID" => "",
-        "QUIZ_NAME" => "$quizName",
-        "DESCRIPTION" => "$quizDescription",
-        "IS_PUBLIC" => "$isPublic",
-        "NO_OF_ATTEMPTS" => "$noAttempts",
-        "TIME_LIMIT" => "$isTime",
-        "IS_SAVABLE" => "$isSave",
-        "DATE_OPEN" => $dateOpen,
-        "DATE_CLOSED" => $dateClose,
-        "INTERNAL_DESCRIPTION" => "",
-        "IMAGE" => basename( $_FILES["quizImageUpload"]["name"]),
-        "IMAGE_ALT" => "$quizImageText"
-        
-        );
+        $error = 1; 
+    } 
 
+    if($quizImageText == " " || $quizImageText == "" || $quizImageText == NULL){
+        $quizImageTextError = "Error: Please enter alternative text to the quiz more accessible.";
+        $error = 1;
+    }
     
-    ($dbLogic->insert($dataArray, "quiz"));
-     
+    //now display error pag
+    if ($error == 1){
+        //tell user to re-include the image
+        if ($imageUploadError == "") {
+            $imageUploadError = "Due to another error, please upload the picture again.";
+        }
+        include("create-quiz-view.php");
+    } else {// no errors
+        // If image passed all criteria, attempt to upload
+        if ($uploadOk == 1) {
+            if (move_uploaded_file($_FILES["quizImageUpload"]["tmp_name"], $target_file)) {
+                echo "The file ". basename( $_FILES["quizImageUpload"]["name"]). " has been uploaded.";
+            } else {
+                $imageUploadError = "Sorry, there was an error uploading your file.";
+                $error = 1;
+            }
+        }
+        
+       $dbLogic = new DB();
+        //Get username for use with Editors table when required
+        $uid = $_SESSION["username"];
+        //Set time limit to 00:00:00 for storing in database if there is NO time limit
+        if($isTime == '0'){
+            $isTime = '00:00:00';
+        }
+
+        //Set Number of attempts to 0 for storing in database if there are unlimited attempts
+        if($noAttempts == 'Unlimited'){
+            $noAttempts = '0';
+        }
+
+        //Create String value for dateStart and dateEnd values
+
+        $dateOpen = $yearStart."-".$monthStart."-".$dayStart." 00:00:00";
+        $dateClose = $yearEnd."-".$monthEnd."-".$dayEnd." 11:59:00";    
+
+        $dataArray = array(
+            "QUIZ_ID" => "",
+            "QUIZ_NAME" => "$quizName",
+            "DESCRIPTION" => "$quizDescription",
+            "IS_PUBLIC" => "$isPublic",
+            "NO_OF_ATTEMPTS" => "$noAttempts",
+            "TIME_LIMIT" => "$isTime",
+            "IS_SAVABLE" => "$isSave",
+            "DATE_OPEN" => $dateOpen,
+            "DATE_CLOSED" => $dateClose,
+            "INTERNAL_DESCRIPTION" => "",
+            "IMAGE" => basename( $_FILES["quizImageUpload"]["name"]),
+            "IMAGE_ALT" => "$quizImageText"
+
+            );
+
+
+        ($dbLogic->insert($dataArray, "quiz"));
+        //success
+        $quizNameError = "Success";
+        include("create-quiz-view.php");
+
+        /*Also need to:
+         * - Insert the username of creator into the editors table
+         * - Validate whether the Quiz name already exists in DB
+        */
+    }
+} else {    //a Get request
+    
+    //set defaults
+    $quizName = "";
+    $quizDescription = "";
+    $isPublic = "1";
+    $noAttempts = "Unlimited";
+    $isTime = "0";
+    $timeHours = "0";
+    $timeMinutes = "0";
+    $isSave = "0";
+    
+     //default is today
+    $monthStart = $currentDate["mon"];
+    $dayStart = $currentDate["mday"];
+    $yearStart = $currentDate["year"];
+    
+    $monthEnd = $currentDate["mon"];
+    $dayEnd = $currentDate["mday"];
+    $yearEnd = $currentDate["year"];
+    
     include("create-quiz-view.php");
     
-    /*Also need to:
-     * - Insert the username of creator into the editors table
-     * - Validate whether the Quiz name already exists in DB
-    */
     
-    
-
 }
-//html
-else{
-    include("create-quiz-view.php");}
