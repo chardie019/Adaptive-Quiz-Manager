@@ -10,7 +10,7 @@ and open the template in the editor.
 
 #wrapper {
 width:100%;
-background-color:#f8f8f8;
+background-color: #f8f8f8;
 margin:0 auto;
 border-left:1px solid #ccc;
 border-right:1px solid #ccc;
@@ -161,7 +161,38 @@ background-color:#f1f1f1;
     color: red;
     font-weight: bold;
 }
+#heading h1{
+    text-align: center;
+    padding-top: 70px;
+}
 
+#edit-console{
+    width:80%;
+    float:left;
+    margin-left: 21%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+
+}
+
+.nav-button{
+        position: relative;
+	background-color:#e9ab00;
+	-moz-border-radius:28px;
+	-webkit-border-radius:28px;
+	border-radius:28px;
+	border:1px solid #808080;
+	display:inline-block;
+	cursor:pointer;
+        width: 80px;
+	color:#ffffff;
+	font-size:1.2em;
+	padding:16px 31px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #808080;
+        text-align: center;
+}
 
 /*Creates a thinner middle column*/
 #content-centre{

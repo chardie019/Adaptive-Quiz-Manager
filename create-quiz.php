@@ -28,10 +28,13 @@ $monthEndError = "";
 $yearEndError = "";
 $imageUploadError = "";
 $quizImageTextError = "";
+$quizDescription = "";
+$quizImageText = "";
 
 //Get current system date values in the same format as user entererd them
 $currentDate = getdate(date("U"));
-
+//Get current system datetime for insertion into EDITORS table
+$creationDatetime = date('Y-m-d H:i:s');
 //auto create the years (used for the view only)
 $yearCurrent = $currentDate["year"];
 
@@ -71,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         $quizDescriptionError = "Error: You must enter a Description for your quiz.";
         $error = 1;
     }
-    if($isPublic != "1" && $isPublic != "2"){
+    if($isPublic != "1" && $isPublic != "0"){
         $isPublicError = "Error: You must choose if your quiz is public or private.";
         $error = 1;
     }
@@ -131,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
      *Double \\ is needed at the end of path to cancel out the single \ effect leading into "
      * 
      */
-    $target_dir = CONFIG_ROOT_DIR . "\data\quiz-images\\";
+    $target_dir = "C:\Users\Admin\Documents\GitHub\Adaptive-Quiz-Manager\data\quiz-images\\";
     $target_file = $target_dir . basename($_FILES["quizImageUpload"]["name"]);
     $uploadOk = 1;
     $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
@@ -176,6 +179,18 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         $error = 1;
     }
     
+    $dbLogic = new DB();
+    
+    //Ensure quiz name is not already taken in database
+        $quiz_name_list = $dbLogic->selectAll('quiz');   
+
+        foreach ($quiz_name_list as $answerRow) {
+            if($answerRow["QUIZ_NAME"] == $quizName){
+                $quizNameError = "Quiz name already in use. Please rename your quiz.";
+                $error = 1;
+            }
+        }
+        
     //now display error pag
     if ($error == 1){
         //tell user to re-include the image
@@ -194,7 +209,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
             }
         }
         
-       $dbLogic = new DB();
+
         //Get username for use with Editors table when required
         $uid = $_SESSION["username"];
         //Set time limit to 00:00:00 for storing in database if there is NO time limit
@@ -211,7 +226,8 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
         $dateOpen = $yearStart."-".$monthStart."-".$dayStart." 00:00:00";
         $dateClose = $yearEnd."-".$monthEnd."-".$dayEnd." 11:59:00";    
-
+          
+        //Create array for insert->quiz
         $dataArray = array(
             "QUIZ_ID" => "",
             "QUIZ_NAME" => "$quizName",
@@ -228,16 +244,30 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
             );
 
-
-        ($dbLogic->insert($dataArray, "quiz"));
+        //Insert quiz into database
+        $current_quiz_id = ($dbLogic->insert($dataArray, "quiz"));
+        
         //success
         $quizNameError = "Success";
-        include("create-quiz-view.php");
+        
+        //Insert creator of quiz into the editors table upon successful creation of quiz
+        $dataArray2 = array(
+            "user_USERNAME" => "$uid",
+            "quiz_QUIZ_ID" => "$current_quiz_id",
+            "ADDED_AT" => "$creationDatetime",
+            "ADDED_BY" => "$uid"
+        );
 
-        /*Also need to:
-         * - Insert the username of creator into the editors table
-         * - Validate whether the Quiz name already exists in DB
-        */
+        $dbLogic->insert($dataArray2, "editor");        
+        
+        //Set current quiz being created as session variable
+        $_SESSION['CURRENT_CREATE_QUIZ_ID'] = $current_quiz_id;
+        header('Location: '. CONFIG_ROOT_URL . '/edit-quiz/'.$_SESSION["CURRENT_CREATE_QUIZ_ID"]);
+        
+        $_SESSION['SET_QUIZ_ID'] = '1';
+        exit();
+
+        
     }
 } else {    //a Get request
     

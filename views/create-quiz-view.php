@@ -27,29 +27,33 @@ require_once("includes/config.php");
             <div id="content-create-quiz">
  
                 <h1>Create Quiz</h1>
-
+                
                 <br />
                 <br />
                 <!--enctype="" used because of image file upload in form-->
                 <form action='#' method='post' enctype="multipart/form-data" >
     
                 <label>Please enter the Title of your quiz: </label>
-                <input type='text' name='quizName' size='30'></input>
+                <input type='text' name='quizName' value='<?php echo $quizName ?>' size='30'></input>
                 <br />
                 <?php echo "<span class=\"inputError\">".$quizNameError."</span>"?>
                 <br />
                 <br />
 
                 <label>Please enter a description for your quiz: </label>
-                <textarea name="quizDescription" cols="40" rows="5"></textarea>
+                <textarea name="quizDescription" cols="40" rows="5"><?php echo $quizDescription ?></textarea>
+                <br />
+                <?php echo "<span class=\"inputError\">".$quizDescriptionError."</span>"?>
                 <br />
                 <br />
-
+                
                 <label>Is this public or private: </label>
                 Public: 
                 <input type='radio' name='isPublic' value='1' checked></input>
                 Private: 
                 <input type='radio' name='isPublic' value='0'></input>
+                <br />
+                <?php echo "<span class=\"inputError\">".$isPublicError."</span>"?>
                 <br />
                 <br />
 
@@ -68,6 +72,8 @@ require_once("includes/config.php");
                     <option>10</option>
                 </select>
                 <br />
+                <?php echo "<span class=\"inputError\">".$noAttemptsError."</span>"?>
+                <br />
                 <br />
 
                 <label>Is there a time limit to complete the quiz: </label>
@@ -75,6 +81,8 @@ require_once("includes/config.php");
                 <input type='radio' name='isTime' value='0' checked></input>
                 Yes:
                 <input type='radio' name='isTime' value='1'></input>
+                <br />
+                <?php echo "<span class=\"inputError\">".$isTimeError."</span>"?>
                 <br />
                 <br />
                 <label>***If YES, please enter that time limit: </label>
@@ -103,6 +111,8 @@ require_once("includes/config.php");
                     <option>55</option>
                 </select> 
                 <br />
+                <?php echo "<span class=\"inputError\">".$timeLimitError."</span>"?>
+                <br />                
                 <br />
 
                 <label>Can users save progress and return later to the quiz: </label>
@@ -110,6 +120,8 @@ require_once("includes/config.php");
                 <input type='radio' name='isSave' value='0' checked></input>
                 Yes:
                 <input type='radio' name='isSave' value='1'></input>
+                <br />
+                <?php echo "<span class=\"inputError\">".$isSaveError."</span>"?>
                 <br />
                 <br />
                 <label for="dayStart">When does this quiz open:</label>
@@ -245,13 +257,13 @@ require_once("includes/config.php");
                 <br />
 
                 <label>Please provide alternative text for the image you uploaded:</label>
-                <textarea name="quizImageText" cols="40" rows="5"></textarea>
+                <textarea name="quizImageText" cols="40" rows="5"><?php echo $quizImageText ?></textarea>
                 <br />
                 <br />
 
                 <button class="mySubmit" type="submit" name="confirmQuiz" value="Enter">Create</button>
             </form>
-
+                
             </div> <!-- end #content -->
 
 
