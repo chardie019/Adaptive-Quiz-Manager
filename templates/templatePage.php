@@ -35,7 +35,7 @@ echo '<link href="' . $stylesheet . '" rel="stylesheet" type="text/css" />' . "\
             <!-- start #content -->
             <div id="content">
                 
-                <h1><?php echo $this->heading; ?></h1>
+                <h1 id="heading"><?php echo $this->heading; ?></h1>
                 
                 <?php echo $this->body; ?>
                 

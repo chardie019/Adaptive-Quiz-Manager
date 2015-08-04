@@ -1,34 +1,9 @@
-<!DOCTYPE html> 
-
 <?php
-// include php files to do with view
-require_once("includes/config.php");
-// end of php file inclusion
+
+$templateLogic = new templateLogic;
+$templateLogic->setTitle('Edit Quiz');
+$templateLogic->startBody();
 ?>
- 
-<head>
-    
-<meta charset="utf-8"/>
-
-<link rel="stylesheet" type="text/css" href="<?php echo(STYLES_LOCATION) ?>/style.css" media="screen" />
- 
-<title>Edit Quiz - <?php echo (STYLES_SITE_NAME); ?></title>
- 
-</head>
- 
-    <body>
- 
-        <div id="wrapper">
-            <?php include('header.php'); ?>
-
-            <?php include('nav.php'); ?>
-
-            
-
-                <div id='heading'>
-                    <h1>Edit Quiz</h1>
-                </div>
-            
                 <div id='edit-console'>
 
                     
@@ -278,15 +253,8 @@ require_once("includes/config.php");
                 <button class="mySubmit" type="submit" name="confirmQuiz" value="Enter">Create</button>
             </form>
                  <a class='myReturn' href='<?php echo(CONFIG_ROOT_URL) ?>/edit-quiz'>Return</a>
-            </div> <!-- end #content -->
+<?php
+$templateLogic->endBody();
 
-
-            <?php include('sidebar.php'); ?>
-
-            <?php include('footer.php'); ?>
- 
-        </div> <!-- End #wrapper -->
- 
-    </body>
- 
-</html>
+//html
+echo $templateLogic->render();

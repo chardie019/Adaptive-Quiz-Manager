@@ -1,8 +1,26 @@
-### version 5.4 - 1/08/2015 - Create Quiz Draft ###
+### version 5.4 - 1/08/2015 - Create Quiz Draft & Templating ###
 == Joshua
 Templating system implemented site wide
 Improved create quiz with much more validation & pre-fill
 reoragnised some files, all files in the "lib" folder are included automatically
+
+### version 5.3.1 - 1/08/2015 - Create Quiz Draft ###
+== Harry
+- Now checks if quiz name is taken before inserting
+- Now inserts username into editors table for created quiz
+- Now directs user to 'edit-quiz' upon successful completion of creating
+a quiz.
+- Now has default quiz list for all quizzes which user has edit
+permissions on if 'Edit Quiz' is selected from nav bar.
+- Added edit-quiz-list-view where users can select a quiz to edit from
+their approved list of quizzes
+- Edit quiz page doesnt do anything but present information and populate
+fields ready for editing (No editing functionality is incluuded yet)
+- DATES and TIMES DO NOT auto fill in edit quiz, wasn't sure how to
+change them back to a format to fill the select boxes when the quiz is
+selected
+- Basic  buttons are presented top of page, they dont link anywhere yet
+- Styling is all early versions! will look prettier
 
 ### version 5.3 - 29/07/2015 - Create Quiz Draft ###
 ==Harry
