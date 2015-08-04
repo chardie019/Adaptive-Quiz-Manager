@@ -1,32 +1,13 @@
-<!DOCTYPE html>
+<?php
 
-<head>
-    
-<meta charset="utf-8"/>
- 
-<link rel="stylesheet" type="text/css" href="<?php echo(STYLES_LOCATION) ?>/style.css" media="screen" />
- 
-<title>404 - <?php echo (STYLES_SITE_NAME); ?></title>
- 
-</head>
- 
-    <body>
- 
-        <div id="wrapper">
-            <?php include('header.php'); ?>
-
-            <?php include('nav.php'); ?>
-
- 
-<div id="content">
- 
-<h1>Sorry...</h1>
-
+$templateLogic = new templateLogic;
+$templateLogic->setTitle('404 - Page Not Found');
+$templateLogic->setHeading('Sorry...');
+$templateLogic->startBody();
+?>
 <h3><?php echo($errorMessage); ?></h3>
+<?php
+$templateLogic->endBody();
 
-</div> <!-- end #content -->
-<?php include('sidebar.php'); ?>
-<?php include('footer.php'); ?>
-        </div> <!-- End #wrapper -->
-    </body>
-</html>
+//html
+echo $templateLogic->render("error");

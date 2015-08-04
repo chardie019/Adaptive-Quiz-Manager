@@ -1,7 +1,4 @@
 <?php
-// include php files to do with view
-require_once("includes/config.php");
-// end of php file inclusion
 
 $templateLogic = new templateLogic;
 $templateLogic->setTitle('About');

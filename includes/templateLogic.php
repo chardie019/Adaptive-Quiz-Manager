@@ -34,7 +34,8 @@ class templateLogic {
     /** templateLogic constructor adds data to ALL the pages */
     function __construct() {
         //add these to all pages
-        $this->addCSS(STYLES_LOCATION . "/style.css");        
+        $this->addCSS(STYLES_LOCATION . "/style.css");
+        $this->addJavascriptTop(STYLES_LOCATION . "/jquery-1.11.2.min.js");
     }
     /** 
      * templateLogic constructor adds data to ALL the pages 
@@ -82,7 +83,7 @@ class templateLogic {
     function setTitle($inputTitle = NULL) {
         if ($inputTitle !== NULL) {
             $this->title = $inputTitle;     //set the title (if var is sent)
-        } else if (isset($this->heading)) {
+        } else if (!is_null($this->heading)) {
             $this->title = $this->heading;  //same as heading (if it is set)
         } else {
             $this->title = STYLES_SITE_HEADING; //same as default heading (otherwise)
@@ -100,11 +101,12 @@ class templateLogic {
     function setHeading($inputHeading = NULL) {
         if ($inputHeading !== NULL) {
             $this->heading = $inputHeading;     //set the heading (if var is sent)
-        } else if (isset($this->title)) {
+        } else if (!is_null($this->title)) {
             $this->heading = $this->title;          //same as title (if title is set)
         } else {
             $this->heading = STYLES_SITE_HEADING;   //same as default heading/title (otherwise)
         }
+        
     }
     /** 
      * This function stores the body in a buffer to output later
@@ -184,16 +186,16 @@ class templateLogic {
      */
     function checkPageIsReady() {
         //if heading not set, call it to set defaults, likewise for the rest
-        if (!isset($this->Heading)){
+        if (is_null($this->heading)){
             $this->setHeading();
         }
-        if (!isset($this->title)){
+        if (is_null($this->title)){
             $this->setTitle();
         }
-        if (!isset($this->body)){
+        if (is_null($this->body)){
             $this->endBody();
         }
-        if (!isset($this->footer)){
+        if (is_null($this->footer)){
             $this->setFooter();
         }
     }
@@ -219,6 +221,12 @@ class templateLogic {
             case "error":
                 header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
                 include("templatePage.php");
+                break;
+            case "noHeading":
+                include("templatePageNoHeading.php");
+                break;
+            case "blank":
+                include("templatePageBlank.php");
                 break;
             default:
                 //This should never be reached but in case, show error

@@ -36,8 +36,21 @@ if(session_id() == '') { //it may of been started eariler eg login file.
 //php files needed by all
 
 //independant files
-include_once("commonFunctions.php");
+//include all files in the "lib" directory
+$files = array();
+    $dir = opendir(dirname(__FILE__) . '/../lib/');
+    while(($currentFile = readdir($dir)) !== false){
+        if ( $currentFile != '.' && $currentFile != '..' && strtolower(substr($currentFile, strrpos($currentFile, '.') + 1)) == 'php' ){
+            $files[] = $currentFile;
+        }
+    }
+closedir($dir);
+foreach ($files as $file) {
+    include_once $file;
+}
 include_once("styles.php");
+
+
 
 //include the database
 include_once("dbLogic.php");
@@ -60,16 +73,6 @@ if ($dbLogic == false || $_SESSION["DB_STATUS"] == 0){
     }
 
 
-
-
-
-
-
-
-
 //note: when echo-ing html other language, use  echo (htmlentities($string));
-
-
-
 
 ?>

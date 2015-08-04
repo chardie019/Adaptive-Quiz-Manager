@@ -35,13 +35,11 @@ echo '<link href="' . $stylesheet . '" rel="stylesheet" type="text/css" />' . "\
             <!-- start #content -->
             <div id="content">
                 
-                <h1><?php echo $this->heading; ?></h1>
-                
                 <?php echo $this->body; ?>
                 
             </div> 
             <!-- end #content -->
-
+        
             <?php include('sidebar.php'); ?>
 
             <?php include('footer.php'); ?>

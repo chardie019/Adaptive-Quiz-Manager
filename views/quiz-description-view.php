@@ -1,34 +1,13 @@
-<!DOCTYPE html>
-
 <?php
-// include php files to do with view
-require_once("includes/config.php");
-// end of php file inclusion
+
+$templateLogic = new templateLogic;
+$templateLogic->addCSS(STYLES_LOCATION . "/take-quiz-style.css");
+$templateLogic->setTitle($quizData['QUIZ_NAME']);
+$templateLogic->setHeading("Take Quiz Confirmation");
+$templateLogic->startBody();
 ?>
 
- 
-<head>
- 
-<meta charset="utf-8"/>
-
-<link rel="stylesheet" type="text/css" href="<?php echo(STYLES_LOCATION) ?>/style.css" media="screen" />
-<link rel="stylesheet" type="text/css" href="<?php echo(STYLES_LOCATION) ?>/take-quiz-style.css" media="screen" />
- 
-<title>Take Quiz Confirmation - <?php echo (STYLES_SITE_NAME); ?></title>
- 
-</head>
- 
-    <body>
- 
-        <div id="wrapper">
-            <?php include('header.php'); ?>
-
-            <?php include('nav.php'); ?>
-
- 
-<div id="content-centre">
- 
-<h1><?php echo ($quizData['QUIZ_NAME']); ?> </h1>
+ <div id="content-centre">
 
 <p> 
     <img alt="<?php $quizData['TIME_LIMIT'] ?>" src="<?php echo($quizData["IMAGE"]) ?>" />
@@ -62,17 +41,9 @@ require_once("includes/config.php");
     <button class="myReturn" type="submit" name="notConfirmQuiz" value="Return">Return</button>
 </form>
 
+<?php
+$templateLogic->endBody();
 
-</div> <!-- end #content -->
- 
-
-<?php include('sidebar.php'); ?>
- 
-<?php include('footer.php'); ?>
- 
-        </div> <!-- End #wrapper -->
- 
-    </body>
- 
-</html>
+//html
+echo $templateLogic->render();
 

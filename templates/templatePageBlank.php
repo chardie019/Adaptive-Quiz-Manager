@@ -26,26 +26,13 @@ echo '<link href="' . $stylesheet . '" rel="stylesheet" type="text/css" />' . "\
     <body>
         <!-- start #wrapper -->
         <div id="wrapper"> 
-            <!-- start header -->
-            <?php include('header.php'); ?>
-            <!-- end header -->
-            <!-- start nav -->
-            <?php include('nav.php'); ?>
-            <!-- end nav -->
-            <!-- start #content -->
+            
             <div id="content">
-                
-                <h1><?php echo $this->heading; ?></h1>
                 
                 <?php echo $this->body; ?>
                 
             </div> 
             <!-- end #content -->
-
-            <?php include('sidebar.php'); ?>
-
-            <?php include('footer.php'); ?>
-        
         </div> 
         <!-- End #wrapper -->
         <!-- Js files bottom -->

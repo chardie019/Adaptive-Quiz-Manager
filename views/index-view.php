@@ -1,32 +1,11 @@
-<!DOCTYPE html> 
-
 <?php
-// include php files to do with view
-require_once("includes/config.php");
-// end of php file inclusion
+
+$templateLogic = new templateLogic;
+$templateLogic->setTitle('Home');
+$templateLogic->startBody();
 ?>
- 
-<head>
 
-<meta charset="utf-8"/>
- 
-<link rel="stylesheet" type="text/css" href="<?php echo(STYLES_LOCATION) ?>/style.css" media="screen" />
- 
-<title>Home - <?php echo (STYLES_SITE_NAME); ?></title>
- 
-</head>
- 
-    <body>
- 
-        <div id="wrapper">
-            <?php include('header.php'); ?>
-
-            <?php include('nav.php'); ?>
-
-
-            <div id="content">
-
-            <br />    
+<br />    
             <br />
             <br />
 
@@ -55,15 +34,8 @@ require_once("includes/config.php");
                 <a class="menu-icons" href="<?php echo(CONFIG_ROOT_URL) ?>/help">Help</a>
             </div>
 
-            </div> <!-- end #content -->
+<?php
+$templateLogic->endBody();
 
-
-            <?php include('sidebar.php'); ?>
-
-            <?php include('footer.php'); ?>
- 
-        </div> <!-- End #wrapper -->
- 
-    </body>
- 
-</html>
+//html
+echo $templateLogic->render();

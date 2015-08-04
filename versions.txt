@@ -1,3 +1,17 @@
+### version 5.4 - 1/08/2015 - Create Quiz Draft ###
+== Joshua
+Templating system implemented site wide
+Improved create quiz with much more validation & pre-fill
+reoragnised some files, all files in the "lib" folder are included automatically
+
+### version 5.3 - 29/07/2015 - Create Quiz Draft ###
+==Harry
+Inital front page of create quiz created
+some validation
+Doesn't add user to to editor table
+Doesn't check if quiz name already exist in DB
+NEED to update quiz-list  page to display image now that quiz cover images can be uploaded 
+
 ### version 5.2  - 28/07/2015 - Templates ###
 ==joshua
 Inital version of the templating system
