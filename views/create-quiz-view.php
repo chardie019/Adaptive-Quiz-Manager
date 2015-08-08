@@ -214,7 +214,7 @@ $templateLogic->startBody();
         <br />
         <?php echo "<span class=\"inputError\">".$imageUploadError."</span>"?>
         <br />
-        <p class="label">Is there a cover image to upload with your quiz:</p>
+        <p class="label">Is there a cover image to upload with your quiz(optional):</p>
         <input type="file" name="quizImageUpload" accept="image/*">
         <br />
         <br />
@@ -224,7 +224,7 @@ $templateLogic->startBody();
         <textarea name="quizImageText" cols="40" rows="5"></textarea>
         <br />
         <br />
-        <button class="mySubmit" type="submit" name="confirmQuiz" value="Enter">Create</button>
+        <button class="mybutton mySubmit" type="submit" name="confirmQuiz" value="Enter">Create</button>
     </form>
 
 </div>

@@ -66,9 +66,20 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     //no error yet
     $error = 0;
     
+    $dbLogic = new DB();
+
     if($quizName == " " || $quizName == "" || $quizName == NULL){
         $quizNameError = "Error: You must enter a name for your quiz.";
         $error = 1;
+    } else {
+        //Ensure quiz name is not already taken in database
+        $quiz_name_list = $dbLogic->selectAll('quiz');   
+        foreach ($quiz_name_list as $answerRow) {
+            if($answerRow["QUIZ_NAME"] == $quizName){
+                $quizNameError = "Quiz name already in use. Please rename your quiz.";
+                $error = 1;
+            }
+        }
     }
     if($quizDescription == " " || $quizDescription == "" || $quizDescription == NULL){
         $quizDescriptionError = "Error: You must enter a Description for your quiz.";
@@ -140,30 +151,36 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
     
     // Check if image file is an actual image or fake image
-    if(isset($_POST["submit"])) {
-        $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
+    if (is_uploaded_file($_FILES["quizImageUpload"]["tmp_name"])){
+        $check = getimagesize($_FILES["quizImageUpload"]["tmp_name"]);
         if($check !== false) {
-            $imageUploadError = "File is an image - " . $check["mime"] . ".";
+            //$imageUploadError = "File is an image - " . $check["mime"] . ".";
+            // purpose? - commented out by josh
             $uploadOk = 1;
         } else {
             $imageUploadError = "File is not an image.";
             $uploadOk = 0;
         }
-    }
-    // Check if file already exists inside folders
-    if (file_exists($target_file)) {
-        $imageUploadError = "Sorry, file already exists.";
-        $uploadOk = 0;
-    }
-    // Check file size is smaller than 500kb, can change this later
-    if ($_FILES["quizImageUpload"]["size"] > 500000) {
-        $imageUploadError = "Sorry, your file is too large.";
-        $uploadOk = 0;
-    }
-    // Allow certain image file types only *Stop people uploading other file types e.g. pdf
-    if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-    && $imageFileType != "gif" ) {
-        $uploadOk = 0;
+        // Check if file already exists inside folders
+        if (file_exists($target_file)) {
+            $imageUploadError = "Sorry, file already exists.";
+            $uploadOk = 0;
+        }
+        // Check file size is smaller than 500kb, can change this later
+        if ($_FILES["quizImageUpload"]["size"] > 500000) {
+            $imageUploadError = "Sorry, your file is too large.";
+            $uploadOk = 0;
+        }
+        // Allow certain image file types only *Stop people uploading other file types e.g. pdf
+        if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+        && $imageFileType != "gif" ) {
+            $uploadOk = 0;
+        }
+        //only check ALT text if there is an image (which is optional)
+        if($quizImageText == " " || $quizImageText == "" || $quizImageText == NULL){
+            $quizImageTextError = "Error: Please enter alternative text to the quiz more accessible.";
+            $error = 1;
+        }
     }
     // Check if $uploadOk is set to 0 by an upload error. Exit if true.
     if ($uploadOk == 0) {
@@ -172,29 +189,14 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                 . "- File must be in .jpg, .png, .jpeg and .gif file types\n"
                 . "- The name of your file may be taken. Try renaming the file ";
         $error = 1; 
-    } 
-
-    if($quizImageText == " " || $quizImageText == "" || $quizImageText == NULL){
-        $quizImageTextError = "Error: Please enter alternative text to the quiz more accessible.";
-        $error = 1;
     }
-    
-    $dbLogic = new DB();
-    
-    //Ensure quiz name is not already taken in database
-        $quiz_name_list = $dbLogic->selectAll('quiz');   
 
-        foreach ($quiz_name_list as $answerRow) {
-            if($answerRow["QUIZ_NAME"] == $quizName){
-                $quizNameError = "Quiz name already in use. Please rename your quiz.";
-                $error = 1;
-            }
-        }
+    
         
     //now display error pag
     if ($error == 1){
         //tell user to re-include the image
-        if ($imageUploadError == "") {
+        if (is_uploaded_file($_FILES["quizImageUpload"]["tmp_name"]) && $imageUploadError == ""){
             $imageUploadError = "Due to another error, please upload the picture again.";
         }
         include("create-quiz-view.php");

@@ -250,9 +250,9 @@ $templateLogic->startBody();
                 <br />
                 <br />
 
-                <button class="mySubmit" type="submit" name="confirmQuiz" value="Enter">Create</button>
+                <button class="mybutton mySubmit" type="submit" name="confirmQuiz" value="Enter">Create</button>
             </form>
-                 <a class='myReturn' href='<?php echo(CONFIG_ROOT_URL) ?>/edit-quiz'>Return</a>
+                 <a class='mybutton myReturn' href='<?php echo(CONFIG_ROOT_URL) ?>/edit-quiz'>Return</a>
 <?php
 $templateLogic->endBody();
 

@@ -1,11 +1,13 @@
 <?php
 
 $templateLogic = new templateLogic;
-$templateLogic->setTitle('Select Quiz');
-$templateLogic->setHeading('Approved Quiz List');
+$templateLogic->setTitle('Edit Quiz');
+$templateLogic->setHeading('Edit Quiz');
 $templateLogic->startBody();
 ?>
             <div id="content-centre">
+                
+                <?php if (count($quizEditId) > 0) { //there are quizes?>
 
                 <form action="#" method="post">
                     <br />
@@ -14,13 +16,12 @@ $templateLogic->startBody();
                     <label class="label">Select Quiz: </label>
                         
                     <select class="quiz_list" name="quizid">
-        <?php
-        foreach ($quizEditId as $answerRow) {
-        echo "<option value = ".($answerRow["QUIZ_ID"])."> ".$answerRow["QUIZ_NAME"]."</option>";
-        }
-        ?>
+                    <?php
+                    foreach ($quizEditId as $answerRow) {
+                    echo "<option value = ".($answerRow["QUIZ_ID"])."> ".$answerRow["QUIZ_NAME"]."</option>";
+                    };?>
                     </select>
-    <!-- pad  the space between submit button and dropdown box -->
+                    <!-- pad  the space between submit button and dropdown box -->
                     <br />
                     <br />
                     
@@ -34,12 +35,27 @@ $templateLogic->startBody();
                     
                     <br />
                     <br />
-        <?php echo "<input type=\"hidden\" name=\"selectQuizId\" value=". ($answerRow["QUIZ_ID"])." />"?>
+                    <?php echo "<input type=\"hidden\" name=\"selectQuizId\" value=". ($answerRow["QUIZ_ID"])." />"?>
 
                         <button class="mySubmit" type="submit" name="selectQuiz" value="Select Quiz">
                             Select Quiz
                         </button>
                     </form>
+                <?php } else {  //there are NO quizes?>
+                <p>
+                    Currently you have no quizzes created or have no edit permissions on any quiz.
+                    <br />
+                    <br />
+                    How about having a go an creating a quiz?
+                    <a href="<?php echo (CONFIG_ROOT_URL . "/create-quiz") ?>" class="mybutton mySubmit">
+                            Create Quiz
+                    </a>
+                    <a href="<?php echo (CONFIG_ROOT_URL) ?>" class="mybutton myReturn">
+                            Home
+                    </a>
+                </p>
+                
+                <?php }//end quiz if statement ?> 
 
 
 

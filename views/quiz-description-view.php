@@ -33,12 +33,12 @@ $templateLogic->startBody();
 <!-- Quiz confirmed, user and form are sent to /take-quiz/QUIZ_CURRENT_QUIZ_ID, which is question 1 of quiz-->
 <form action="#" method="post"> 
     <?php echo "<input type=\"hidden\" name=\"confirmQuizId\" value=\"" . $_SESSION['QUIZ_CURRENT_QUIZ_ID'] . "\" />"; ?>
-    <button class="mySubmit" type="submit" name="confirmQuiz" value="Enter">Begin</button>
+    <button class="mybutton mySubmit" type="submit" name="confirmQuiz" value="Enter">Begin</button>
 </form>
 
 
 <form action="#" method="post"> 
-    <button class="myReturn" type="submit" name="notConfirmQuiz" value="Return">Return</button>
+    <button class="mybutton myReturn" type="submit" name="notConfirmQuiz" value="Return">Return</button>
 </form>
 
 <?php

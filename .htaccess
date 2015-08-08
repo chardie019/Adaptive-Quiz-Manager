@@ -1,22 +1,25 @@
-#single path here, due to differnt path separators in Linux (:) to Windows (;)
-# Actually not used after all due to absolute paths needed (from C drive (Win) and linux (/data/www/html/scci/aqm)
-#not portable then :(
-#php_value include_path ./new-siteincludes
-
 php_value display_errors On
 
 #rewrite engine must be working
 RewriteEngine On
 Options -MultiViews
 
-
-# 404 Page - not work
-ErrorDocument 404 /aqm/404.php
-
-
+# 404 Page - not used as it only take absolute path from web root, workaround is at bottom
+#ErrorDocument 404 ./404.php
 
 # Do not process images or CSS files further      #
-RewriteRule \.(css|jpe?g|gif|png)$ - [L]
+RewriteRule \.(css|jpe?g|gif|png|js)$ - [L]
+
+#only change url if file not exist
+RewriteCond %{REQUEST_FILENAME} !-f
+
+#only change url if directory not exist
+RewriteCond %{REQUEST_FILENAME} !-d
+
+#pretty url for messages
+#http://localhost/aqm/about/1/messages/3
+#http://localhost/aqm/about?quiz=1&messages=3
+RewriteRule ^([^/]+)/([^/]+)/([^/]+)/([^/]+)$ $1.php?quiz=$2&$3=$4 [NC,QSA,L]
 
 #only change url if file not exist
 RewriteCond %{REQUEST_FILENAME} !-f
@@ -25,14 +28,16 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 
 #remove php extenstion (2 levels deep)
-# eg <site>/index/theID?order=down 
-#  = <site>/index.php?quiz=theID&order=down
+# eg <site>/aqm/index/theID?order=down 
+#  = <site>/aqm/index.php?quiz=theID&order=down
 RewriteRule ^([^/]+)/([^/]+)/?$ $1.php?quiz=$2 [NC,QSA,L]
 
-#remove php extenstion (1 level deep)
+#remove php extenstion (1 & 3 level deep[existent files])
 # eg <site>/index
 #  = <site>/index.php
-RewriteCond %{REQUEST_FILENAME}.php -f [NC]
+# eg <site>/aqm/subdir/file
+#  = <site>/aqm/subdir/file.php
+RewriteCond %{REQUEST_FILENAME}.php -f
 RewriteRule ^([^\.]+)$ $1.php [NC,QSA,L]
 
 #remove php extenstion (1 level deep) with quiz ID
@@ -45,12 +50,19 @@ RewriteRule ^([^/\.]+)/?$ index.php?quiz=$1 [NC,QSA,L]
 #  = <site>/index.php?quiz=12345/12345
 #RewriteRule ^([^\.]+)$ index.php?quiz=$1 [NC,QSA,L]
 
+#only change url if file not exist
+RewriteCond %{REQUEST_FILENAME} !-f
+
+#only change url if directory not exist
+RewriteCond %{REQUEST_FILENAME} !-d
+
+#404 document in current directory
+RewriteRule .* 404.php [L]
 
 
 #guide to flags
 # NC - No Case
 # L - Last to match
 # QSA - Query String Append, adds quaery to the urls after rewrite
-
 
 #Other configuration options are made in config.php (in includes)

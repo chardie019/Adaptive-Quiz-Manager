@@ -220,7 +220,7 @@ select.quiz_list {
 }
 
 /*Submit and Cancel buttons used on site*/
-.mySubmit, .myReturn {
+.mybutton {
         position: absolute;
 	background-color:#e9ab00;
 	-moz-border-radius:28px;
@@ -236,7 +236,7 @@ select.quiz_list {
 	text-shadow:0px 1px 0px #808080;
 }
 
-.mySubmit:hover, .myReturn:hover {
+.mybutton:hover, .mybutton:hover {
 	background-color:#B0B0B0;
 }
 
