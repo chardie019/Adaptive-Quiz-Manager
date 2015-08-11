@@ -6,7 +6,7 @@
             <br />
             <span class="label">TYPE: </span><?php echo ($_SESSION["usertype"]); ?>
             <br />
-            <a href="<?php echo(CONFIG_ROOT_URL); ?>/logout">Logout</a>
+            <a href="<?php echo(CONFIG_ROOT_URL); ?>/misc/logout">Logout</a>
         </p>
         
     </div>

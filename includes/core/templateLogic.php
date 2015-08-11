@@ -35,7 +35,7 @@ class templateLogic {
     function __construct() {
         //add these to all pages
         $this->addCSS(STYLES_LOCATION . "/style.css");
-        $this->addJavascriptTop(STYLES_LOCATION . "/jquery-1.11.2.min.js");
+        $this->addJavascriptTop(STYLES_DATA_LOCATION . "/jquery-1.11.2.min.js");
     }
     /** 
      * templateLogic constructor adds data to ALL the pages 

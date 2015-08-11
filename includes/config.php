@@ -15,12 +15,14 @@ define( 'CONFIG_ROOT_URL', substr($_SERVER['PHP_SELF'], 0, - (strlen($_SERVER['S
 //define('INCLUDES', __DIR__);        //  C:\xampp\htdocs\aqm\includes <include location>
 
 
-//set include path (so you don't reference other files, just this
+//set include path (so you don't reference other files, just this) (Part 1/2)
 $paths = array(
-    dirname(__FILE__),                      //include directory
-    dirname(__FILE__) . '/../views/',       //views directory
-    dirname(__FILE__) . '/../templates/',   //templates directory
-    dirname(__FILE__) . '/../lib/'          //libraries directory
+    dirname(__FILE__),                  //include directory
+    dirname(__FILE__) . '/core/',       //core directory
+    dirname(__FILE__) . '/views/',      //views directory
+    dirname(__FILE__) . '/templates/',  //templates directory
+    dirname(__FILE__) . '/lib/',        //libraries directory
+    dirname(__FILE__) . '/logic/'       //logic directory (related logic to the pages)
  );
 set_include_path(get_include_path() . PATH_SEPARATOR . implode(PATH_SEPARATOR, $paths));
 
@@ -37,17 +39,31 @@ if(session_id() == '') { //it may of been started eariler eg login file.
 
 //independant files
 //include all files in the "lib" directory
-$files = array();
-    $dir = opendir(dirname(__FILE__) . '/../lib/');
-    while(($currentFile = readdir($dir)) !== false){
-        if ( $currentFile != '.' && $currentFile != '..' && strtolower(substr($currentFile, strrpos($currentFile, '.') + 1)) == 'php' ){
-            $files[] = $currentFile;
+try {
+    $files = array();
+    $lib = dirname(__FILE__) . '/lib/';
+        if (is_dir($lib)){
+                $dir = opendir($lib);
+                while(($currentFile = readdir($dir)) !== false){
+                    if ( $currentFile != '.' && $currentFile != '..' && strtolower(substr($currentFile, strrpos($currentFile, '.') + 1)) == 'php' ){
+                        $files[] = $currentFile;
+                    }
+                }
+        closedir($dir);
+        } else {
+            throw new Exception('Error including library in config.');
         }
+    foreach ($files as $file) {
+        include_once $file;
     }
-closedir($dir);
-foreach ($files as $file) {
-    include_once $file;
+    $lib = null;
+} catch (Exception $e) {
+    echo 'Caught exception: ',  $e->getMessage(), "\n";
 }
+//set include path for teh quiz pages (so you don't reference other files, just this) (Part 2/2)
+
+$paths2 = directoryToArray(dirname(__FILE__) . '/logic/', true, true, false);
+set_include_path(get_include_path() . PATH_SEPARATOR . implode(PATH_SEPARATOR, $paths2));
 include_once("styles.php");
 
 

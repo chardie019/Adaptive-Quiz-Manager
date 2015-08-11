@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 <head>
 
 <!-- include php files related to html output here -->
-<?php require_once("includes/config.php"); ?>
+<?php require_once("../includes/config.php"); ?>
 <!-- end of php file inclusion -->
  
 <link rel="stylesheet" type="text/css" href="<?php echo(STYLES_LOCATION) ?>/style.css" media="screen" />

@@ -33,7 +33,7 @@ $templateLogic->startBody();
     </table>
         </div>
      <br />
-    <a href="<?php echo(CONFIG_ROOT_URL) ?>">Go to homepage</a>
+    <a class="mybutton myReturn" href="<?php echo(CONFIG_ROOT_URL) ?>">Go to Homepage</a>
  </div>
 
 

@@ -8,7 +8,7 @@ if (empty($_SERVER['uid'])){
     if (empty($_SESSION["USERLOGIC_UID_IS_SET"])){         //not logged in
         if (!defined('USERLOGIC_ON_LOGIN_PAGE')){
             $_SESSION["REQUEST_URI"] = $_SERVER["REQUEST_URI"]; //record where we are going, just like csu
-            header('Location: ' . CONFIG_ROOT_URL . '/login-stub.php'); //this page set USERLOGIC_ON_LOGIN_PAGE variable
+            header('Location: ' . CONFIG_ROOT_URL . '/misc/login-stub.php'); //this page set USERLOGIC_ON_LOGIN_PAGE variable
             stop();
         }
     } else {                    //is logged in

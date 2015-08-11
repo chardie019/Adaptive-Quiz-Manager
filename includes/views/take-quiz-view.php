@@ -5,7 +5,7 @@ $templateLogic->addCSS(STYLES_LOCATION . "/take-quiz-style.css");
 $templateLogic->setTitle('Take Quiz');
 $templateLogic->startBody();
 ?>
-
+<div id="content-centre">
 <p> 
     <?php echo ("<span class=\"feedbackStyle\">".$answerFeedback."</span>");
 
@@ -33,7 +33,7 @@ $templateLogic->startBody();
         <br />
         <button class="mybutton mySubmit" type="submit" value="Submit">Submit</button>
     </form>
-
+</div>
 <?php
 $templateLogic->endBody();
 

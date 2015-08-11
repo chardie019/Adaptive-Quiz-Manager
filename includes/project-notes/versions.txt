@@ -1,3 +1,7 @@
+### version 5.4.2 - 1/08/2015 - Reorganised folders & Slight changes ###
+= Joshua
+chnaged folders around so the development environment is easier
+
 ### version 5.4.1 - 1/08/2015 - Slight changes, quiz-list etc ###
 == Joshua
 improved take-quiz(list) draft
