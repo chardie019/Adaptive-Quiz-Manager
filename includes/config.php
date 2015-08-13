@@ -17,12 +17,13 @@ define( 'CONFIG_ROOT_URL', substr($_SERVER['PHP_SELF'], 0, - (strlen($_SERVER['S
 
 //set include path (so you don't reference other files, just this) (Part 1/2)
 $paths = array(
-    dirname(__FILE__),                  //include directory
-    dirname(__FILE__) . '/core/',       //core directory
-    dirname(__FILE__) . '/views/',      //views directory
-    dirname(__FILE__) . '/templates/',  //templates directory
-    dirname(__FILE__) . '/lib/',        //libraries directory
-    dirname(__FILE__) . '/logic/'       //logic directory (related logic to the pages)
+    dirname(__FILE__),                          //include directory
+    dirname(__FILE__) . '/core/',               //core directory
+    dirname(__FILE__) . '/views/',              //views directory
+    dirname(__FILE__) . '/templates/',          //templates directory
+    dirname(__FILE__) . '/subMenus/',           //templates directory
+    dirname(__FILE__) . '/lib/',                //libraries directory
+    dirname(__FILE__) . '/related-logic/'        //logic directory (related logic to the pages)
  );
 set_include_path(get_include_path() . PATH_SEPARATOR . implode(PATH_SEPARATOR, $paths));
 
@@ -61,9 +62,10 @@ try {
     echo 'Caught exception: ',  $e->getMessage(), "\n";
 }
 //set include path for teh quiz pages (so you don't reference other files, just this) (Part 2/2)
-
-$paths2 = directoryToArray(dirname(__FILE__) . '/logic/', true, true, false);
+$paths2 = directoryToArray(dirname(__FILE__) . '/related-logic/', true, true, false);
+$paths3 = directoryToArray(dirname(__FILE__) . '/views/', true, true, false);
 set_include_path(get_include_path() . PATH_SEPARATOR . implode(PATH_SEPARATOR, $paths2));
+set_include_path(get_include_path() . PATH_SEPARATOR . implode(PATH_SEPARATOR, $paths3));
 include_once("styles.php");
 
 

@@ -19,12 +19,12 @@ RewriteCond %{REQUEST_FILENAME} !-d
 #pretty url for messages
 #http://localhost/aqm/about/1/messages/3
 #http://localhost/aqm/about?quiz=1&messages=3
-RewriteRule ^([^/]+)/([^/]+)/([^/]+)/([^/]+)$ $1.php?quiz=$2&$3=$4 [NC,QSA,L]
+RewriteRule ^([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$ $1.php?quiz=$2&$3=$4 [NC,QSA,L]
 
 #remove php extenstion (3 levels deep) [for non-existant files eg 1]
 # eg <site>/aqm/about/stub/1?order=down
 #  = <site>/aqm/about/stub?quiz=1&order=down
-RewriteRule ^([^/]+)/([^/]+)/([^/]+)$ $1/$2.php?quiz=$3 [NC,QSA,L]
+RewriteRule ^([^/]+)/([^/]+)/([^/]+)/?$ $1/$2.php?quiz=$3 [NC,QSA,L]
 
 #php file does exist
 RewriteCond %{REQUEST_FILENAME}.php -f

@@ -12,46 +12,21 @@ require_once("includes/config.php");
 
 $dbLogic = new DB();
 
-//Set page error messages blank upon initial loading
-$quizNameError = "";
-$quizDescriptionError = "";
-$isPublicError = "";
-$noAttemptsError = "";
-$isTimeError = "";
-$isSaveError = "";
-$timeLimitError = "";
-$invalidDateError1 = "";
-$invalidDateError2 = "";
-$dayStartError = "";
-$monthStartError = "";
-$yearStartError = "";
-$dayEndError = "";
-$monthEndError = "";
-$yearEndError = "";
-$imageUploadError = "";
-$quizImageTextError = "";
+$quizIDPost = filter_input(INPUT_POST, "quizid");
 
+$quizIDGet = filter_input(INPUT_GET, "quiz");
 
 if($_SERVER['REQUEST_METHOD'] === "POST"){
     
-    $quizID = filter_input(INPUT_POST, "quizid");
-    
-    $_SESSION['CURRENT_CREATE_QUIZ_ID'] = "$quizID";
-    
-    $column = "*";
-    
-    $dataArray = array(
-        "QUIZ_ID" => $_SESSION['CURRENT_CREATE_QUIZ_ID']
-    );
-    
-    $quizInfo = $dbLogic->select('*', 'quiz', $dataArray, true);
+    //$_SESSION['CURRENT_CREATE_QUIZ_ID'] = "$quizID";
     
     //html
-    include("edit-quiz-view.php");
+    header('Location: ' . CONFIG_ROOT_URL . '/edit-quiz/' . $quizIDPost);
+    stop();
     
 }
 //If coming from home page, display quiz list for user to select
-else if($_SESSION['SET_QUIZ_ID'] == ""){
+else if(is_null($quizIDGet)){
     
     $uid = $_SESSION["username"];
     //where coloumns
@@ -68,10 +43,14 @@ else if($_SESSION['SET_QUIZ_ID'] == ""){
     include('edit-quiz-list-view.php');
     
     
+} else {
+    //html
+include("edit-quiz-view.php");
+    
 }
 
 //Once user selects a quiz, the form is posted back to this file and info is gathered
-
+/*
 else{ //Load recent data from create-quiz.php creation
 
 //Get all values regarding quiz from database, and populate form data with current values
@@ -89,5 +68,5 @@ include("edit-quiz-view.php");
 
 $_SESSION['SET_QUIZ_ID'] = "";
 }
-
+*/
 //Now perform validation on user input - Insert new entry using old Version no. and Shared Quiz ID. 

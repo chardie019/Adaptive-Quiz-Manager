@@ -34,8 +34,16 @@ echo '<link href="' . $stylesheet . '" rel="stylesheet" type="text/css" />' . "\
             <!-- end nav -->
             <!-- start #content -->
             <div id="content">
-                
+                <!-- sub menu -->
+                <?php if (!is_null($this->subMenuFile)) {
+                    include ($this->subMenuFile);
+                } else {
+                    echo '<!-- no sub menu included -->';
+                } ?>
+                <!-- end sub menu -->
+                <!-- heading -->
                 <h1 id="heading"><?php echo $this->heading; ?></h1>
+                <!-- end heading -->
                 
                 <?php echo $this->body; ?>
                 

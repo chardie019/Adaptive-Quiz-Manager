@@ -21,7 +21,11 @@ class templateLogic {
     /** @var string The title of the page, in the <title> tag */
     private $title;
     /** @var string The heading in the <h1> tag */
-    private $heading; 
+    private $heading;
+    /** @var string The Sub Menu (if any) e.g edit quiz menu */
+    private $subMenuFile; 
+    /** @var string Idenifies who is the index for the submenu */
+    private $subMenuIndex; 
     /** @var string The main body */
     private $body; 
     /** @var string The words in the footer of the page */
@@ -34,8 +38,8 @@ class templateLogic {
     /** templateLogic constructor adds data to ALL the pages */
     function __construct() {
         //add these to all pages
-        $this->addCSS(STYLES_LOCATION . "/style.css");
-        $this->addJavascriptTop(STYLES_DATA_LOCATION . "/jquery-1.11.2.min.js");
+        $this->addCSS("style.css");
+        $this->addJavascriptTop("jquery-1.11.2.min.js");
     }
     /** 
      * templateLogic constructor adds data to ALL the pages 
@@ -44,7 +48,7 @@ class templateLogic {
      * @return void
      */
     function addCSS($inputCSS) {
-    $this->stylesheets[] = $inputCSS;   //add to array
+    $this->stylesheets[] = STYLES_LOCATION . '/' . $inputCSS;   //add to array
     }
     /** 
      * This function adds javascript to the top of the page 
@@ -56,10 +60,10 @@ class templateLogic {
      * @return void
      */
     function addJavascriptTop($inputJS) {
-    $this->javascriptsTop[] = $inputJS; //add to array
+    $this->javascriptsTop[] = STYLES_DATA_LOCATION . '/' . $inputJS; //add to array
     }
     /** 
-     * This function adds a string to head of the html page 
+     * This function adds a Javascript file to head of the html page 
      * 
      * Use ths function to set page specific CSS, &lt;style&gt;,
      * if templateLogic is doesn't have funcationality you need
@@ -107,6 +111,51 @@ class templateLogic {
             $this->heading = STYLES_SITE_HEADING;   //same as default heading/title (otherwise)
         }
         
+    }
+    /** 
+     * This function sets the sub menu type (if any)
+     * 
+     * If set, a sub meni will be printed
+     * Applicable types are "take-quiz", "create-quiz", "edit-quiz", "stats", "about" & "help" 
+     * 
+     * @param string $inputType The type to be set
+     * @param string $index Teels the submenu which is NOT the index, set to the page name
+     */
+    function setSubMenuType($inputType = NULL, $inputIndex = NULL) {
+        //choose which file to include on the template page
+        $this->subMenuIndex = $inputIndex;
+        switch ($inputType) {
+            case "take-quiz":
+                $this->addCSS("take-quiz-style.css");
+                $this->subMenuFile = "takeQuizSubMenu.php";
+                break;
+            case "create-quiz":
+                $this->addCSS("create-quiz-style.css");
+                $this->subMenuFile = "createQuizSubMenu.php";
+                break;
+            case "edit-quiz":
+                $this->addCSS("edit-quiz-style.css");
+                $this->subMenuFile = "editQuizSubMenu.php";
+                break;
+            case "stats":
+                $this->addCSS("stats-style.css");
+                $this->subMenuFile = "statsSubMenu.php";
+                break;    
+            case "about":
+                $this->addCSS("about-style.css");
+                $this->subMenuFile = "aboutSubMenu.php";
+                break;    
+            case "help":
+                $this->addCSS("help-style.css");
+                $this->subMenuFile = "helpSubMenu.php";
+                break;
+            case NULL:
+                $this->subMenuFile = NULL;
+                break;
+            default:    //just in case
+                $this->subMenuFile = NULL;
+                break;
+        }
     }
     /** 
      * This function stores the body in a buffer to output later
@@ -162,7 +211,7 @@ class templateLogic {
      * @return void
      */
     function addJavascriptBottom($inputJS) {
-    $this->javascriptsBottom[] = $inputJS;  //add to array
+    $this->javascriptsBottom[] = STYLES_DATA_LOCATION . '/' . $inputJS;  //add to array
     }
     /** 
      * Adds a sring to the bottom of the page 

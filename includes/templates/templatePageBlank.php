@@ -29,6 +29,14 @@ echo '<link href="' . $stylesheet . '" rel="stylesheet" type="text/css" />' . "\
             
             <div id="content">
                 
+                <!-- sub menu -->
+                <?php if (!is_null($this->subMenuFile)) {
+                    include ($this->subMenuFile);
+                } else {
+                    echo '<!-- no sub menu included -->';
+                } ?>
+                <!-- end sub menu -->
+                
                 <?php echo $this->body; ?>
                 
             </div> 
