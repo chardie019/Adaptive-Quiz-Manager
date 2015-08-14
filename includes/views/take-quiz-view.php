@@ -1,7 +1,7 @@
 <?php
 
 $templateLogic = new templateLogic;
-$templateLogic->addCSS(STYLES_LOCATION . "/take-quiz-style.css");
+$templateLogic->addCSS("take-quiz-style.css");
 $templateLogic->setTitle('Take Quiz');
 $templateLogic->startBody();
 ?>

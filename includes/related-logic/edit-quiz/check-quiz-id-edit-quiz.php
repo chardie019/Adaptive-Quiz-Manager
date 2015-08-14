@@ -9,7 +9,7 @@ $quizIDGet = filter_input(INPUT_GET, "quiz");
 
 if(is_null($quizIDGet)){
     //back to edit quiz
-    header('Location: ' . CONFIG_ROOT_URL . '/edit-quiz');
+    header('Location: ' . CONFIG_ROOT_URL . '/edit-quiz.php?no-quiz-selected=yes');
     stop();
     
 }

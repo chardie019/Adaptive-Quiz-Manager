@@ -221,7 +221,7 @@ select.quiz_list {
 
 /*Submit and Cancel buttons used on site*/
 .mybutton {
-        position: absolute;
+        /* position: absolute; */
 	background-color:#e9ab00;
 	-moz-border-radius:28px;
 	-webkit-border-radius:28px;

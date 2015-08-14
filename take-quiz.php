@@ -20,7 +20,7 @@ function prepareViewPage() {
     if (empty($questionData["IMAGE"])){
         $questionData["IMAGE"] = "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="; //transparent gif
     } else {
-        $questionData["IMAGE"] = STYLES_QUIZ_IMAGES_LOCATION . "/" . $questionData["IMAGE"];
+        $questionData["IMAGE"] = returnQuizImagepath($_SESSION["QUIZ_CURRENT_QUIZ_ID"], $questionData["IMAGE"]);
     }
   
     $data = array(

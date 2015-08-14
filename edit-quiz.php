@@ -21,7 +21,7 @@ if($_SERVER['REQUEST_METHOD'] === "POST"){
     //$_SESSION['CURRENT_CREATE_QUIZ_ID'] = "$quizID";
     
     //html
-    header('Location: ' . CONFIG_ROOT_URL . '/edit-quiz/' . $quizIDPost);
+    header('Location: ' . CONFIG_ROOT_URL . '/edit-quiz.php?quiz=' . $quizIDPost);
     stop();
     
 }

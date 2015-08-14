@@ -228,7 +228,7 @@ $quizName = filter_input(INPUT_POST, "quizName");
         
         //Set current quiz being created as session variable
         $_SESSION['CURRENT_CREATE_QUIZ_ID'] = $current_quiz_id;
-        header('Location: '. CONFIG_ROOT_URL . '/edit-quiz/'.$_SESSION["CURRENT_CREATE_QUIZ_ID"]);
+        header('Location: '. CONFIG_ROOT_URL . '/edit-quiz.php?quiz='.$_SESSION["CURRENT_CREATE_QUIZ_ID"]);
         
         $_SESSION['SET_QUIZ_ID'] = '1';
         exit();

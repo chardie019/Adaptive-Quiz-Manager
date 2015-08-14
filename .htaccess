@@ -2,63 +2,12 @@ php_value display_errors On
 
 #rewrite engine must be working
 RewriteEngine On
+#make apache condier the
 Options -MultiViews
 
 # 404 Page - not used as it only take absolute path from web root, workaround is at bottom
 #ErrorDocument 404 ./404.php
 
-# Do not process images or CSS files further      #
-RewriteRule \.(css|jpe?g|gif|png|js)$ - [L]
-
-#only change url if file not exist
-RewriteCond %{REQUEST_FILENAME} !-f
-
-#only change url if directory not exist
-RewriteCond %{REQUEST_FILENAME} !-d
-
-#pretty url for messages
-#http://localhost/aqm/about/1/messages/3
-#http://localhost/aqm/about?quiz=1&messages=3
-RewriteRule ^([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$ $1.php?quiz=$2&$3=$4 [NC,QSA,L]
-
-#remove php extenstion (3 levels deep) [for non-existant files eg 1]
-# eg <site>/aqm/about/stub/1?order=down
-#  = <site>/aqm/about/stub?quiz=1&order=down
-RewriteRule ^([^/]+)/([^/]+)/([^/]+)/?$ $1/$2.php?quiz=$3 [NC,QSA,L]
-
-#php file does exist
-RewriteCond %{REQUEST_FILENAME}.php -f
-
-#remove php extenstion (3 levels deep) [existant file]
-# eg <site>/aqm/index/theID?order=down 
-#  = <site>/aqm/index.php?quiz=theID&order=down
-RewriteRule ^([^/]+)/([^/]+)$ %{REQUEST_URI}.php [NC,QSA,L]
-
-#only change url if file or file.php not exist
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME}.php !-f
-
-#remove php extenstion (2 levels deep) [non-existant file]
-# eg <site>/aqm/index/theID?order=down 
-#  = <site>/aqm/index.php?quiz=theID&order=down
-RewriteRule ^([^/]+)/([^/]+)/?$ $1.php?quiz=$2 [NC,QSA,L]
-
-#remove php extenstion (1 level deep[existent files])
-# eg <site>/index
-#  = <site>/index.php
-# eg <site>/aqm/subdir/file
-#  = <site>/aqm/subdir/file.php
-RewriteRule ^([^/\.]+)/?$ $1.php [NC,QSA,L]
-
-#remove php extenstion (1 level deep) with quiz ID
-# eg <site>/12345
-#  = <site>/index.php?quiz=12345
-RewriteRule ^([^/\.]+)/?$ index.php?quiz=$1 [NC,QSA,L]
-
-#many level deep - not used
-# eg <site>/12345/12345
-#  = <site>/index.php?quiz=12345/12345
-#RewriteRule ^([^\.]+)$ index.php?quiz=$1 [NC,QSA,L]
 
 #only change url if file not exist
 RewriteCond %{REQUEST_FILENAME} !-f

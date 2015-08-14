@@ -1,7 +1,7 @@
 <?php
 //Define site styles here
 define('STYLES_LOCATION', CONFIG_ROOT_URL . "/data/styles");
-define('STYLES_QUIZ_IMAGES_LOCATION', CONFIG_ROOT_URL . "/data/images");
+define('STYLES_QUIZ_IMAGES_LOCATION', CONFIG_ROOT_URL . "/data/quiz-images");
 define('STYLES_DATA_LOCATION', CONFIG_ROOT_URL . "/data");
 define('STYLES_SITE_NAME', "Adaptive Quiz Manager");
 

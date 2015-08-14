@@ -2,16 +2,13 @@
 function echoClassIfRequestMatches($requestUri, $class, $rootLink = false)
 {
     $currentFileName = basename($_SERVER['REQUEST_URI'], ".php");
-    $urlArray = explode('/', $_SERVER['REQUEST_URI']);
+    $url = $_SERVER['REQUEST_URI'];
     $inUrl = FALSE;
 
     $isRoot = false;
     if ($rootLink == false){
-        foreach($urlArray as $urlArrayString) {
-            if ($urlArrayString == $requestUri){
-                $inUrl = true;
-                break; //no need to keep going
-            }     
+        if (strpos($url, $requestUri) !== false) {
+            $inUrl = true;
         }
     }
     if ($rootLink == True){
@@ -23,15 +20,11 @@ function echoClassIfRequestMatches($requestUri, $class, $rootLink = false)
     if (is_string($rootLink)) {
         $rootInURL = false;
         $rootIsNotInURL = false; //overides
-        foreach($urlArray as $urlArrayString) {
-            if ($urlArrayString == $rootLink){
-                $rootInURL = true;
-                //problem
-            }
-
-            if ($urlArrayString != "" && $urlArrayString == $requestUri){
-                $rootIsNotInURL = true;
-            }
+        if (strpos($url, $rootLink) !== false) {
+            $rootInURL = true;
+        }
+        if (strpos($url, $requestUri) !== false) {
+            $rootIsNotInURL = true; //overide root
         }
         if ($rootInURL == true && $rootIsNotInURL == false){
             $inUrl = true;  //root wasn't overided by another link
