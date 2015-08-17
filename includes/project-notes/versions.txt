@@ -1,3 +1,9 @@
+### version 5.5.1 - 18/08/2015 - Draft question map buttons  ###
+=Joshua
+more progress on edit question map
+draft buttons for editing the question/answer
+so others can join in
+
 ### version 5.5 - 1/08/2015 - no pretty URLS, question map started  ###
 = Joshua
 removed htaccess linking (pretty urls) due to frustration + hurts portablity anyway

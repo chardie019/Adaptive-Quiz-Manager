@@ -5,6 +5,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+// Report all PHP errors (disable to hide mysql error)
+//error_reporting(-1);
 
 ini_set("log_errors", 1);
 ini_set("error_log", "not_synced/PHP_errors.log"); //relative to htaccess in the aqm
@@ -61,11 +63,19 @@ try {
 } catch (Exception $e) {
     echo 'Caught exception: ',  $e->getMessage(), "\n";
 }
-//set include path for teh quiz pages (so you don't reference other files, just this) (Part 2/2)
-$paths2 = directoryToArray(dirname(__FILE__) . '/related-logic/', true, true, false);
-$paths3 = directoryToArray(dirname(__FILE__) . '/views/', true, true, false);
-set_include_path(get_include_path() . PATH_SEPARATOR . implode(PATH_SEPARATOR, $paths2));
-set_include_path(get_include_path() . PATH_SEPARATOR . implode(PATH_SEPARATOR, $paths3));
+$OtherDirectoriesToInclude = array (
+    '/related-logic/',
+    '/views/',
+    '../../about/',
+    '../../edit-quiz/',
+    '../../help/',
+    '../../stats/',
+    '../../edit-quiz/'  
+);
+foreach ($OtherDirectoriesToInclude as $dir){
+    $path = directoryToArray(dirname(__FILE__) . $dir, true, true, false);
+    set_include_path(get_include_path() . PATH_SEPARATOR . implode(PATH_SEPARATOR, $path));
+}
 include_once("styles.php");
 
 
