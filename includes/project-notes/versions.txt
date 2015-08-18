@@ -1,3 +1,7 @@
+### version 5.5.1.1 - 19/08/2015 - fixed take-quiz  ###
+=joshua
+forgot to update take-quiz as per htaccess slim down
+
 ### version 5.5.1 - 18/08/2015 - Draft question map buttons  ###
 =Joshua
 more progress on edit question map

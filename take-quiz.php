@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //next question
     }           
     if ($quizConfirmPosted != "") {
         $_SESSION["QUIZ_CONFIRMED"] = $quizConfirmIdPosted;
-        header('Location: '. CONFIG_ROOT_URL . '/take-quiz/'.$_SESSION["QUIZ_CONFIRMED"]);   
+        header('Location: '. CONFIG_ROOT_URL . '/take-quiz.php?quiz='.$_SESSION["QUIZ_CONFIRMED"]);   
         stop(); //refresh the page an rerun script
     }
     if ($quizNotConfirmPosted != "") {
