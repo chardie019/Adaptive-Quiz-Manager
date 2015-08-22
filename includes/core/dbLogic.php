@@ -44,8 +44,9 @@ class DB {
     function __construct ($TINA = false) {
         $options = array(
             //PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8mb4' COLLATE 'utf8mb4_unicode_ci' ",
-            PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8",
-            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION
+            PDO::ATTR_EMULATE_PREPARES      => false,
+            PDO::MYSQL_ATTR_INIT_COMMAND    => "SET NAMES utf8",
+            PDO::ATTR_ERRMODE               => PDO::ERRMODE_EXCEPTION
         );
         try {
             if (!$TINA) { //false - default

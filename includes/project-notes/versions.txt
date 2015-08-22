@@ -1,3 +1,8 @@
+### version 5.5.1.2 - 23/08/2015 - tree-view edit-quiz draft  ###
+=joshua
+Draft tree-view working
+misc fixes to make linux compatible
+
 ### version 5.5.1.1 - 19/08/2015 - fixed take-quiz  ###
 =joshua
 forgot to update take-quiz as per htaccess slim down

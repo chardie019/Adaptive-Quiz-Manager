@@ -66,11 +66,11 @@ try {
 $OtherDirectoriesToInclude = array (
     '/related-logic/',
     '/views/',
-    '../../about/',
-    '../../edit-quiz/',
-    '../../help/',
-    '../../stats/',
-    '../../edit-quiz/'  
+    '/../about/',
+    '/../edit-quiz/',
+    '/../help/',
+    '/../stats/',
+    '/../edit-quiz/'  
 );
 foreach ($OtherDirectoriesToInclude as $dir){
     $path = directoryToArray(dirname(__FILE__) . $dir, true, true, false);
