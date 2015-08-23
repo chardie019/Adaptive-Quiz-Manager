@@ -3,8 +3,8 @@
 $templateLogic = new templateLogic;
 $templateLogic->setTitle('Edit Questions');
 $templateLogic->setSubMenuType("edit-quiz", "question");
+$templateLogic->addCSS("jstree/themes/default/style.min.css", true);
 $templateLogic->addCustomHeaders('
-    <link rel="stylesheet" href="/aqm/data/jstree/themes/default/style.min.css" />
 <style>
     .edit-question-area{
         background-color: #E2E2E2;
@@ -12,6 +12,9 @@ $templateLogic->addCustomHeaders('
         height: 30em;
         float: left;
         overflow-y: scroll;
+    }
+    .answer {
+        background-color: burlywood;
     }
     .edit-question-sidebar {
         float: right;
@@ -25,13 +28,36 @@ $templateLogic->addCustomHeaders('
     .nested {
         padding-left: 2em;
     }
+    /* non-js styles */
+    li 
+    { 
+        position: relative; 
+        margin-left: -15px;
+        list-style: none;
+    } 
+    .question-list {
+        border-left: black 1px solid;
+    }
+    /* remove non-js styles */
+    .jstree-children .question-list {
+        border-left: initial;
+    }
+    .jstree-children li 
+    { 
+        position: initial; 
+        margin-left: initial;
+        list-style: initial;
+    } 
+    .jstree-children .answer {
+        background-color: initial;
+    }
     </style>');
 $templateLogic->startBody();
 ?>
 <form  method="post" action="<?php echo htmlentities($_SERVER['PHP_SELF']) . '?quiz=' . $quizIDGet; ?>">
 <div class="edit-question-area">
     <?php if (count($quizData) > 0) { // if there are questions ?>
-    <p> Demo tree view, to see other draft, scroll below (no input yet on this tree, is on the other) </p>
+    <p> Demo tree view, input works </p>
     <p> to use , import \includes\project-notes\question_answer.sql table </p>
     
     	<div id="myjstree" class="demo">
@@ -56,14 +82,21 @@ function build_tree($arrs, $parent_id="", $level=0) {
     foreach ($arrs as $arr) {
         if ($arr['PARENT_ID'] == $parent_id) {
                  if ($arr['TYPE'] == "question"){
-                    $typeItem = "question-item";
+                    $typeItem = "question";
                     $typeList= "question-list";
+                    $jsTreeType = "question";
                     $letter = "Q";
                     $item = $letter . ":  " . $arr['question_QUESTION_ID'];
+                    $id = $letter . $arr['question_QUESTION_ID'];
+                    $value = $arr['question_QUESTION_ID'];
                 } else {
-                    $typeItem = "answer-item";
+                    $typeItem = "answer";
                     $typeList = "answer-list";
-                    $item = "A:  " . $arr['answer_ANSWER_ID'];
+                    $jsTreeType = "answer";
+                    $letter = "A";
+                    $item = $letter . ":  " . $arr['answer_ANSWER_ID'];
+                    $id = $letter . $arr['answer_ANSWER_ID'];
+                    $value = $arr['answer_ANSWER_ID'];
                 }
                 //to do, loop the tree
                 if ($arr['LOOP_CHILD_ID'] != NULL){
@@ -78,11 +111,14 @@ function build_tree($arrs, $parent_id="", $level=0) {
                         }
                     }
                     $item = $item . " (loop to " . $letterLoopChild . $arr['LOOP_CHILD_ID'].")";
+                    $jsTreeType = "loop";
                 }
-            echo "<ul>\n";
-            echo "\t <li class=\"" . $typeList . '"><span class="' . $typeItem . '">' . $item . '</span>';
+            echo "<ul>" . PHP_EOL;
+            echo "\t <li class=\"" . $typeList . '" data-jstree=\'{"type":"'.$jsTreeType.'"}\'>'
+                    . '<input type="radio" name="'.$typeItem.'" id="'.$id.'" value="'.$value.'" />'
+                    . PHP_EOL . '<label class="' . $typeItem . '" for="'.$id.'">'. $item . '</label>';
             build_tree($arrs, $arr['CONNECTION_ID'], $level+1);
-            echo "</li>\n</ul>";
+            echo "</li>".PHP_EOL."</ul>";
         }
     }
 }
@@ -91,19 +127,12 @@ build_tree($arrs);
 ?>
 </div>
 
-<script src="/aqm/data/jquery-1.11.2.min.js"></script>
-	<script src="/aqm/data/jstree/jstree.min.js"></script>
+
         
         
-        <script>
-	// html demo
-	$('#myjstree').jstree();
-        $('#myjstree').on('ready.jstree', function() {
-            $("#myjstree").jstree("open_all");          
-        });
-        </script>
+        
     
-    
+    <!-- old not needed
     <p> (This will be replaced with a user friendly map/tree but submit values will be same though)</p>
     <div><span class="inputError"><?php echo ($noQuestionSelectedError); ?></span></div>
             <?php for ($i=0;$i<count($quizData);$i+=2){
@@ -118,6 +147,7 @@ build_tree($arrs);
                         . $quizData[$i+1]['ANSWER'] . '</label></div>';
             }
             ?> 
+    -->
         
     <?php } else { //no questions ?>
     <p> There are no questions on this quiz, How about adding some? </p>
@@ -152,6 +182,41 @@ build_tree($arrs);
 
 <?php
 $templateLogic->endBody();
-
+$templateLogic->addJavascriptBottom("jstree/jstree.min.js", true);
+$templateLogic->addCustomBottom(
+        '<script>
+        $(function () {
+            $("#myjstree").jstree({
+                "types": {
+                    "answer": {
+                        "icon": "'. STYLES_THIRD_PARTY_LOCATION .'/jstree/themes/default/answer.png"
+                    },
+                    "question": {
+                        "icon": "'. STYLES_THIRD_PARTY_LOCATION .'/jstree/themes/default/question.png"
+                    },
+                    "loop": {
+                        "icon": "'. STYLES_THIRD_PARTY_LOCATION .'/jstree/themes/default/loop.png"
+                    }
+                },
+                "plugins" : [ "types" ]
+            });
+            // open all questions
+            $("#myjstree").on("ready.jstree", function() {
+                $("#myjstree").jstree("open_all");          
+            });
+            $("#myjstree").bind(
+                "select_node.jstree", function (evt, data) {
+                //console.log($("#myjstree").jstree("get_selected"));
+                var CurrentNode = $("#myjstree").jstree("get_selected");
+                console.log($("#"+CurrentNode).find("input[type=radio]:first")[0]);
+//              //$("#divtree").jstree("get_selected")
+                //remove checks
+                $("#myjstree").find("input[type=radio]").prop("checked", false);
+                var r = $("#"+CurrentNode).find("input[type=radio]:first")[0];
+                $(r).prop("checked", true);
+            });
+            
+       });
+        </script>');
 //html
 echo $templateLogic->render();

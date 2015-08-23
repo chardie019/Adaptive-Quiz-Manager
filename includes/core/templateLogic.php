@@ -44,11 +44,15 @@ class templateLogic {
     /** 
      * templateLogic constructor adds data to ALL the pages 
      * 
-     * @param string $inputCSS The file name of the CSS file to added
+     * @param string $inputCSS The file name (or subfolder/subfolder/file) of the CSS file to added
      * @return void
      */
-    function addCSS($inputCSS) {
-    $this->stylesheets[] = STYLES_LOCATION . '/' . $inputCSS;   //add to array
+    function addCSS($inputCSS, $thirdParty = false) {
+        if ($thirdParty == false){
+            $this->stylesheets[] = STYLES_LOCATION . '/' . $inputCSS;   //add to array
+        } else {
+            $this->stylesheets[] = STYLES_THIRD_PARTY_LOCATION . '/' . $inputCSS; 
+        }  
     }
     /** 
      * This function adds javascript to the top of the page 
@@ -59,8 +63,13 @@ class templateLogic {
      * @param string $inputJS The file name of the CSS file to added
      * @return void
      */
-    function addJavascriptTop($inputJS) {
-    $this->javascriptsTop[] = STYLES_DATA_LOCATION . '/' . $inputJS; //add to array
+    function addJavascriptTop($inputJS, $thirdParty = false) {
+        if ($thirdParty == false){
+            $this->javascriptsTop[] = STYLES_DATA_LOCATION . '/' . $inputJS; //add to array
+        } else {
+            $this->javascriptsTop[] = STYLES_THIRD_PARTY_LOCATION . '/' . $inputJS; //add to array
+        }
+    
     }
     /** 
      * This function adds a Javascript file to head of the html page 
@@ -210,8 +219,13 @@ class templateLogic {
      * @param string $inputJS The filename of the JS script
      * @return void
      */
-    function addJavascriptBottom($inputJS) {
-    $this->javascriptsBottom[] = STYLES_DATA_LOCATION . '/' . $inputJS;  //add to array
+    function addJavascriptBottom($inputJS, $thirdParty = false) {
+        if ($thirdParty == false){
+            $this->javascriptsBottom[] = STYLES_DATA_LOCATION . '/' . $inputJS;  //add to array
+        } else {
+            $this->javascriptsBottom[] = STYLES_THIRD_PARTY_LOCATION . '/' . $inputJS;  //add to array
+        }
+    
     }
     /** 
      * Adds a sring to the bottom of the page 
