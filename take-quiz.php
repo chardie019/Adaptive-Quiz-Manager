@@ -74,11 +74,12 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //next question
         "QUIZ_ID"           => $_SESSION["QUIZ_CURRENT_QUIZ_ID"]
     );
     $whereColoumn = array(
-        "question_QUESTION_ID"  => "QUESTION_ID",
-        "quiz_QUIZ_ID"          => "QUIZ_ID"
+        "answer.question_QUESTION_ID"   => "QUESTION_ID",
+        "question_answer.quiz_QUIZ_ID"  => "QUIZ_ID",
+        "answer.quiz_QUIZ_ID"           => "QUIZ_ID"
     );
 
-    $answerID = $dbLogic->selectWithColumns("answer.*", "answer, question, quiz", $data, $whereColoumn);
+    $answerID = $dbLogic->selectWithColumns("answer.*, CONNECTION_ID", "answer, question, quiz", $data, $whereColoumn);
     
     //Set the feedback to appear on the next question page for the one previously answered
     if(!empty($answerID['FEEDBACK'])){
@@ -88,13 +89,18 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //next question
     //success - input was legit - answer is valid
     if (count($answerID) > 0){ 
         //Call record-answer before a new question ID is set
-            include("record-answer.php");    
+        //include("record-answer.php");    
           
         //get the next question
-        $data = array(
-            "QUESTION_ID" => $answerID['LINK']
+        $where = array(
+            "PARENT_ID" => $answerID['CONNECTION_ID']
         );      
-        //find next question
+            $whereColumns = array(
+                "question_answer.question_QUESTION_ID" => "QUESTION_ID"
+            );
+            //find first question - we assume first in table is the first
+            //find the first question
+            $questionData = $dbLogic->selectWithColumnsOrder("question.*", "question_answer, question", $where, $whereColumns, "CONNECTION_ID");
         $questionData = $dbLogic->select("*", "question", $data);
         $answerData = prepareViewPage();
         
@@ -137,11 +143,16 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //next question
                 include ("quiz-description.php");
             } else {                                                                   // straight to the actual quiz
                 //find question now
-            $data = array(
-                        "quiz_QUIZ_ID" => $_SESSION["QUIZ_CURRENT_QUIZ_ID"]
-                    );
+                //"question_answer.quiz_QUIZ_ID" => $_SESSION["QUIZ_CURRENT_QUIZ_ID"]
+            $where = array(
+                "question_answer.quiz_QUIZ_ID" => $_SESSION["QUIZ_CURRENT_QUIZ_ID"]
+            );
+            $whereColumns = array(
+                "question_answer.question_QUESTION_ID" => "question.QUESTION_ID"
+            );
             //find first question - we assume first in table is the first
-            $questionData = $dbLogic->select("*", "question", $data);
+            //find the first question
+            $questionData = $dbLogic->selectWithColumnsOrder("question.*, question_answer.quiz_QUIZ_ID", "question_answer, question", $where, $whereColumns, "CONNECTION_ID");
             $_SESSION["QUIZ_CURRENT_QUESTION"] = $questionData["QUESTION_ID"];
             $answerData = prepareViewPage(); 
             //html

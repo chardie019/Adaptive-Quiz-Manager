@@ -93,6 +93,26 @@ class DB {
         return $results;
     }
     
+    public function selectOrder($columns, $table, $dataArray, $sortColumn, $singleRow=True) {
+        if (!is_string ($table)) {
+            die("A string was not passed to the Select function on DB class");
+        }
+        $where = "";
+        foreach ($dataArray as $column => $value) {      //$value not used - it's in $data
+            $where .= ($where == "") ? "" : " AND ";
+            $where .= "$column = :$column";
+        }
+        
+        $stmt = self::$connection->prepare("SELECT $columns FROM $table WHERE $where ORDER BY $sortColumn;") or die('Problem preparing query');
+        $stmt->execute($dataArray);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if ($singleRow && ($results)) {   //true and are actaully results
+            //$results = array_values($results[0]);   //return normal array instead
+            $results = $results[0];   //return normal array instead
+        }
+        return $results;
+    }
+    
     public function selectWithColumns($column, $table, $dataArray, $whereColumn, $singleRow=True) {
         if (!is_string ($table)) {
             die("A string was not passed to the selectWithColumns( function on DB class");
@@ -108,6 +128,38 @@ class DB {
         }
         $stmt = self::$connection->prepare("SELECT $column FROM $table WHERE " . $where . ";") or die('Problem preparing query');
         $stmt->execute($dataArray);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if ($singleRow && ($results)) {   //true and are actaully results
+            //$results = array_values($results[0]);   //return normal array instead
+            $results = $results[0];   //return normal array instead
+        }
+        return $results;
+    }
+    
+    public function selectWithColumnsOrder($column, $table, $dataArray, $whereColumn, $sortColumn, $singleRow=True) {
+        if (!is_string ($table)) {
+            die("A string was not passed to the selectWithColumns( function on DB class");
+        }
+        $where = "";
+        //the parms to be binded
+        foreach ($dataArray as $columnTemp => $valueTemp) {      //$value not used - it's in $data
+            $where .= ($where == "") ? "" : " AND ";
+            $where .= "$columnTemp = :" . preg_replace('/\\./', '_', $columnTemp); //replace dot with underscore for table.column
+            $bindings[] = array( 'binding' => preg_replace('/\\./', '_', $columnTemp), 'value' => $valueTemp );
+        }
+        //the columns
+        foreach ($whereColumn as $columnTemp => $valueTemp) {      //build coloumn where query
+            $where .= ($where == "") ? "" : " AND ";
+            $where .= "$columnTemp = $valueTemp";
+        }
+        
+        $sql = "SELECT $column FROM $table WHERE $where ORDER BY $sortColumn;";
+
+        $stmt = self::$connection->prepare("SELECT $column FROM $table WHERE $where ORDER BY $sortColumn") or die('Problem preparing query');
+        foreach ($bindings as $bind) {
+            $stmt->bindValue(':' . $bind['binding'], $bind['value']);
+        }
+        $stmt->execute();
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         if ($singleRow && ($results)) {   //true and are actaully results
             //$results = array_values($results[0]);   //return normal array instead
