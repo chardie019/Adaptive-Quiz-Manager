@@ -152,13 +152,12 @@ class DB {
             $where .= ($where == "") ? "" : " AND ";
             $where .= "$columnTemp = $valueTemp";
         }
-        
         $sql = "SELECT $column FROM $table WHERE $where ORDER BY $sortColumn;";
-
         $stmt = self::$connection->prepare("SELECT $column FROM $table WHERE $where ORDER BY $sortColumn") or die('Problem preparing query');
         foreach ($bindings as $bind) {
             $stmt->bindValue(':' . $bind['binding'], $bind['value']);
         }
+        //$stmt->debugDumpParams();
         $stmt->execute();
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         if ($singleRow && ($results)) {   //true and are actaully results
@@ -299,7 +298,41 @@ class DB {
         }
         return $results;
     }
+
 //Used to retrieve results from required tables
+    public function selectFullOuterJoin($column, $table, $whereData, $joinTable, $tableArray, $joinTable2, $tableArray2,$singleRow=True) {
+        if (!is_string ($table)) {
+            die("A string was not passed to the selectFullOuterJoin( function on DB class");
+        }
+        $where = "";
+        $joinWhere = "";
+        $joinWhere2 = "";
+        foreach ($whereData as $columnTemp => $valueTemp) {      //$value not used - it's in $data
+            $where .= ($where == "") ? "" : " AND ";
+            $where .= "$columnTemp = :$columnTemp";
+        }
+        foreach ($tableArray as $columnTemp => $valueTemp) {      //build coloumn where query
+            $joinWhere .= ($joinWhere == "") ? "" : " AND ";
+            $joinWhere .= "$columnTemp = $valueTemp";
+        }
+        foreach ($tableArray2 as $columnTemp => $valueTemp) {      //build coloumn where query
+            $joinWhere2 .= ($joinWhere2 == "") ? "" : " AND ";
+            $joinWhere2 .= "$columnTemp = $valueTemp";
+        }
+        $sql = "SELECT $column FROM $table " . 
+                "LEFT JOIN $joinTable ON $joinWhere " . 
+                "LEFT JOIN $joinTable2 ON $joinWhere2 WHERE $where;";
+        $stmt = self::$connection->prepare($sql) or die('Problem preparing query');
+        
+        $stmt->execute($whereData);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if ($singleRow && ($results)) {   //true and are actaully results
+            //$results = array_values($results[0]);   //return normal array instead
+            $results = $results[0];   //return normal array instead
+        }
+        return $results;
+    }
+    
     public function selectWithFourColumns($column, $table, $dataArray, $whereColumn, $whereColumn2,$whereColumn3,$singleRow=True) {
         if (!is_string ($table)) {
             die("A string was not passed to the selectWithColumns( function on DB class");

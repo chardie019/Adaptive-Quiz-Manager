@@ -7,7 +7,7 @@
 include ("check-quiz-id-edit-quiz.php");
 // end of php file inclusion
 
-$quizIDGet = filter_input(INPUT_GET, "quiz");
+$quizIdGet = filter_input(INPUT_GET, "quiz");
 
 $questionIDPost = filter_input(INPUT_POST, "question");
 

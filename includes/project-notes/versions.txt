@@ -1,3 +1,11 @@
+### version 5.5.2 - 23/08/2015 - question_answer + fixes  ###
+=joshua
+Fixed a some issues with empty folders (github issue) thanks harry
+changed SQL database with new table question_answer to support quiz map
+moved quiz_id from question to the new table
+fixed take-quiz and map due to move
+addd full outer join in db logic
+
 ### version 5.5.1.3 - 23/08/2015 - tree-view edit-quiz draft2  ###
 =joshua
 Draft tree-view inputs working

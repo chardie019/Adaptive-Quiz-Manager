@@ -9,7 +9,7 @@ include ("check-quiz-id-edit-quiz.php");
 
 $quizIDGet = filter_input(INPUT_GET, "quiz");
 
-$linkIDPost = filter_input(INPUT_POST, "answer");
+$questionIDPost = filter_input(INPUT_POST, "question");
 
 //html
 include("add-answer-view.php");

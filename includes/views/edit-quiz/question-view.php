@@ -51,15 +51,18 @@ $templateLogic->addCustomHeaders('
     .jstree-children .answer {
         background-color: initial;
     }
+    .jstree-children .question {
+        font-weight: bold;
+    }
     </style>');
 $templateLogic->startBody();
 ?>
 <form  method="post" action="<?php echo htmlentities($_SERVER['PHP_SELF']) . '?quiz=' . $quizIDGet; ?>">
 <div class="edit-question-area">
     <?php if (count($quizData) > 0) { // if there are questions ?>
-    <p> Demo tree view, input works </p>
-    <p> to use , import \includes\project-notes\question_answer.sql table </p>
-    
+    <p> Demo tree view, input works - note:quiz_QUIZ_Id moved from question to the question_answer table </p>
+    <p> to use , import \includes\project-notes\aqm.sql table </p>
+    <div><span class="inputError"><?php echo ($selectionError); ?></span></div>
     	<div id="myjstree" class="demo">
 <?php
 //connect to mysql and select db
@@ -161,22 +164,27 @@ build_tree($arrs);
     
 </div>
 <div class="edit-question-sidebar">
-    <p><input class="mybutton" type="submit" name="addQuestion" value="Add Question" />
-    <br />
-    <br />
-    <input class="mybutton" type="submit" name="removeQuestion" value="Remove Question" />
-    <br />
-    <br />
-    <input class="mybutton" type="submit" name="addAnswer" value="Add Answer" />
-    <br />
-    <br />
-    <input class="mybutton" type="submit" name="removeAnswer" value="Remove Answer" />
-    <br />
-    <br />
-    <input class="mybutton" type="reset" value="Clear" />
-    <br />
-    <br />
-    <a class="mybutton" href="<?php echo CONFIG_ROOT_URL . '/edit-quiz/question/add-initial-question.php?quiz=' . $quizIDGet ?>">Add Initial Question</a></p>
+    <p>
+        <input class="mybutton" type="submit" name="inspect" value="Inspect" />
+        <br />
+        <br />
+        <input class="mybutton" type="submit" name="addQuestion" value="Add Question" />
+        <br />
+        <br />
+        <input class="mybutton" type="submit" name="removeQuestion" value="Remove Question" />
+        <br />
+        <br />
+        <input class="mybutton" type="submit" name="addAnswer" value="Add Answer" />
+        <br />
+        <br />
+        <input class="mybutton" type="submit" name="removeAnswer" value="Remove Answer" />
+        <br />
+        <br />
+        <input class="mybutton" type="reset" value="Clear" />
+        <br />
+        <br />
+        <a class="mybutton" href="<?php echo CONFIG_ROOT_URL . '/edit-quiz/question/add-initial-question.php?quiz=' . $quizIDGet ?>">Add Initial Question</a>
+    </p>
 </div>
 </form>
 
