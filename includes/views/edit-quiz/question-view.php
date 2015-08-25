@@ -82,11 +82,16 @@ while ($row = mysqli_fetch_array($result, MYSQL_ASSOC)) {
 }
 
 function build_tree($arrs, $parent_id="", $level=0) {
+    $listNum = 0; //open first only
     foreach ($arrs as $arr) {
         if ($arr['PARENT_ID'] == $parent_id) {
                  if ($arr['TYPE'] == "question"){
                     $typeItem = "question";
-                    $typeList= "question-list";
+                    if($listNum == 0){
+                        $addClass = " jstree-open";
+                    }else {$addClass = "";}
+                    $listNum++;
+                    $typeList= "question-list". $addClass;
                     $jsTreeType = "question";
                     $letter = "Q";
                     $item = $letter . ":  " . $arr['question_QUESTION_ID'];
@@ -210,7 +215,7 @@ $templateLogic->addCustomBottom(
             });
             // open all questions
             $("#myjstree").on("ready.jstree", function() {
-                $("#myjstree").jstree("open_all");          
+                /*$("#myjstree").jstree("open_all"); */         
             });
             $("#myjstree").bind(
                 "select_node.jstree", function (evt, data) {

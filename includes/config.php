@@ -98,6 +98,7 @@ if ($dbLogic == false || $_SESSION["DB_STATUS"] == 0){
     //include other config files
     include_once("userBean.php");
    include_once("userLogic.php");
+   include_once("quizLogic.php");
     }
 
 

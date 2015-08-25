@@ -1,4 +1,10 @@
-### version 5.5.2 - 23/08/2015 - question_answer + fixes  ###
+### version 5.5.2.1 - 25/08/2015 - tidy take-quiz a little + 1 generic function  ###
+=joshua
+impletmented 1 generic function for take quiz (saving code)
+set edit-quiz map to open first branch only (todo, add a open all branch button)
+moved test quiz images in a folder 
+
+### version 5.5.2 - 24/08/2015 - question_answer + fixes  ###
 =joshua
 Fixed a some issues with empty folders (github issue) thanks harry
 changed SQL database with new table question_answer to support quiz map
