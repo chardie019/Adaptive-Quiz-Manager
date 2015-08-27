@@ -42,25 +42,29 @@ class DB {
     private static $errorMessage;
     
     function __construct ($TINA = false) {
-        $options = array(
-            //PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8mb4' COLLATE 'utf8mb4_unicode_ci' ",
-            PDO::ATTR_EMULATE_PREPARES      => false,
-            PDO::MYSQL_ATTR_INIT_COMMAND    => "SET NAMES utf8",
-            PDO::ATTR_ERRMODE               => PDO::ERRMODE_EXCEPTION
-        );
-        try {
-            if (!$TINA) { //false - default
-                self::$connection = new PDO("mysql:host=localhost;dbname=aqm", "aqm", "jc66882Dxc9D", $options); //$host,$user,$password,$db
-                $_SESSION["DB_STATUS"] = 1;
-                // "::" is the Scope Resolution Operator aka access class variables
-            } else {
-                //setup TINA
-                echo "TINA!!!!!";
+            $options = array(
+                //PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8mb4' COLLATE 'utf8mb4_unicode_ci' ",
+                PDO::ATTR_EMULATE_PREPARES      => false,
+                PDO::MYSQL_ATTR_INIT_COMMAND    => "SET NAMES utf8",
+                PDO::ATTR_ERRMODE               => PDO::ERRMODE_EXCEPTION
+            );
+            try {
+                if (!$TINA) { //false - default
+                    self::$connection = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DB, DB_USERNAME, DB_PASSWORD, $options); //$host,$user,$password,$db
+                    $_SESSION["DB_STATUS"] = 1;
+                    // "::" is the Scope Resolution Operator aka access class variables
+                } else {
+                    //setup TINA
+                    echo "TINA!!!!!";
+                }
+            } catch (PDOException $e) {
+                if (CONFIG_DEV_ENV == true){
+                    $errorMessageSpecific = $e->getMessage();
+                }
+                $errorMessage = "There was an error connecting to the database.";
+                include "404.php";
+                exit;
             }
-        } catch (PDOException $e) {
-            self::$errorMessage = "There was an error connecting to the database.";
-            $_SESSION["DB_STATUS"] = 0;
-        }
     }
     function isError() {
         if (self::$errorMessage  === NULL){
@@ -362,6 +366,9 @@ class DB {
             $results = $results[0];   //return normal array instead
         }
         return $results;
+    }
+    private function cleanTheOutput($output){
+        return htmlentities($output);
     }
 }
 ?>

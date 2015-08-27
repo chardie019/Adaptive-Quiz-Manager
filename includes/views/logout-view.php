@@ -16,4 +16,4 @@ $templateLogic->startBody();
 $templateLogic->endBody();
 
 //html
-echo $templateLogic->render("blank");
+echo $templateLogic->render();

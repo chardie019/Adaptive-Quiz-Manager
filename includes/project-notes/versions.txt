@@ -1,4 +1,11 @@
-### version 5.5.2.2 - 25/08/2015 - small userlogic  chnages ###
+### version 5.5.2.3 - 28/08/2015 - login changes ###
+=joshua
+transparent logo
+make dev login page more robust so team can not run into errors
+added version table to ensure we are working on the same tables versions wtc.
+tested working on a personal linux server (on the Internet)
+
+### version 5.5.2.2 - 28/08/2015 - small userlogic  chnages ###
 =joshua 
 double check db is correct, ensure userlogic is working(login)
 

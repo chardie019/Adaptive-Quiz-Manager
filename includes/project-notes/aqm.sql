@@ -13,14 +13,14 @@ SET @tables = CONCAT('DROP TABLE IF EXISTS ', @tables);
 PREPARE stmt FROM @tables;
 EXECUTE stmt;
 DEALLOCATE PREPARE stmt;
-SET FOREIGN_KEY_CHECKS = 1;
+
 
 -- phpMyAdmin SQL Dump
 -- version 3.4.5
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Aug 27, 2015 at 12:08 PM
+-- Generation Time: Aug 28, 2015 at 02:25 AM
 -- Server version: 5.5.16
 -- PHP Version: 5.3.8
 
@@ -621,6 +621,23 @@ INSERT INTO `user` (`USERNAME`, `ADMIN_TOGGLE`) VALUES
 ('user2', 0),
 ('user3', 0);
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `version`
+--
+
+CREATE TABLE IF NOT EXISTS `version` (
+  `BUILD_NUMBER` int(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores website DB version';
+
+--
+-- Dumping data for table `version`
+--
+
+INSERT INTO `version` (`BUILD_NUMBER`) VALUES
+(1);
+
 --
 -- Constraints for dumped tables
 --
@@ -687,3 +704,5 @@ ALTER TABLE `taker`
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+SET FOREIGN_KEY_CHECKS = 1;

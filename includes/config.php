@@ -10,6 +10,14 @@
 
 ini_set("log_errors", 1);
 ini_set("error_log", "not_synced/PHP_errors.log"); //relative to htaccess in the aqm
+define( 'CONFIG_DEV_ENV', true); //are developing
+
+//DB variables
+define( 'DB_HOST', "localhost");
+define( 'DB_DB', "aqm");
+define( 'DB_USERNAME', "aqm");
+define( 'DB_PASSWORD', "jc66882Dxc9D");
+
 
 //define site variables (not styles)
 define( 'CONFIG_ROOT_DIR', dirname(dirname(__FILE__))); // C:\xampp\htdocs\aqm <inlude file from another location relative to here? >
@@ -19,6 +27,7 @@ define( 'CONFIG_ROOT_URL', substr($_SERVER['PHP_SELF'], 0, - (strlen($_SERVER['S
 
 //set include path (so you don't reference other files, just this) (Part 1/2)
 $paths = array(
+    dirname(__FILE__) . '/../',                 //root directory
     dirname(__FILE__),                          //include directory
     dirname(__FILE__) . '/core/',               //core directory
     dirname(__FILE__) . '/views/',              //views directory
@@ -80,28 +89,18 @@ include_once("styles.php");
 
 
 
-//include the database
-include_once("dbLogic.php");
+
 //check database works
+include_once("dbLogic.php");
 
-    $dbLogic = new DB();
-if ($dbLogic == false || $_SESSION["DB_STATUS"] == 0){
-        
-        if ($_SESSION["DB_REDIRECT"] != 1){
-            $_SESSION["DB_REDIRECT"] = 1; //redirecting
-            header('Location: ' . CONFIG_ROOT_URL . '/404.php');
-            stop();
-        }
-        
-} else {
+//test DB works
+$dbLogic = new DB();
 
-    //include other config files
-    include_once("userBean.php");
-   include_once("userLogic.php");
-   include_once("quizLogic.php");
-    }
+//include other config files
+include_once("userBean.php");
+include_once("quizLogic.php");
 
-
+include_once("userLogic.php");
 //note: when echo-ing html other language, use  echo (htmlentities($string));
 
 ?>
