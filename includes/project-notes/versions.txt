@@ -1,3 +1,7 @@
+### version 5.5.2.2 - 25/08/2015 - small userlogic  chnages ###
+=joshua 
+double check db is correct, ensure userlogic is working(login)
+
 ### version 5.5.2.1 - 25/08/2015 - tidy take-quiz a little + 1 generic function  ###
 =joshua
 impletmented 1 generic function for take quiz (saving code)

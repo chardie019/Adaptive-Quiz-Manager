@@ -5,16 +5,19 @@
 //check user is logged in (dev envirnment)
 //actually is csu authenication in csu envirnment
 if (empty($_SERVER['uid'])){
-    if (empty($_SESSION["USERLOGIC_UID_IS_SET"])){         //not logged in
-        if (!defined('USERLOGIC_ON_LOGIN_PAGE')){
+    if (empty($_SESSION["username"]) 
+            && !defined('USERLOGIC_ON_LOGIN_PAGE') 
+            && empty($_SESSION["USERLOGIC_UID_IS_SET"])) { //not logged in
             $_SESSION["REQUEST_URI"] = $_SERVER["REQUEST_URI"]; //record where we are going, just like csu
             header('Location: ' . CONFIG_ROOT_URL . '/misc/login-stub.php'); //this page set USERLOGIC_ON_LOGIN_PAGE variable
-            stop();
-        }
-    } else {                    //is logged in
-        $_SESSION["USERLOGIC_UID_IS_SET"] = "SET";    //disable login stub screen
+            exit;
+    } else {
+        //TODO check we actually going to login stub (user didn't escape by pressing the back button)
     }
+} else {                    //is logged in
+    $_SESSION["USERLOGIC_UID_IS_SET"] = "SET";    //disable login stub screen
 }
+
 
 //setup user access etc.
 if (!empty($_SERVER['uid'])){ //if not logined through the dev envirnment
