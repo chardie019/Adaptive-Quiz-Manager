@@ -272,12 +272,17 @@ class DB {
         return $results = self::$connection->lastInsertID();
     }
  
-        public function delete($col, $data, $table) {
-            $dataArray = array($data);
-            $stmt = self::$connection->prepare("delete from $table where $col = ?;") or die('Problem preparing query');
-        $stmt->execute($dataArray);  //send the values separately
- 
-        return $results = self::$connection->lastInsertID(); //return the ID of the user in the database.
+    public function delete($dataArray, $table) {
+        if (!is_string ($table)) {
+            die("A string was not passed to the Select function on DB class");
+        }
+        $where = "";
+        foreach ($dataArray as $column => $value) {      //$value not used - it's in $data
+            $where .= ($where == "") ? "" : " AND ";
+            $where .= "$column = :$column";
+        }      
+        $stmt = self::$connection->prepare("DELETE FROM $table WHERE " . $where . ";") or die('Problem preparing query');
+        $stmt->execute($dataArray);      
     }
     
     public function selectDistinct($column, $table, $dataArray, $whereColumn, $singleRow=True) {

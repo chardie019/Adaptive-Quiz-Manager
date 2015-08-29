@@ -6,37 +6,32 @@ $templateLogic->setSubMenuType("edit-quiz", "details");
 $templateLogic->startBody();
 ?>
                 
-                <div id="content-create-quiz">
-                <br />
-                <br />
-                <!--enctype="" used because of image file upload in form-->
-                <form action='#' method='post' enctype="multipart/form-data" >
-                    
-                <label>Please enter the Title of your quiz: </label>
+<div id="content-create-quiz">
+    <br />
+    <br />
+    <!--enctype="" used because of image file upload in form-->
+        <form action='#' method='post' enctype="multipart/form-data" >                    
+                <p class="label">Please enter the Title of your quiz:</p>
                 <input type='text' name='quizName' value='<?php echo $quizInfo['QUIZ_NAME'] ?>' size='30'></input>
                 <br />
                 <?php echo "<span class=\"inputError\">".$quizNameError."</span>"?>
                 <br />
                 <br />
 
-                <label>Please enter a description for your quiz: </label>
+                <p class="label">Please enter a description for your quiz:</p>
                 <textarea name="quizDescription" cols="40" rows="5"><?php echo $quizInfo['DESCRIPTION'] ?></textarea>
                 <br />
                 <?php echo "<span class=\"inputError\">".$quizDescriptionError."</span>"?>
                 <br />
-                <br />
-                
-                <label>Is this public or private: </label>
+                <p class="label">Is this public or private:</p>
                 Public: 
-                <input type='radio' name='isPublic' value='1' checked></input>
+                <input type='radio' name='isPublic' value='1' <?php if ($quizInfo['IS_PUBLIC'] == "1"){echo "checked=\"checked\"";} ?> />
                 Private: 
-                <input type='radio' name='isPublic' value='0'></input>
+                <input type='radio' name='isPublic' value='0' <?php if ($quizInfo['IS_PUBLIC'] == "0"){echo "checked=\"checked\"";} ?> />
                 <br />
                 <?php echo "<span class=\"inputError\">".$isPublicError."</span>"?>
                 <br />
-                <br />
-
-                <label>Please enter the number of attempts permitted: </label>
+                <p class="label">Please enter the number of attempts permitted:</p>
                 <select name='noAttempts'>
                       <option <?php if($quizInfo['NO_OF_ATTEMPTS'] == '0'){echo("selected");}?>>Unlimited</option>
                       <option <?php if($quizInfo['NO_OF_ATTEMPTS'] == '1'){echo("selected");}?>>1</option>
@@ -53,9 +48,7 @@ $templateLogic->startBody();
                 <br />
                 <?php echo "<span class=\"inputError\">".$noAttemptsError."</span>"?>
                 <br />
-                <br />
-
-                <label>Is there a time limit to complete the quiz: </label>
+                <p class="label">Is there a time limit to complete the quiz:</p>
                 No:
                 <input type='radio' name='isTime' value='0' <?php if($quizInfo['TIME_LIMIT'] == '00:00:00'){echo("checked");}?>></input>
                 Yes:
@@ -63,38 +56,35 @@ $templateLogic->startBody();
                 <br />
                 <?php echo "<span class=\"inputError\">".$isTimeError."</span>"?>
                 <br />
-                <br />
-                <label>***If YES, please enter that time limit: </label>
+                <p class="label">*** If YES, please enter that time limit: ***</p>
                 Hours
                 <select name='timeHours'>
-                    <option>0</option>
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
+                    <option <?php if ($timeHours == "0"){echo "selected=\"selected\"";} ?>>0</option>
+                    <option <?php if ($timeHours == "1"){echo "selected=\"selected\"";} ?>>1</option>
+                    <option <?php if ($timeHours == "2"){echo "selected=\"selected\"";} ?>>2</option>
+                    <option <?php if ($timeHours == "3"){echo "selected=\"selected\"";} ?>>3</option>
+                    <option <?php if ($timeHours == "4"){echo "selected=\"selected\"";} ?>>4</option>
+                    <option <?php if ($timeHours == "5"){echo "selected=\"selected\"";} ?>>5</option>
                 </select>
                 Minutes
                 <select name='timeMinutes'>
-                    <option>0</option>
-                    <option>5</option>
-                    <option>10</option>
-                    <option>15</option>
-                    <option>20</option>
-                    <option>25</option>
-                    <option>30</option>
-                    <option>35</option>
-                    <option>40</option>
-                    <option>45</option>
-                    <option>50</option>
-                    <option>55</option>
+                    <option <?php if ($timeMinutes == "00"){echo "selected=\"selected\"";} ?>>00</option>
+                    <option <?php if ($timeMinutes == "05"){echo "selected=\"selected\"";} ?>>05</option>
+                    <option <?php if ($timeMinutes == "10"){echo "selected=\"selected\"";} ?>>10</option>
+                    <option <?php if ($timeMinutes == "15"){echo "selected=\"selected\"";} ?>>15</option>
+                    <option <?php if ($timeMinutes == "20"){echo "selected=\"selected\"";} ?>>20</option>
+                    <option <?php if ($timeMinutes == "25"){echo "selected=\"selected\"";} ?>>25</option>
+                    <option <?php if ($timeMinutes == "30"){echo "selected=\"selected\"";} ?>>30</option>
+                    <option <?php if ($timeMinutes == "35"){echo "selected=\"selected\"";} ?>>35</option>
+                    <option <?php if ($timeMinutes == "40"){echo "selected=\"selected\"";} ?>>40</option>
+                    <option <?php if ($timeMinutes == "45"){echo "selected=\"selected\"";} ?>>45</option>
+                    <option <?php if ($timeMinutes == "50"){echo "selected=\"selected\"";} ?>>50</option>
+                    <option <?php if ($timeMinutes == "55"){echo "selected=\"selected\"";} ?>>55</option>
                 </select> 
                 <br />
                 <?php echo "<span class=\"inputError\">".$timeLimitError."</span>"?>
                 <br />                
-                <br />
-
-                <label>Can users save progress and return later to the quiz: </label>
+                <p class="label">Can users save progress and return later to the quiz:</p>
                 No:
                 <input type='radio' name='isSave' value='0' <?php if($quizInfo['IS_SAVABLE'] == '0'){echo("checked");}?>></input>
                 Yes:
@@ -103,7 +93,7 @@ $templateLogic->startBody();
                 <?php echo "<span class=\"inputError\">".$isSaveError."</span>"?>
                 <br />
                 <br />
-                <label for="dayStart">When does this quiz open:</label>
+                <p class="label">When does this quiz open:</p>
                 <select name="dayStart" /> 
                     <option>1</option>       
                     <option>2</option>       
@@ -165,7 +155,7 @@ $templateLogic->startBody();
                 <?php echo "<span class=\"inputError\">".$invalidDateError1."</span>"?>
                 <br />
                 <br />
-                <label for="dayEnd">When does this quiz close: </label> 
+                <p class="label">When does this quiz close:</p>
                 <select name="dayEnd" /> 
                     <option>1</option>       
                     <option>2</option>       
@@ -226,25 +216,19 @@ $templateLogic->startBody();
                 <?php echo "<span class=\"inputError\">".$yearEndError."</span>"?>
                 <?php echo "<span class=\"inputError\">".$invalidDateError2."</span>"?>
                 <br />
-                <br />
                 
-                <label>Would you like to change the current Quiz cover image:</label>
+                <p class="label">Is there a cover image to upload with your quiz(optional):</p>
                 <input type="file" name="quizImageUpload" accept="image/*">
-                <br />
                 <br />
                 <img src='<?php echo "C:\Users\Admin\Documents\GitHub\Adaptive-Quiz-Manager\data\quiz-images\\" . $quizInfo["IMAGE"]; ?>' alt='<?php echo $quizInfo['IMAGE_ALT']?>'>
                 <?php echo "<span class=\"inputError\">".$imageUploadError."</span>"?>
                 <br />
-                <br />
-
-                <label>Please provide alternative text for the image you uploaded:</label>
+                <p class="label">Please provide alternative text for the image you uploaded:</p>
                 <textarea name="quizImageText" cols="40" rows="5"><?php echo $quizInfo['IMAGE_ALT'] ?></textarea>
                 <br />
-                <br />
-
-                <button class="mybutton mySubmit" type="submit" name="confirmQuiz" value="Enter">Create</button>
+                <button class="mybutton mySubmit" type="submit" name="confirmQuiz" value="Enter">Update</button>
             </form>
-                 <a class='mybutton myReturn' href='<?php echo(CONFIG_ROOT_URL) ?>/edit-quiz'>Return</a>
+                 <a class='mybutton myReturn' href='<?php echo(CONFIG_ROOT_URL) . "/edit-quiz.php?quiz=".$quizIDPost?>'>Cancel</a>
 <?php
 $templateLogic->endBody();
 

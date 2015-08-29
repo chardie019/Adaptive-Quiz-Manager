@@ -30,7 +30,7 @@ $imageUploadError = "";
 $quizImageTextError = "";
     
 
-
+//Retrieve Quiz details to populate form
     $column = "*";
     
     $dataArray = array(
@@ -38,6 +38,10 @@ $quizImageTextError = "";
     );
     
     $quizInfo = $dbLogic->select('*', 'quiz', $dataArray, true);
+    
+    $time_string = $quizInfo['TIME_LIMIT'];
+    $timeHours = substr($time_string, 1, 1);
+    $timeMinutes = substr($time_string, 3, 2);
 
 //html
 include("details-view.php");
