@@ -273,7 +273,6 @@ class DB {
         $stmt->execute();
         return $lastInsertID = self::$connection->lastInsertID();
     }
-<<<<<<< HEAD
      /**
      * Runs a delete like: "delete from $tables where $whereValuesArray AND "
      * 
@@ -290,21 +289,8 @@ class DB {
         $stmt = self::bindParams($stmt, $deleteValues);
         $stmt->execute();  //send the values separately
         return $lastInsertID = self::$connection->lastInsertID(); //return the ID of the user in the database.
-=======
- 
-    public function delete($dataArray, $table) {
-        if (!is_string ($table)) {
-            die("A string was not passed to the Select function on DB class");
-        }
-        $where = "";
-        foreach ($dataArray as $column => $value) {      //$value not used - it's in $data
-            $where .= ($where == "") ? "" : " AND ";
-            $where .= "$column = :$column";
-        }      
-        $stmt = self::$connection->prepare("DELETE FROM $table WHERE " . $where . ";") or die('Problem preparing query');
-        $stmt->execute($dataArray);      
->>>>>>> origin/master
     }
+
 
     /**
      * Runs a select query like: "SELECT DISTINCT $column FROM $table WHERE $whereValues & $whereColumns"
