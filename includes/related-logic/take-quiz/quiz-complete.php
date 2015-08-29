@@ -19,18 +19,14 @@ $dbLogic = new DB();
         "result_RESULT_ID" => $_SESSION["RESULT_ID"]
     );
     $whereColumn = array(
-        "RESULT_ID" => "result_RESULT_ID"
-    );
-    $whereColumn2 = array(
-        "QUESTION_ID" => "result_answer.question_QUESTION_ID"
-    );
-    $whereColumn3 = array(
+        "RESULT_ID" => "result_RESULT_ID",
+        "QUESTION_ID" => "result_answer.question_QUESTION_ID",
         "result_answer.ANSWER" => "ANSWER_ID"
     );
     
-    $quizResults = $dbLogic->selectWithFourColumns("QUESTION, answer.ANSWER, STARTED_AT, "
+    $quizResults = $dbLogic->selectWithColumns("QUESTION, answer.ANSWER, STARTED_AT, "
             . "ANSWERED_AT", "result_answer, question, answer, result", $data, 
-            $whereColumn, $whereColumn2, $whereColumn3, false); 
+            $whereColumn, false); 
 
     
  

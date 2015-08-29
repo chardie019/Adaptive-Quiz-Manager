@@ -1,3 +1,21 @@
+### version 5.5.3.1 - 29/08/2015 - Re-done DB logic
+=Joshua
+Re-done DB logic, only minor fixes to go
+DB changed from takers/editors to reference shared quiz id 
+Shared quiz fixed - but broken (webpage)
+--- TODO needs generic function ReturnSharedQuizId
+minor update to quiz-complete (removed one function from dblogic)
+
+### version 5.5.3 - 29/08/2015 - Edit Quiz changes
+=Harry
+- Implemented attempt limitations to stop users taking quiz if they've reach maximum attempts
+- Implemented add/remove Taker as well as validation
+- Implemented Add/remove Editor  as well as validation
+- Edit details form now fills out with quiz data upon load. Edit: (Still doesn't load dates woops)
+- Updated delete() method in dbLogic
+- Other small changes including small bugs, updated a few paths etc. 
+*NOTE: some updates may have caused a few styling obscurities, will fix next commit!
+
 ### version 5.5.2.3 - 28/08/2015 - login changes ###
 =joshua
 transparent logo

@@ -1,65 +1,31 @@
 <?php
-//DBLogic.php
-
-/*Example to to use it:
- * require_once("DbClass.php");
-    //create an instance of the DB class
-
-    $DbClass = new DB();
- * 
- * //retrieve data
-            $firstName = "josh";
-            $lastName = "Grey";
-            $data = array(
-                "firstName" => $firstName,
-                "lastName" => $lastName,
-            );
-            $resultLine = $DbClass->select("*", "test", $data);
-            
-            
-            $i = 0;
-            foreach ($resultLine as $oneResult) {
-                echo "<tr>";
-                $result = array_values($oneResult); //convert from assocative array to numeric(normal) array
-                echo "<td> <input type=\"radio\" name=\"id\" value=\"$result[0]\" />";
-                for ($i2 = 0; $i2 < (count($oneResult)); $i2++){
-                echo "<td>";
-                    //echo "$i2";
-                    echo $result[$i2];                    
-                    echo "</td>";
-                }
-                echo "</tr>"; 
-                $i += 1;
-            }
-            echo "</table>";
-                    echo "<br /> <b>Total rows: $i<b>"
- * 
- * 
+/*DBLogic.php
+ * Provides easy DB access with DB protection mechanisim
+ * TODO: implement clean the output
  */
 
 class DB {
     private static $connection; //private - no access to outsiders
-    private static $errorMessage;
     
     function __construct ($TINA = false) {
             $options = array(
-                //PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8mb4' COLLATE 'utf8mb4_unicode_ci' ",
                 PDO::ATTR_EMULATE_PREPARES      => false,
                 PDO::MYSQL_ATTR_INIT_COMMAND    => "SET NAMES utf8",
                 PDO::ATTR_ERRMODE               => PDO::ERRMODE_EXCEPTION
             );
             try {
                 if (!$TINA) { //false - default
-                    self::$connection = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DB, DB_USERNAME, DB_PASSWORD, $options); //$host,$user,$password,$db
-                    $_SESSION["DB_STATUS"] = 1;
-                    // "::" is the Scope Resolution Operator aka access class variables
+                    //$host,$user,$password,$db
+                    self::$connection = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DB, DB_USERNAME, DB_PASSWORD, $options); 
+                    // "::" is the Scope Resolution Operator aka access class variables (and static functions)
                 } else {
                     //setup TINA
                     echo "TINA!!!!!";
                 }
             } catch (PDOException $e) {
                 if (CONFIG_DEV_ENV == true){
-                    $errorMessageSpecific = $e->getMessage();
+                /* @var $errorMessageSpecific type */
+                $errorMessageSpecific = $e->getMessage();
                 }
                 $errorMessage = "There was an error connecting to the database.";
                 include "404.php";
@@ -74,301 +40,440 @@ class DB {
         }
     }
  
-    //Select rows from the database.
-    //returns a full row or rows from $table using $where as the where clause.
-    //return value is an associative array with column names as keys.
-    public function select($columns, $table, $dataArray, $singleRow=True) {
-        if (!is_string ($table)) {
-            die("A string was not passed to the Select function on DB class");
-        }
-        $where = "";
-        foreach ($dataArray as $column => $value) {      //$value not used - it's in $data
-            $where .= ($where == "") ? "" : " AND ";
-            $where .= "$column = :$column";
-        }
-        
-        $stmt = self::$connection->prepare("SELECT $columns FROM $table WHERE " . $where . ";") or die('Problem preparing query');
-        $stmt->execute($dataArray);
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        if ($singleRow && ($results)) {   //true and are actaully results
-            //$results = array_values($results[0]);   //return normal array instead
-            $results = $results[0];   //return normal array instead
-        }
-        return $results;
-    }
-    
-    public function selectOrder($columns, $table, $dataArray, $sortColumn, $singleRow=True) {
-        if (!is_string ($table)) {
-            die("A string was not passed to the Select function on DB class");
-        }
-        $where = "";
-        foreach ($dataArray as $column => $value) {      //$value not used - it's in $data
-            $where .= ($where == "") ? "" : " AND ";
-            $where .= "$column = :$column";
-        }
-        
-        $stmt = self::$connection->prepare("SELECT $columns FROM $table WHERE $where ORDER BY $sortColumn;") or die('Problem preparing query');
-        $stmt->execute($dataArray);
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        if ($singleRow && ($results)) {   //true and are actaully results
-            //$results = array_values($results[0]);   //return normal array instead
-            $results = $results[0];   //return normal array instead
-        }
-        return $results;
-    }
-    
-    public function selectWithColumns($column, $table, $dataArray, $whereColumn, $singleRow=True) {
-        if (!is_string ($table)) {
-            die("A string was not passed to the selectWithColumns( function on DB class");
-        }
-        $where = "";
-        foreach ($dataArray as $columnTemp => $valueTemp) {      //$value not used - it's in $data
-            $where .= ($where == "") ? "" : " AND ";
-            $where .= "$columnTemp = :$columnTemp";
-        }
-        foreach ($whereColumn as $columnTemp => $valueTemp) {      //build coloumn where query
-            $where .= ($where == "") ? "" : " AND ";
-            $where .= "$columnTemp = $valueTemp";
-        }
-        $stmt = self::$connection->prepare("SELECT $column FROM $table WHERE " . $where . ";") or die('Problem preparing query');
-        $stmt->execute($dataArray);
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        if ($singleRow && ($results)) {   //true and are actaully results
-            //$results = array_values($results[0]);   //return normal array instead
-            $results = $results[0];   //return normal array instead
-        }
-        return $results;
-    }
-    
-    public function selectWithColumnsOrder($column, $table, $dataArray, $whereColumn, $sortColumn, $singleRow=True) {
-        if (!is_string ($table)) {
-            die("A string was not passed to the selectWithColumns( function on DB class");
-        }
-        $where = "";
-        //the parms to be binded
-        foreach ($dataArray as $columnTemp => $valueTemp) {      //$value not used - it's in $data
-            $where .= ($where == "") ? "" : " AND ";
-            $where .= "$columnTemp = :" . preg_replace('/\\./', '_', $columnTemp); //replace dot with underscore for table.column
-            $bindings[] = array( 'binding' => preg_replace('/\\./', '_', $columnTemp), 'value' => $valueTemp );
-        }
-        //the columns
-        foreach ($whereColumn as $columnTemp => $valueTemp) {      //build coloumn where query
-            $where .= ($where == "") ? "" : " AND ";
-            $where .= "$columnTemp = $valueTemp";
-        }
-        $sql = "SELECT $column FROM $table WHERE $where ORDER BY $sortColumn;";
-        $stmt = self::$connection->prepare("SELECT $column FROM $table WHERE $where ORDER BY $sortColumn") or die('Problem preparing query');
-        foreach ($bindings as $bind) {
-            $stmt->bindValue(':' . $bind['binding'], $bind['value']);
-        }
-        //$stmt->debugDumpParams();
+
+    /**
+     * Runs a select query like: "SELECT $column FROM $table WHERE $whereValues;"
+     * 
+     * @param string  $columns The columns to be selected in the SQL query. In the form: "xx, yyy, max(zzz) etc"
+     * @param string $tables The tables to be selected by the SQL query. in the form of "xx, yyy, zzz etc"
+     * @param array $whereValuesArray  The input for the where clause. form $column => $vlaue
+     * @param boolean $singleRow return one row of many? true is the default (single row)
+     * @return array $results The results, eg result[15]['column'] or result['column']
+     */
+    public function select($columns, $tables, array $whereValuesArray, $singleRow=True) {
+        assert(is_string($columns));
+        assert(is_bool($singleRow));
+        $where = self::prepareWhereValuesSQL($whereValuesArray); //the values
+        $stmt = self::$connection->prepare("SELECT $columns FROM $tables WHERE $where;") or die('Problem preparing query');
+        $stmt = self::bindParams($stmt, $whereValuesArray);
         $stmt->execute();
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         if ($singleRow && ($results)) {   //true and are actaully results
-            //$results = array_values($results[0]);   //return normal array instead
             $results = $results[0];   //return normal array instead
         }
         return $results;
     }
-    
-    public function selectWithColumnsOr($column, $table, $dataArray, $whereColumn, $dataArrayOr, $whereColumnOr, $singleRow=True) {
-        if (!is_string ($table)) {
-            die("A string was not passed to the selectWithColumns( function on DB class");
-        }
-        $where = "";
-        foreach ($dataArray as $columnTemp => $value) {      //$value not used - it's in $data
-            $where .= ($where == "") ? "" : " AND ";
-            $where .= "$columnTemp = :$columnTemp";
-        }
-        foreach ($whereColumn as $columnTemp => $value) {      //build coloumn where query
-            $where .= ($where == "") ? "" : " AND ";
-            $where .= "$columnTemp = $value";
-        }
-        $dataArrayMerged = array_merge($dataArray, $dataArrayOr);
-        $where .= " OR (";
-        $firstrun = true;
-        foreach ($dataArrayOr as $columnTemp => $value) {      //$value not used - it's in $data
-            $where .= ($firstrun == true) ? "" : " AND ";
-            $firstrun = false;
-            $where .= "$columnTemp = :$columnTemp";
-        }
-        foreach ($whereColumnOr as $columnTemp => $value) {      //where colown OR
-            $where .= ($where == "") ? "" : " AND ";
-            $where .= "$columnTemp = $value";
-        }
-        $where .= ")";
-        $stmt = self::$connection->prepare("SELECT $column FROM $table WHERE " . $where . ";") or die('Problem preparing query');
-        $stmt->execute($dataArrayMerged);
+    /**
+     * Runs a select query like: "SELECT $column FROM $table WHERE $whereValues ORDER BY $sortColumn"
+     * 
+     * @param string  $columns The columns to be selected in the SQL query. In the form: "xx, yyy, max(zzz) etc"
+     * @param string $tables The tables to be selected by the SQL query. in the form of "xx, yyy, zzz etc"
+     * @param array $whereValuesArray  The input for the where clause. form $column => $value
+     * @param string $sortColumn The name of the column to sort by
+     * @param boolean $singleRow return one row of many? true is the default (single row)
+     * @return array $results The results, eg result[15]['column'] or result['column']
+     */
+    public function selectOrder($columns, $tables, array $whereValuesArray, $sortColumn, $singleRow=True) {
+        assert(is_string($columns));
+        assert(is_string($tables));
+        assert(is_string($sortColumn));
+        assert(is_bool($singleRow));
+        $where = self::prepareWhereValuesSQL($whereValuesArray); //the values
+        $stmt = self::$connection->prepare("SELECT $columns FROM $tables WHERE $where ORDER BY $sortColumn") or die('Problem preparing query');
+        $stmt = self::bindParams($stmt, $whereValuesArray);
+        $stmt->execute();
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         if ($singleRow && ($results)) {   //true and are actaully results
-            //$results = array_values($results[0]);   //return normal array instead
             $results = $results[0];   //return normal array instead
         }
         return $results;
     }
     
-    public function selectDistinctWithColumnsOr($column, $table, $dataArray, $whereColumn, $dataArrayOr, $whereColumnOr, $singleRow=True) {
-        if (!is_string ($table)) {
-            die("A string was not passed to the selectWithColumns( function on DB class");
-        }
-        $where = "";
-        foreach ($dataArray as $columnTemp => $value) {      //$value not used - it's in $data
-            $where .= ($where == "") ? "" : " AND ";
-            $where .= "$columnTemp = :$columnTemp";
-        }
-        foreach ($whereColumn as $columnTemp => $value) {      //build coloumn where query
-            $where .= ($where == "") ? "" : " AND ";
-            $where .= "$columnTemp = $value";
-        }
-        $dataArrayMerged = array_merge($dataArray, $dataArrayOr);
-        $where .= " OR (";
-        $firstrun = true;
-        foreach ($dataArrayOr as $columnTemp => $value) {      //$value not used - it's in $data
-            $where .= ($firstrun == true) ? "" : " AND ";
-            $firstrun = false;
-            $where .= "$columnTemp = :$columnTemp";
-        }
-        foreach ($whereColumnOr as $columnTemp => $value) {      //where colown OR
-            $where .= ($where == "") ? "" : " AND ";
-            $where .= "$columnTemp = $value";
-        }
-        $where .= ")";
-        $stmt = self::$connection->prepare("SELECT DISTINCT $column FROM $table WHERE " . $where . ";") or die('Problem preparing query');
-        $stmt->execute($dataArrayMerged);
+    /**
+     * Runs a select query like: "SELECT $column FROM $table WHERE $whereValues AND $whereColumns ORDER BY $sortColumn"
+     * 
+     * @param string  $columns The columns to be selected in the SQL query. In the form: "xx, yyy, max(zzz) etc"
+     * @param string $tables The tables to be selected by the SQL query. in the form of "xx, yyy, zzz etc"
+     * @param array $whereValuesArray  The input for the where clause. form $column => $value
+     * @param array $whereColumnsArray The where matching tables to be selected by the SQL query. in the form of $column => $otherColumn
+     * @param string $sortColumn The name of the column to sort by
+     * @param boolean $singleRow return one row or many? true is the default (single row)
+     * @return array $results The results, eg result[15]['column'] or result['column']
+     */
+    public function selectWithColumns($columns, $tables, array $whereValuesArray, array $whereColumnsArray, $singleRow=True) {
+        assert(is_string($columns));
+        assert(is_string($tables));
+        assert(is_bool($singleRow));
+        $where = self::prepareWhereValuesSQL($whereValuesArray); //the values
+        $where = self::prepareWhereColumnsSQL($whereColumnsArray, $where); //the columns
+        $stmt = self::$connection->prepare("SELECT $columns FROM $tables WHERE $where;") or die('Problem preparing query');
+        $stmt = self::bindParams($stmt, $whereValuesArray);
+        $stmt->execute();
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         if ($singleRow && ($results)) {   //true and are actaully results
-            //$results = array_values($results[0]);   //return normal array instead
             $results = $results[0];   //return normal array instead
         }
         return $results;
     }
-    
-    public function selectAll($table) {
-        if (!is_string ($table)) {
-            die("A string was not passed to the SelectAll function on DB class");
+    /**
+     * Runs a select query like: "SELECT $column FROM $table WHERE $whereValues & $whereColumns ORDER BY $sortColumn"
+     * 
+     * @param string  $columns The columns to be selected in the SQL query. In the form: "xx, yyy, max(zzz) etc"
+     * @param string $tables The tables to be selected by the SQL query. in the form of "xx, yyy, zzz etc"
+     * @param array $whereValuesArray  The input for the where clause. form $column => $vlaue
+     * @param array $whereColumnsArray The where matching tables to be selected by the SQL query. in the form of $column => $otherColumn
+     * @param string $sortColumn The name of the column to sort by
+     * @param boolean $singleRow return one row of many? true is the default (single row)
+     * @return array $results The results, eg result[15]['column'] or result['column']
+     */
+    public function selectWithColumnsOrder($columns, $tables, array $whereValuesArray, array $whereColumnsArray, $sortColumn, $singleRow=True) {
+        assert(is_string($columns));
+        assert(is_string($tables));
+        assert(is_string($sortColumn));
+        assert(is_bool($singleRow));
+        $where = self::prepareWhereValuesSQL($whereValuesArray); //the values
+        $where = self::prepareWhereColumnsSQL($whereColumnsArray, $where); //the columns
+        $stmt = self::$connection->prepare("SELECT $columns FROM $tables WHERE $where ORDER BY $sortColumn") or die('Problem preparing query');
+        $stmt = self::bindParams($stmt, $whereValuesArray);
+        $stmt->execute();
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if ($singleRow && ($results)) {   //true and are actaully results
+            $results = $results[0];   //return normal array instead
         }
-        $stmt = self::$connection->prepare("SELECT * FROM $table;") or die('Problem preparing query');
+        return $results;
+    }
+    /**
+     * Runs a select query like: "SELECT $column FROM $table WHERE $whereValues & $whereColumns OR ($whereValues & $whereColumns) ORDER BY $sortColumn"
+     * 
+     * @param string  $columns The columns to be selected in the SQL query. In the form: "xx, yyy, max(zzz) etc"
+     * @param string $tables The tables to be selected by the SQL query. in the form of "xx, yyy, zzz etc"
+     * @param array $whereValuesArray  The input for the where clause. form $column => $vlaue
+     * @param array $whereColumnsArray The where matching tables to be selected by the SQL query. in the form of $column => $otherColumn
+     * @param array $whereValuesArray2  The input for the where clause (after the OR). form $column => $vlaue
+     * @param array $whereColumnsArray2 The where matching tables(after the OR) to be selected by the SQL query. in the form of $column => $otherColumn    
+     * @param string $sortColumn The name of the column to sort by
+     * @param boolean $singleRow return one row of many? true is the default (single row)
+     * @return array $results The results, eg result[15]['column'] or result['column']
+     */
+    public function selectWithColumnsOrSort($columns, $tables, array $whereValuesArray, array $whereColumnsArray,
+            array $whereValuesArray2, array $whereColumnsArray2, $sortColumn, $singleRow=True) {
+        assert(is_string($columns));
+        assert(is_string($tables));
+        assert(is_string($sortColumn));
+        assert(is_bool($singleRow));
+        $where = self::prepareWhereValuesSQL($whereValuesArray); //the values
+        $where = self::prepareWhereColumnsSQL($whereColumnsArray, $where); //the columns
+        $where .= " OR (";
+        $where = self::prepareWhereValuesSQL($whereValuesArray2, $where); //the values
+        $where = self::prepareWhereColumnsSQL($whereColumnsArray2, $where); //the columns
+        $where .= ")";
+        $stmt = self::$connection->prepare("SELECT $columns FROM $tables WHERE $where ORDER BY $sortColumn;") or die('Problem preparing query');
+        $stmt = self::bindParams($stmt, $whereValuesArray);
+        $stmt->execute();
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if ($singleRow && ($results)) {   //true and are actaully results
+            $results = $results[0];   //return normal array instead
+        }
+        return $results;
+    }
+    /**
+     * Runs a select query like: "SELECT $column FROM $table WHERE $whereValues & $whereColumns OR ($whereValues & $whereColumns)"
+     * 
+     * @param string  $columns The columns to be selected in the SQL query. In the form: "xx, yyy, max(zzz) etc"
+     * @param string $tables The tables to be selected by the SQL query. in the form of "xx, yyy, zzz etc"
+     * @param array $whereValuesArray  The input for the where clause. form $column => $value
+     * @param array $whereColumnsArray The where matching tables to be selected by the SQL query. in the form of $column => $otherColumn
+     * @param array $whereValuesArray2  The input for the where clause (after the OR). form $column => $value
+     * @param array $whereColumnsArray2 The where matching tables(after the OR) to be selected by the SQL query. in the form of $column => $otherColumn    
+     * @param string $sortColumn The name of teh column to sort by
+     * @param boolean $singleRow return one row of many? true is the default (single row)
+     * @return array $results The results, eg result[15]['column'] or result['column']
+     */
+    public function selectWithColumnsOr($columns, $tables, array $whereValuesArray, array $whereColumnsArray,
+            array $whereValuesArray2, array $whereColumnsArray2, $singleRow=True) {
+        assert(is_string($columns));
+        assert(is_string($tables));
+        assert(is_bool($singleRow));
+        $where = self::prepareWhereValuesSQL($whereValuesArray); //the values
+        $where = self::prepareWhereColumnsSQL($whereColumnsArray, $where); //the columns
+        $where .= " OR (";
+        $where = self::prepareWhereValuesSQL($whereValuesArray2, $where); //the values
+        $where = self::prepareWhereColumnsSQL($whereColumnsArray2, $where); //the columns
+        $where .= ")";
+        $stmt = self::$connection->prepare("SELECT $columns FROM $tables WHERE $where;") or die('Problem preparing query');
+        $stmt = self::bindParams($stmt, $whereValuesArray);
+        $stmt->execute();
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if ($singleRow && ($results)) {   //true and are actaully results
+            $results = $results[0];   //return normal array instead
+        }
+        return $results;
+    }
+    /**
+     * Runs a select query like: "SELECT DISTINCT $column FROM $table WHERE $whereValues & $whereColumns OR ($whereValues & $whereColumns)"
+     * 
+     * @param string  $columns The columns to be selected in the SQL query. In the form: "xx, yyy, max(zzz) etc"
+     * @param string $tables The tables to be selected by the SQL query. in the form of "xx, yyy, zzz etc"
+     * @param array $whereValuesArray  The input for the where clause. form $column => $value
+     * @param array $whereColumnsArray The where matching tables to be selected by the SQL query. in the form of $column => $otherColumn
+     * @param array $whereValuesArray2  The input for the where clause (after the OR). form $column => $value
+     * @param array $whereColumnsArray2 The where matching tables(after the OR) to be selected by the SQL query. in the form of $column => $otherColumn    
+     * @param string $sortColumn The name of teh column to sort by
+     * @param boolean $singleRow return one row of many? true is the default (single row)
+     * @return array $results The results, eg result[15]['column'] or result['column']
+     */
+    public function selectDistinctWithColumnsOr($columns, $tables, array $whereValuesArray, array $whereColumnsArray,
+            array $whereValuesArray2, array $whereColumnsArray2, $singleRow=True) {
+        assert(is_string($columns));
+        assert(is_string($tables));
+        assert(is_bool($singleRow));
+        $where = self::prepareWhereValuesSQL($whereValuesArray); //the values
+        $where = self::prepareWhereColumnsSQL($whereColumnsArray, $where); //the columns
+        $where .= " OR (";
+        $where = self::prepareWhereValuesSQL($whereValuesArray2, $where); //the values
+        $where = self::prepareWhereColumnsSQL($whereColumnsArray2, $where); //the columns
+        $where .= ")";
+        $stmt = self::$connection->prepare("SELECT DISTINCT $columns FROM $tables WHERE $where;") or die('Problem preparing query');
+        $stmt = self::bindParams($stmt, $whereValuesArray);
+        $stmt->execute();
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if ($singleRow && ($results)) {   //true and are actaully results
+            $results = $results[0];   //return normal array instead
+        }
+        return $results;
+    }
+    /**
+     * Runs a select ALL query like: ""SELECT * FROM $tables;""
+     * 
+     * @param string $tables The tables to be selected by the SQL query. in the form of "xx, yyy, zzz etc"
+     * @return array $results The results, eg result[15]['column'] or result['column']
+     */
+    public function selectAll($tables) {
+        assert(is_string($tables));
+        $stmt = self::$connection->prepare("SELECT * FROM $tables;") or die('Problem preparing query');
         $stmt->execute();
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $results;
     }
+    /**
+     * Runs a insert like: "insert into $table ($columns) values ($values);"
+     * 
+     * @param string $tables The tables to be selected by the SQL query. in the form of "xx, yyy, zzz etc"
+     * @param array $whereValuesArray  The input for the where clause. form $column => $value
+     * @param array $whereColumnsArray The where matching tables to be selected by the SQL query. in the form of $column => $otherColumn
+     * @return string $lastInsertID Returns the primary key of the insertion (eg quiz_id)
+     */
+    public function insert(array $insertArray, $tables) {
+        assert(is_string($tables));
+        $columns = self::prepareInsertColumns($insertArray);
+        $values = self::prepareInsertValues($insertArray);
+        echo "insert into $tables ($columns) values ($values);";
+        $stmt = self::$connection->prepare("insert into $tables ($columns) values ($values);") or die('Problem preparing query');
+        $stmt = self::bindParams($stmt, $insertArray);
+        $stmt->execute();
+        return $lastInsertID = self::$connection->lastInsertID();
+    }
+     /**
+     * Runs a delete like: "delete from $tables where $whereValuesArray AND "
+     * 
+     * @param string $tables The tables to be selected by the SQL query. in the form of "xx, yyy, zzz etc"
+     * @param array $deleteValues  The input for the where clause. form $column => $value
+     * @param array $deleteColumns The where matching tables to be selected by the SQL query. in the form of $column => $otherColumn
+     * @return string $lastInsertID Returns the primary key of the insertion (eg quiz_id)
+     */
+    public function delete($tables, $deleteValues, $deleteColumns) {
+        /* @var $where string */
+        $where = self::prepareWhereValuesSQL($deleteValues); //the values
+        $where = self::prepareWhereColumnsSQL($deleteColumns, $where); //the columns
+        $stmt = self::$connection->prepare("delete from $tables where $where;") or die('Problem preparing query');
+        $stmt = self::bindParams($stmt, $deleteValues);
+        $stmt->execute();  //send the values separately
+        return $lastInsertID = self::$connection->lastInsertID(); //return the ID of the user in the database.
+    }
 
-    //Inserts a new row into the database.
-    //takes an array of data, where the keys in the array are the column names
-    //and the values are the data that will be inserted into those columns.
-    //$table is the name of the table.
-    public function insert($dataArray, $table) {
-        $values = "";
-        $columns = "";
-        foreach ($dataArray as $column => $value) { //$value not used, it's in execute
-            $columns .= ($columns == "") ? "" : ", ";
-            $columns .= $column;
-            $values .= ($values == "") ? "" : ", ";
-            $values .= ":$column";
-        }
-        
-        $stmt = self::$connection->prepare("insert into $table ($columns) values ($values);") or die('Problem preparing query');
-        $stmt->execute($dataArray); //send the values separately
-        return $results = self::$connection->lastInsertID();
-    }
- 
-        public function delete($col, $data, $table) {
-            $dataArray = array($data);
-            $stmt = self::$connection->prepare("delete from $table where $col = ?;") or die('Problem preparing query');
-        $stmt->execute($dataArray);  //send the values separately
- 
-        return $results = self::$connection->lastInsertID(); //return the ID of the user in the database.
-    }
-    
-    public function selectDistinct($column, $table, $dataArray, $whereColumn, $singleRow=True) {
-        if (!is_string ($table)) {
-            die("A string was not passed to the selectQuiz( function on DB class");
-        }
-        $where = "";
-        foreach ($dataArray as $columnTemp => $valueTemp) {      //$value not used - it's in $data
-            $where .= ($where == "") ? "" : " OR ";             //Or here not AND, allows select quiz criteria to execute properly
-            $where .= "$columnTemp = :$columnTemp";
-        }
-        foreach ($whereColumn as $columnTemp => $valueTemp) {      //build coloumn where query
-            $where .= ($where == "") ? "" : " AND ";
-            $where .= "$columnTemp = $valueTemp";
-        }
-        $stmt = self::$connection->prepare("SELECT DISTINCT $column FROM $table WHERE " . $where . ";") or die('Problem preparing query');
-        $stmt->execute($dataArray);
+    /**
+     * Runs a select query like: "SELECT DISTINCT $column FROM $table WHERE $whereValues & $whereColumns"
+     * 
+     * @param string  $columns The columns to be selected in the SQL query. In the form: "xx, yyy, max(zzz) etc"
+     * @param string $tables The tables to be selected by the SQL query. in the form of "xx, yyy, zzz etc"
+     * @param array $whereValuesArray  The input for the where clause. form $column => $value
+     * @param array $whereColumnsArray The where matching tables to be selected by the SQL query. in the form of $column => $otherColumn   
+     * @param boolean $singleRow return one row of many? true is the default (single row)
+     * @return array $results The results, eg result[15]['column'] or result['column']
+     */
+    public function selectDistinct($columns, $tables, array $whereValuesArray, array $whereColumnsArray, $singleRow=True) {
+        assert(is_string($columns));
+        assert(is_string($tables));
+        assert(is_bool($singleRow));
+        $where = self::prepareWhereValuesSQL($whereValuesArray); //the values
+        $where = self::prepareWhereColumnsSQL($whereColumnsArray, $where); //the columns
+        $stmt = self::$connection->prepare("SELECT DISTINCT $columns FROM $tables WHERE " . $where . ";") or die('Problem preparing query');
+        $stmt = self::bindParams($stmt, $whereValuesArray);
+        $stmt->execute();
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         if ($singleRow && ($results)) {   //true and are actaully results
-            //$results = array_values($results[0]);   //return normal array instead
+            $results = $results[0];   //return normal array instead
+        }
+        return $results;
+    }
+    /**
+     * Runs a select query like: "SELECT DISTINCT $column FROM $table WHERE $whereValues & $whereColumns"
+     * 
+     * @param string  $columns The columns to be selected in the SQL query. In the form: "xx, yyy, max(zzz) etc"
+     * @param string $tables The tables to be selected by the SQL query. in the form of "xx, yyy, zzz etc"
+     * @param array $whereValuesArray  The input for the where clause. form $column => $value
+     * @param array $whereColumnsArray The where matching tables to be selected by the SQL query. in the form of $column => $otherColumn   
+     * @param string $sortColumn The name of teh column to sort by
+     * @param boolean $singleRow return one row of many? true is the default (single row)
+     * @return array $results The results, eg result[15]['column'] or result['column']
+     */
+    public function selectDistinctOrder($columns, $tables, array $whereValuesArray, array $whereColumnsArray, $sortColumn, $singleRow=True) {
+        assert(is_string($columns));
+        assert(is_string($tables));
+        assert(is_string($sortColumn));
+        assert(is_bool($singleRow));
+        $where = self::prepareWhereValuesSQL($whereValuesArray); //the values
+        $where = self::prepareWhereColumnsSQL($whereColumnsArray, $where); //the columns
+        $stmt = self::$connection->prepare("SELECT DISTINCT $columns FROM $tables WHERE " . $where . "ORDER BY $sortColumn;") or die('Problem preparing query');
+        $stmt = self::bindParams($stmt, $whereValuesArray);
+        $stmt->execute();
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if ($singleRow && ($results)) {   //true and are actaully results
             $results = $results[0];   //return normal array instead
         }
         return $results;
     }
 
-//Used to retrieve results from required tables
-    public function selectFullOuterJoin($column, $table, $whereData, $joinTable, $tableArray, $joinTable2, $tableArray2,$singleRow=True) {
-        if (!is_string ($table)) {
-            die("A string was not passed to the selectFullOuterJoin( function on DB class");
-        }
-        $where = "";
-        $joinWhere = "";
-        $joinWhere2 = "";
-        foreach ($whereData as $columnTemp => $valueTemp) {      //$value not used - it's in $data
-            $where .= ($where == "") ? "" : " AND ";
-            $where .= "$columnTemp = :$columnTemp";
-        }
-        foreach ($tableArray as $columnTemp => $valueTemp) {      //build coloumn where query
-            $joinWhere .= ($joinWhere == "") ? "" : " AND ";
-            $joinWhere .= "$columnTemp = $valueTemp";
-        }
-        foreach ($tableArray2 as $columnTemp => $valueTemp) {      //build coloumn where query
-            $joinWhere2 .= ($joinWhere2 == "") ? "" : " AND ";
-            $joinWhere2 .= "$columnTemp = $valueTemp";
-        }
-        $sql = "SELECT $column FROM $table " . 
+    /**
+     * Runs a FULL outer join query like: ""SELECT $column FROM $table LEFT JOIN $joinTable ON $joinWhere LEFT JOIN $joinTable2 ON $joinWhere2 WHERE $where;""
+     * 
+     * @param string $columns The columns to be selected in the SQL query. In the form: "xx, yyy, max(zzz) etc"
+     * @param string $tables The tables to be selected by the SQL query. in the form of "xx, yyy, zzz etc"
+     * @param array $whereData  The input for the where clause. form $column => $value
+     * @param string $joinTable The table for the 1st join "LEFT JOIN $joinTable ON"
+     * @param array $tableArray The 1st ON (where) matching tables to be selected by the SQL query. in the form of $column => $otherColumn 
+     * @param string $joinTable2 The table for the 2nd join "LEFT JOIN $joinTable ON"  
+     * @param array $tableArray2 The 2nd ON (where) matching tables to be selected by the SQL query. in the form of $column => $otherColumn  
+     * @param boolean $singleRow return one row of many? true is the default (single row)
+      * @return array $results The results, eg result[15]['column'] or result['column']
+     */
+    public function selectFullOuterJoin($columns, $tables, array $whereData, $joinTable, 
+            $tableArray, $joinTable2, array $tableArray2,$singleRow=True) {
+        assert(is_string($columns));
+        assert(is_string($tables));
+        assert(is_string($joinTable));
+        assert(is_string($joinTable2));
+        assert(is_bool($singleRow));
+        $where = self::prepareWhereValuesSQL($whereData);
+        $joinWhere = self::prepareWhereColumnsSQL($tableArray);
+        $joinWhere2 = self::prepareWhereColumnsSQL($tableArray2);
+        $sql = "SELECT $columns FROM $tables " . 
                 "LEFT JOIN $joinTable ON $joinWhere " . 
                 "LEFT JOIN $joinTable2 ON $joinWhere2 WHERE $where;";
         $stmt = self::$connection->prepare($sql) or die('Problem preparing query');
-        
-        $stmt->execute($whereData);
+        $stmt = self::bindParams($stmt, $whereData);
+        $stmt->execute();
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         if ($singleRow && ($results)) {   //true and are actaully results
-            //$results = array_values($results[0]);   //return normal array instead
             $results = $results[0];   //return normal array instead
         }
         return $results;
     }
     
-    public function selectWithFourColumns($column, $table, $dataArray, $whereColumn, $whereColumn2,$whereColumn3,$singleRow=True) {
-        if (!is_string ($table)) {
-            die("A string was not passed to the selectWithColumns( function on DB class");
-        }
-        $where = "";
-        foreach ($dataArray as $columnTemp => $valueTemp) {      //$value not used - it's in $data
-            $where .= ($where == "") ? "" : " AND ";
-            $where .= "$columnTemp = :$columnTemp";
-        }
-        foreach ($whereColumn as $columnTemp => $valueTemp) {      //build coloumn where query
-            $where .= ($where == "") ? "" : " AND ";
-            $where .= "$columnTemp = $valueTemp";
-        }
-        foreach ($whereColumn2 as $columnTemp => $valueTemp) {      //build coloumn where query
-            $where .= ($where == "") ? "" : " AND ";
-            $where .= "$columnTemp = $valueTemp";
-        }
-        foreach ($whereColumn3 as $columnTemp => $valueTemp) {      //build coloumn where query
-            $where .= ($where == "") ? "" : " AND ";
-            $where .= "$columnTemp = $valueTemp";
-        }
-        $stmt = self::$connection->prepare("SELECT $column FROM $table WHERE " . $where . ";") or die('Problem preparing query');
-        $stmt->execute($dataArray);
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        if ($singleRow && ($results)) {   //true and are actaully results
-            //$results = array_values($results[0]);   //return normal array instead
-            $results = $results[0];   //return normal array instead
-        }
-        return $results;
-    }
+    /**
+     * Cleans the output (to the web broswer) by running htmlentities on it fisrt (stop cross site scripting)
+     * 
+     * @param string $output The data to be cleaned
+     * @return string The cleaned data
+     */
     private function cleanTheOutput($output){
-        return htmlentities($output);
+        assert(is_string($output));
+        return htmlentities($output); //convert html entitiles like "<" to &lt;
+    }
+    /**
+     * Converts the Where data array to a string in preapation for PDO
+     * 
+     * @param array $whereColumnsArray An assoicative array in the form of $column(or table.column) => $value 
+     * @param string $where a string of the existing where sql query, values will be added on. (optional)
+     * @return string $where Part of the SQL query
+     */
+    private static function prepareWhereColumnsSQL(array $whereColumnsArray, $where = ""){
+        assert(is_string($where));
+        foreach ($whereColumnsArray as $columnTemp => $valueTemp) {      //build coloumn where query
+            $where .= ($where == "") ? "" : " AND ";
+            $where .= "$columnTemp = $valueTemp";
+        }
+        return $where;
+    }
+    
+    /**
+     * Converts the Where data array to a string in preapation for PDO
+     * 
+     * @param $whereValuesArray An assoicative array in the form of $column(or table.column) => $value 
+     * @param $where a string of the existing where sql query, values will be added on. (optional)
+     * @return $where Part of the SQL query
+     */
+    private static function prepareWhereValuesSQL(array $whereValuesArray, $where = ""){
+        assert(is_string($where));
+        foreach ($whereValuesArray as $columnTemp => $valueTemp) {      //$value not used - it's in $data
+            $where .= ($where == "") ? "" : " AND ";
+            $where .= "$columnTemp = :" . self::prepareColumnNameForBinding($columnTemp); //replace dot with underscore for table.column
+        }
+        return $where;
+    }
+
+    /**
+     * Binds the variables in the PDO connection
+     * 
+     * @param $stmt The statement as prepared previsously by PDO.
+     * @param $whereValuesArray An assoicative array in the form of $column(or table.column) => $value
+     * @return $stmt The binded stmt
+     */
+    private static function bindParams(PDOStatement $stmt, array $whereValuesArray){
+        foreach ($whereValuesArray as $columnTemp => $valueTemp) {      //$value not used - it's in $data
+            $stmt->bindValue(':' . self::prepareColumnNameForBinding($columnTemp), $valueTemp);
+        }
+        return $stmt;
+    }
+    /**
+     * Prepares the coloumn name (table.column) by replacing the dot with a underscore (doesn't affact the query)
+     * 
+     * @param $columnName The name of the column to be renamed
+     * @return $stmt The binded stmt
+     */
+    private static function prepareColumnNameForBinding($columnName){
+        assert(is_string($columnName));
+        $columnName =  preg_replace('/\\./', '_', $columnName);
+        return $columnName;
+    }
+    /**
+     * Prepares the Insert values by creating the approiate placeholders for binding
+     * 
+     * @param array $insertArray  The input for the where clause. form $column => $value
+     * @param string $values The existing values if any need adding on (optional)
+     * @return string $lastInsertID Returns the primary key of the insertion (eg quiz_id)
+     */
+    private static function prepareInsertValues (array $insertArray, $values = ""){
+        assert(is_string($values));
+        foreach ($insertArray as $column => $valueTemp) { //$value not used, it's in execute
+            $values .= ($values == "") ? "" : ", ";
+            $values .= ":".self::prepareColumnNameForBinding($column);
+        }
+        return $values;
+    }
+    /**
+     * Prepares the insert columns by building string with commas in-between
+     * 
+     * @param array $insertArray  The input for the where clause. form $column => $value
+     * @param string $columns The existing columns if any need adding on (optional)
+     * @return string $columns A string with words and commas for the SQL query
+     */
+    private static function prepareInsertColumns (array $insertArray, $columns = ""){
+        assert(is_string($columns));
+        foreach ($insertArray as $column =>$valueTemp) { //$value not used, it's in execute
+            $columns .= ($columns == "") ? "" : ", ";
+            $columns .= $column;
+        }
+        return $columns;
     }
 }
-?>

@@ -1,19 +1,31 @@
 <?php
 /**
- * Class PdoDebugger
+ * Class quizLogic
  *
- * Emulates the PDO SQL statement in an extremely simple kind of way
+ * Provides generic functions to supoport quiz use case
+ * These functions usually query the databse and return some result.
  */
 class quizLogic
 {
     /**
-     * Returns the emulated SQL string
+     * Returns the next question's data + feedback + question's connection_ID. returns false if fails validation
      *
-     * @param $raw_sql
-     * @param $parameters
-     * @return mixed
+     * @param $quizId The shared quiz id, as provided in the url by the user
+     * @return Returns actual quiz ID, false if shared quiz id doesn't exist
      */
-    static public function nextQuestionDataFeedbackConnectionId($answerId, $previousQuestionId, $quiz_Id) {
+    static public function returnRealQuizID($quizId) {
+        
+        
+    }
+    /**
+     * Returns the next question's data + feedback + question's connection_ID. returns false if fails validation
+     *
+     * @param $answerId The Answer ID just just submitted by the user. 
+     * @param $previousQuestionId The question ID aoosiated with the answer just done (validation)
+     * @param $quizId The quiz the user is on (validation)
+     * @return $questionDataAndFeedback An aossicatve array of the next question data, flase if fails validation
+     */
+    static public function nextQuestionDataFeedbackConnectionId($answerId, $previousQuestionId, $quizId) {
     
         $dbLogic = new DB();
         

@@ -8,9 +8,21 @@
 // Report all PHP errors (disable to hide mysql error)
 //error_reporting(-1);
 
-ini_set("log_errors", 1);
-ini_set("error_log", "not_synced/PHP_errors.log"); //relative to htaccess in the aqm
+
 define( 'CONFIG_DEV_ENV', true); //are developing
+
+if (CONFIG_DEV_ENV == true){
+    assert_options(ASSERT_ACTIVE, 1); //enable asseration
+    assert_options (ASSERT_CALLBACK, 'assert_failed');
+    ini_set("log_errors", 1);
+    ini_set("error_log", "not_synced/PHP_errors.log"); //relative to htaccess in the aqm
+} else {
+    assert_options(ASSERT_ACTIVE, 0); //diable assertions & no performance hit
+}
+
+function assert_failed($file, $line, $expr) {
+    print "Assertion failed in $file on line $line: $expr\n";
+}
 
 //DB variables
 define( 'DB_HOST', "localhost");
