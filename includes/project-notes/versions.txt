@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ### version 5.5.3.1 - 29/08/2015 - Re-done DB logic
 =Joshua
 Re-done DB logic, only minor fixes to go
@@ -6,6 +7,8 @@ Shared quiz fixed - but broken (webpage)
 --- TODO needs generic function ReturnSharedQuizId
 minor update to quiz-complete (removed one function from dblogic)
 
+=======
+>>>>>>> origin/master
 ### version 5.5.3 - 29/08/2015 - Edit Quiz changes
 =Harry
 - Implemented attempt limitations to stop users taking quiz if they've reach maximum attempts

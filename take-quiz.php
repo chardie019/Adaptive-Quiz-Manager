@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //next question
     if ($quizNotConfirmPosted != "") {
         $_SESSION["QUIZ_CONFIRMED"] = ""; //not confirmed anymore
         echo ("notconfirm");
-        header('Location: ' . CONFIG_ROOT_URL . '/take-quiz');   
+        header('Location: ' . CONFIG_ROOT_URL . '/take-quiz.php');   
         stop(); //refresh the page an rerun script (with no quiz this time)
     }
 

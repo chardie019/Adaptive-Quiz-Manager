@@ -102,12 +102,16 @@ background-color:#f1f1f1;
     padding:10px;
 }
 
+#content h1 {
+    text-align: center;
+}
+
 /*Styles for Create-Quiz-View double column*/
 #content-create-quiz{
     position: relative;
-    width:70%;
+    width:100%;
     float:left;
-    margin-left: 15%;
+    margin-left: 10%;
     padding: 10px;
     padding-bottom: 75px;
     margin-bottom: 100px;
@@ -135,7 +139,7 @@ background-color:#f1f1f1;
 
     #content-create-quiz input[type=text] {
         height:25px;
-        width:300px;
+        width:420px;
         border: 1px solid rgb(80,80,80) ;
         border-radius: 2px;
         /*background-color: rgb(208,208,208);*/
@@ -209,6 +213,9 @@ margin-bottom: 100px;
     text-align: center;
 }
 
+#label{
+    font-weight: bold;
+}
 /*styles the dropdown box on select-quiz-view*/
 select.quiz_list {
     height:30px;
@@ -229,6 +236,7 @@ select.quiz_list {
 	border:1px solid #808080;
 	display:inline-block;
 	cursor:pointer;
+        width: 180px;
 	color:#ffffff;
 	font-size:1.2em;
 	padding:16px 31px;
@@ -247,8 +255,7 @@ select.quiz_list {
 }
 
 .myReturn{
-    left:0;
-    bottom:0;
+    float: right;
 }
 
 #buttonborder1, #buttonborder2, #buttonborder3, #buttonborder4, #buttonborder5, #buttonborder6 {

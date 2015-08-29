@@ -29,8 +29,11 @@ require_once("includes/config.php");
 
   $quizID = filter_input(INPUT_POST,'quizid', FILTER_SANITIZE_STRING);  
   
+    $quizAttempts = false;
+    $attemptsReached = false;   
     $dbLogic = new DB();
     
+    //Get all quiz information
     $data = array(
         "QUIZ_ID" => "$quizID"
     );
@@ -40,9 +43,38 @@ require_once("includes/config.php");
     ($quizData = $dbLogic->select($columns, "quiz", $data, true));
     extract($quizData);
     
+    
+    if($quizData['NO_OF_ATTEMPTS'] == '0' || $quizData['NO_OF_ATTEMPTS'] == null){        
+        $quizAttempts = true;    
+    }
+
+    //Only run second query if there is a limit on attempts.
+    
+    if($quizAttempts == false){
+    
+        //Select all QUIZ_ID attempts from result for user, store in array, 
+        //then count identical elements and compare that against number of permitted attempts.
+
+        $dataArray = array(
+            "user_USERNAME"=>$_SESSION['username'],
+            "quiz_QUIZ_ID"=>"$quizID"
+        );
+
+        ($attemptID = $dbLogic->select("quiz_QUIZ_ID", "result", $dataArray, false));
+
+        //Compare NO_OF_ATTEMPTS with result table, count identical quiz id attemtps
+
+        $attemptsDone = count($attemptID);
+        
+        if($attemptsDone>=$quizData['NO_OF_ATTEMPTS']){
+            
+            $attemptsReached = true;          
+        }
+    }
+
     //Set new QUIZ_ID for the session as the id of selected quiz awaiting confirmation
     $_SESSION['QUIZ_CURRENT_QUIZ_ID'] = $quizData['QUIZ_ID'];
-    
+
     //Set null value to appropriate terminology for the view file.
     if($quizData['DESCRIPTION'] == null){
         $quiz_description = "None";
@@ -51,13 +83,13 @@ require_once("includes/config.php");
         $quiz_description = $quizData['DESCRIPTION'];
     }
     
-    if($quizData['NO_OF_ATTEMPTS'] == null){
+    if($quizAttempts != false){
         $no_of_attempts = "Unlimited";
     }
     else{
-        $no_of_attempts = $quizData['NO_OF_ATTEMPTS'];
+        $no_of_attempts = $attemptsDone." / ".$quizData['NO_OF_ATTEMPTS'];
     }
-        
+    
     if($quizData['IS_SAVABLE'] == null || $quizData['IS_SAVABLE'] == '0'){
         $is_savable =  "No";
     }
@@ -74,7 +106,7 @@ require_once("includes/config.php");
     if (empty($quizData["IMAGE"])){
         $quizData["IMAGE"] = "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="; //transparent gif
     } else {
-        $quizData["IMAGE"] = STYLES_QUIZ_IMAGES_LOCATION . "/" . $questionData["IMAGE"];
+        $quizData["IMAGE"] = STYLES_QUIZ_IMAGES_LOCATION . "/" . $quizData["IMAGE"];
     }
     //html view
     include ('quiz-description-view.php');

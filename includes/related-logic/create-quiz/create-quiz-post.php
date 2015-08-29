@@ -181,6 +181,9 @@ $quizName = filter_input(INPUT_POST, "quizName");
         //Set time limit to 00:00:00 for storing in database if there is NO time limit
         if($isTime == '0'){
             $isTime = '00:00:00';
+        }else{
+        $isTime = '0'.$timeHours.':'.$timeMinutes.':00';
+        
         }
 
         //Set Number of attempts to 0 for storing in database if there are unlimited attempts

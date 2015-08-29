@@ -71,8 +71,8 @@ $templateLogic->startBody();
         </select>
         Minutes
         <select name='timeMinutes'>
-            <option <?php if ($timeMinutes == "0"){echo "selected=\"selected\"";} ?>>0</option>
-            <option <?php if ($timeMinutes == "5"){echo "selected=\"selected\"";} ?>>5</option>
+            <option <?php if ($timeMinutes == "00"){echo "selected=\"selected\"";} ?>>00</option>
+            <option <?php if ($timeMinutes == "05"){echo "selected=\"selected\"";} ?>>05</option>
             <option <?php if ($timeMinutes == "10"){echo "selected=\"selected\"";} ?>>10</option>
             <option <?php if ($timeMinutes == "15"){echo "selected=\"selected\"";} ?>>15</option>
             <option <?php if ($timeMinutes == "20"){echo "selected=\"selected\"";} ?>>20</option>
