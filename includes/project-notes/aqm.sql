@@ -14,13 +14,12 @@ PREPARE stmt FROM @tables;
 EXECUTE stmt;
 DEALLOCATE PREPARE stmt;
 
-
 -- phpMyAdmin SQL Dump
 -- version 3.4.5
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Aug 28, 2015 at 02:25 AM
+-- Generation Time: Aug 29, 2015 at 06:01 PM
 -- Server version: 5.5.16
 -- PHP Version: 5.3.8
 
@@ -130,12 +129,7 @@ CREATE TABLE IF NOT EXISTS `editor` (
 --
 
 INSERT INTO `editor` (`user_USERNAME`, `quiz_QUIZ_ID`, `ADDED_AT`, `ADDED_BY`) VALUES
-('testuser', 1, '2015-08-14 00:00:00', 'testuser'),
-('testuser', 9, '2015-08-06 16:40:26', 'testuser'),
-('testuser', 10, '2015-08-13 16:17:22', 'testuser'),
-('testuser', 11, '2015-08-13 23:50:57', 'testuser'),
-('testuser', 12, '2015-08-14 22:53:29', 'testuser'),
-('testuser', 13, '2015-08-14 22:54:40', 'testuser');
+('testuser', 1, '2015-08-14 00:00:00', 'testuser');
 
 -- --------------------------------------------------------
 
@@ -283,28 +277,32 @@ CREATE TABLE IF NOT EXISTS `quiz` (
   `INTERNAL_DESCRIPTION` varchar(255) DEFAULT NULL,
   `IMAGE` varchar(255) DEFAULT NULL,
   `IMAGE_ALT` varchar(255) DEFAULT NULL,
+  `IS_ENABLED` tinyint(4) NOT NULL,
   PRIMARY KEY (`QUIZ_ID`),
-  UNIQUE KEY `QUIZ_ID_UNIQUE` (`QUIZ_ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ;
+  UNIQUE KEY `QUIZ_ID_UNIQUE` (`QUIZ_ID`),
+  KEY `SHARED_QUIZ_ID` (`SHARED_QUIZ_ID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=16 ;
 
 --
 -- Dumping data for table `quiz`
 --
 
-INSERT INTO `quiz` (`QUIZ_ID`, `SHARED_QUIZ_ID`, `VERSION`, `QUIZ_NAME`, `DESCRIPTION`, `IS_PUBLIC`, `NO_OF_ATTEMPTS`, `TIME_LIMIT`, `IS_SAVABLE`, `DATE_OPEN`, `DATE_CLOSED`, `INTERNAL_DESCRIPTION`, `IMAGE`, `IMAGE_ALT`) VALUES
-(1, 1, 1, 'Test Quiz 1', 'This is a Test case Quiz', 1, NULL, NULL, NULL, '2015-01-01 06:41:00', NULL, NULL, NULL, NULL),
-(2, 2, 1, 'Test Quiz 2', 'This is a Test Case Quiz.', 0, NULL, NULL, NULL, '2015-01-01 06:41:00', NULL, NULL, NULL, NULL),
-(3, 3, 1, 'Plagiarism: Beginner', 'This quiz focuses on What IS plagiarism? It aims to educate users on it`s definition and some techniques that help avoid it.', 0, NULL, NULL, NULL, '2015-01-01 06:41:00', NULL, NULL, NULL, NULL),
-(4, 0, 0, 'josh test', 'josh test desc', 1, 0, '00:00:00', 0, '2015-08-01 00:00:00', '2016-01-01 11:59:00', '', 'Untitled.png', 'untilted ALT'),
-(5, 0, 0, '', '1111', 1, 0, '00:00:00', 0, '2015-07-31 00:00:00', '2015-07-31 11:59:00', '', 'Nope.png', '111'),
-(6, 0, 0, '12345', '123456', 1, 0, '00:00:00', 0, '2015-01-01 00:00:00', '2015-01-01 11:59:00', '', 'Nope.png', '`'),
-(7, 0, 0, '1', '2', 1, 0, '00:00:00', 0, '2015-01-01 00:00:00', '2015-01-01 11:59:00', '', 'i-have-no-idea-what-im-doing-dog.jpg', '12345'),
-(8, 0, 0, '1', '2', 1, 0, '00:00:00', 0, '2015-01-01 00:00:00', '2015-01-01 11:59:00', '', '20150723_164052.jpg', '11'),
-(9, 0, 0, 'josh test2', 'd', 1, 0, '00:00:00', 0, '2015-08-06 00:00:00', '2015-08-06 11:59:00', '', '', ''),
-(10, 0, 0, 'mypostie', 'post', 1, 0, '00:00:00', 0, '2015-08-13 00:00:00', '2015-08-13 11:59:00', '', '', ''),
-(11, 0, 0, 'test10', 'test10', 1, 0, '00:00:00', 0, '2015-08-13 00:00:00', '2015-08-13 11:59:00', '', '', ''),
-(12, 0, 0, 'test11', 'test11desc', 1, 0, '00:00:00', 0, '2015-08-14 00:00:00', '2015-08-14 11:59:00', '', '', ''),
-(13, 0, 0, 'test13', 'test13desc', 1, 0, '00:00:00', 0, '2015-08-14 00:00:00', '2015-08-14 11:59:00', '', '', '');
+INSERT INTO `quiz` (`QUIZ_ID`, `SHARED_QUIZ_ID`, `VERSION`, `QUIZ_NAME`, `DESCRIPTION`, `IS_PUBLIC`, `NO_OF_ATTEMPTS`, `TIME_LIMIT`, `IS_SAVABLE`, `DATE_OPEN`, `DATE_CLOSED`, `INTERNAL_DESCRIPTION`, `IMAGE`, `IMAGE_ALT`, `IS_ENABLED`) VALUES
+(1, 1, 1, 'Test Quiz 1', 'This is a Test case Quiz', 1, NULL, NULL, NULL, '2015-01-01 06:41:00', NULL, NULL, NULL, NULL, 1),
+(2, 2, 1, 'Test Quiz 2', 'This is a Test Case Quiz.', 0, NULL, NULL, NULL, '2015-01-01 06:41:00', NULL, NULL, NULL, NULL, 1),
+(3, 3, 1, 'Plagiarism: Beginner', 'This quiz focuses on What IS plagiarism? It aims to educate users on it`s definition and some techniques that help avoid it.', 0, NULL, NULL, NULL, '2015-01-01 06:41:00', NULL, NULL, NULL, NULL, 1),
+(4, 0, 0, 'josh test', 'josh test desc', 1, 0, '00:00:00', 0, '2015-08-01 00:00:00', '2016-01-01 11:59:00', '', 'Untitled.png', 'untilted ALT', 1),
+(5, 0, 0, '', '1111', 1, 0, '00:00:00', 0, '2015-07-31 00:00:00', '2015-07-31 11:59:00', '', 'Nope.png', '111', 1),
+(6, 0, 0, '12345', '123456', 1, 0, '00:00:00', 0, '2015-01-01 00:00:00', '2015-01-01 11:59:00', '', 'Nope.png', '`', 1),
+(7, 0, 0, '1', '2', 1, 0, '00:00:00', 0, '2015-01-01 00:00:00', '2015-01-01 11:59:00', '', 'i-have-no-idea-what-im-doing-dog.jpg', '12345', 1),
+(8, 0, 0, '1', '2', 1, 0, '00:00:00', 0, '2015-01-01 00:00:00', '2015-01-01 11:59:00', '', '20150723_164052.jpg', '11', 1),
+(9, 0, 0, 'josh test2', 'd', 1, 0, '00:00:00', 0, '2015-08-06 00:00:00', '2015-08-06 11:59:00', '', '', '', 1),
+(10, 0, 0, 'mypostie', 'post', 1, 0, '00:00:00', 0, '2015-08-13 00:00:00', '2015-08-13 11:59:00', '', '', '', 1),
+(11, 0, 0, 'test10', 'test10', 1, 0, '00:00:00', 0, '2015-08-13 00:00:00', '2015-08-13 11:59:00', '', '', '', 1),
+(12, 0, 0, 'test11', 'test11desc', 1, 0, '00:00:00', 0, '2015-08-14 00:00:00', '2015-08-14 11:59:00', '', '', '', 1),
+(13, 0, 0, 'test13', 'test13desc', 1, 0, '00:00:00', 0, '2015-08-14 00:00:00', '2015-08-14 11:59:00', '', '', '', 1),
+(14, 1, 2, 'Test Quiz 1', 'This is a Test case Quiz v2', 1, NULL, NULL, NULL, '2015-01-01 06:41:00', NULL, NULL, NULL, NULL, 1),
+(15, 0, 0, 'test after db chnage', 'test after db chnage desc', 1, 0, '00:00:00', 0, '2015-08-29 00:00:00', '2015-08-29 11:59:00', '', '', '', 0);
 
 -- --------------------------------------------------------
 
@@ -636,7 +634,7 @@ CREATE TABLE IF NOT EXISTS `version` (
 --
 
 INSERT INTO `version` (`BUILD_NUMBER`) VALUES
-(1);
+(2);
 
 --
 -- Constraints for dumped tables
@@ -653,7 +651,7 @@ ALTER TABLE `answer_keyword`
 -- Constraints for table `editor`
 --
 ALTER TABLE `editor`
-  ADD CONSTRAINT `fk_Editors_Quiz1` FOREIGN KEY (`quiz_QUIZ_ID`) REFERENCES `quiz` (`QUIZ_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `editor_ibfk_1` FOREIGN KEY (`quiz_QUIZ_ID`) REFERENCES `quiz` (`SHARED_QUIZ_ID`),
   ADD CONSTRAINT `fk_Editors_User1` FOREIGN KEY (`user_USERNAME`) REFERENCES `user` (`USERNAME`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
@@ -698,11 +696,10 @@ ALTER TABLE `result_answer`
 -- Constraints for table `taker`
 --
 ALTER TABLE `taker`
-  ADD CONSTRAINT `fk_takers_quiz1` FOREIGN KEY (`quiz_QUIZ_ID`) REFERENCES `quiz` (`QUIZ_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `taker_ibfk_1` FOREIGN KEY (`quiz_QUIZ_ID`) REFERENCES `quiz` (`SHARED_QUIZ_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `fk_takers_user1` FOREIGN KEY (`user_USERNAME`) REFERENCES `user` (`USERNAME`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
 SET FOREIGN_KEY_CHECKS = 1;
