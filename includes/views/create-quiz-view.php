@@ -210,7 +210,13 @@ $templateLogic->startBody();
         </select> 
         <span class="dateOrder">(Day-Month-Year)</span> 
         <br />
-        <span class="dateOrder"> If someone wants the quiz to permanently open? option?</span>
+        <?php echo "<span class=\"inputError\">".$alwaysOpenError."</span>"?>
+        <br />
+        <p class="label">Will this quiz be permanently open?</p>
+        <label for="noAlwaysOpen">No:</label>
+        <input type='radio' name='alwaysOpen' id="noAlwaysOpen" value='0' <?php if ($alwaysOpen == "0"){echo "checked=\"checked\"";} ?> />
+        <label for="yesAlwaysOpen">Yes:</label>
+        <input type='radio' name='alwaysOpen' id="yesAlwaysOpen" value='1' <?php if ($alwaysOpen == "1"){echo "checked=\"checked\"";} ?> />
         <br />
         <?php echo "<span class=\"inputError\">".$imageUploadError."</span>"?>
         <br />

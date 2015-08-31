@@ -27,6 +27,8 @@ $quizName = filter_input(INPUT_POST, "quizName");
    
     //Get image values entered by user
     $quizImageText = filter_input(INPUT_POST, "quizImageText");
+    
+    $alwaysOpen = filter_input(INPUT_POST, "alwaysOpen");
     //no error yet
     $error = 0;
     
@@ -36,6 +38,7 @@ $quizName = filter_input(INPUT_POST, "quizName");
         $quizNameError = "Error: You must enter a name for your quiz.";
         $error = 1;
     } else {
+        /* //not used due more details being avilable on take-quiz page
         //Ensure quiz name is not already taken in database
         $quiz_name_list = $dbLogic->selectAll('quiz');   
         foreach ($quiz_name_list as $answerRow) {
@@ -43,7 +46,7 @@ $quizName = filter_input(INPUT_POST, "quizName");
                 $quizNameError = "Quiz name already in use. Please rename your quiz.";
                 $error = 1;
             }
-        }
+        }*/
     }
     if($quizDescription == " " || $quizDescription == "" || $quizDescription == NULL){
         $quizDescriptionError = "Error: You must enter a Description for your quiz.";
@@ -88,22 +91,27 @@ $quizName = filter_input(INPUT_POST, "quizName");
             $error = 1;
         }  
     }
-    
-    //Check the End date
-    if (!is_numeric($dayEnd) || !is_numeric($monthEnd) || !is_numeric($yearEnd) //if form was hacked
-        || !checkdate($monthEnd, $dayEnd, $yearEnd)) {   //or is invalid date
-        //Load error screen up.
-        $invalidDateError2 = "Error: The Date choosen is invalid, please correct the date."; 
+    //validate always open
+    if($alwaysOpen != "0" && $alwaysOpen != "1"){
+        $alwaysOpenError = "Error: You must choose whether the quiz will always be open or not.";
         $error = 1;
-    } else {  //is valid entry
-        //Check whether CLOSE date is ON or after START date (Which also means it's after current date).
-        if (new DateTime($yearStart . "-" . $monthStart . "-" . $dayStart) > 
-            new DateTime($yearEnd . "-" . $monthEnd . "-" . $dayEnd)){ //start is past the "end" date - Format:yyyy "-" mm "-" dd
-            $invalidDateError1 = "Error: Closing date must be after Opening date.";
+    } else {
+        //Check the End date
+        if (!is_numeric($dayEnd) || !is_numeric($monthEnd) || !is_numeric($yearEnd) //if form was hacked
+            || !checkdate($monthEnd, $dayEnd, $yearEnd)) {   //or is invalid date
+            //Load error screen up.
+            $invalidDateError2 = "Error: The Date choosen is invalid, please correct the date."; 
             $error = 1;
-        } 
+        } else {  //is valid entry
+            //Check whether CLOSE date is ON or after START date (Which also means it's after current date).
+            if (new DateTime($yearStart . "-" . $monthStart . "-" . $dayStart) > 
+                new DateTime($yearEnd . "-" . $monthEnd . "-" . $dayEnd)){ //start is past the "end" date - Format:yyyy "-" mm "-" dd
+                $invalidDateError1 = "Error: Closing date must be after Opening date.";
+                $error = 1;
+            } 
+        }
     }
-      
+    
     /*Validate Image upload
      * 
      *Double \\ is needed at the end of path to cancel out the single \ effect leading into "
@@ -163,6 +171,22 @@ $quizName = filter_input(INPUT_POST, "quizName");
         if (is_uploaded_file($_FILES["quizImageUpload"]["tmp_name"]) && $imageUploadError == ""){
             $imageUploadError = "Due to another error, please upload the picture again.";
         }
+        
+        //set errors if not set
+        if (!isset($quizNameError)){$quizNameError = "";}
+        if (!isset($quizDescriptionError)){$quizDescriptionError = "";}
+        if (!isset($isPublicError)){$isPublicError = "";}
+        if (!isset($noAttemptsError)){$noAttemptsError = "";}
+        if (!isset($timeLimitError)){$timeLimitError = "";}
+        if (!isset($isTimeError)){$isTimeError = "";}
+        if (!isset($isSaveError)){$isSaveError = "";}
+        if (!isset($invalidDateError1)){$invalidDateError1 = "";}
+        if (!isset($invalidDateError2)){$invalidDateError2 = "";}
+        if (!isset($imageUploadError)){$imageUploadError = "";}
+        if (!isset($quizImageTextError)){$quizImageTextError = "";}
+        //auto create the years (used for the view only)
+        $yearCurrent = $currentDate["year"];
+
         include("create-quiz-view.php");
     } else {// no errors
         // If image passed all criteria, attempt to upload
@@ -192,10 +216,12 @@ $quizName = filter_input(INPUT_POST, "quizName");
         }
 
         //Create String value for dateStart and dateEnd values
-
         $dateOpen = $yearStart."-".$monthStart."-".$dayStart." 00:00:00";
-        $dateClose = $yearEnd."-".$monthEnd."-".$dayEnd." 11:59:00";    
-          
+        if ($alwaysOpen == "0"){
+            $dateClose = $yearEnd."-".$monthEnd."-".$dayEnd." 11:59:00"; 
+        } else {
+            $dateClose = NULL;
+        }
         //Create array for insert->quiz
         $dataArray = array(
             "QUIZ_ID" => "",
@@ -216,6 +242,8 @@ $quizName = filter_input(INPUT_POST, "quizName");
         //Insert quiz into database
         $current_quiz_id = ($dbLogic->insert($dataArray, "quiz"));
         
+        quizLogic::setSharedQuizId($current_quiz_id);
+        
         //success
         $quizNameError = "Success";
         
@@ -231,7 +259,7 @@ $quizName = filter_input(INPUT_POST, "quizName");
         
         //Set current quiz being created as session variable
         $_SESSION['CURRENT_CREATE_QUIZ_ID'] = $current_quiz_id;
-        header('Location: '. CONFIG_ROOT_URL . '/edit-quiz.php?quiz='.$_SESSION["CURRENT_CREATE_QUIZ_ID"]);
+        header('Location: '. CONFIG_ROOT_URL . '/edit-quiz.php?quiz='.$_SESSION["CURRENT_CREATE_QUIZ_ID"].'&create=yes');
         
         $_SESSION['SET_QUIZ_ID'] = '1';
         exit();

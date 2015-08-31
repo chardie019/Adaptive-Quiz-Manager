@@ -1,3 +1,10 @@
+### version 5.5.3.2 - 31/08/2015 - fixed create quiz + some other functions
+=joshua
+fixed create quiz
+added a success text on creation
+fixed create quiz errors (undefined variables)
+started on creating some generic functions
+
 <<<<<<< HEAD
 ### version 5.5.3.1 - 29/08/2015 - Re-done DB logic
 =Joshua

@@ -18,6 +18,7 @@ $monthEndError = "";
 $yearEndError = "";
 $imageUploadError = "";
 $quizImageTextError = "";
+$alwaysOpenError = "";
 
 //Get current system date values in the same format as user entererd them
     $currentDate = getdate(date("U"));    
@@ -43,5 +44,6 @@ $quizImageTextError = "";
     $monthEnd = $currentDate["mon"];
     $dayEnd = $currentDate["mday"];
     $yearEnd = $currentDate["year"];
+    $alwaysOpen = "1";
     
     include("create-quiz-view.php");

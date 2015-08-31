@@ -15,6 +15,10 @@ $dbLogic = new DB();
 $quizIDPost = filter_input(INPUT_POST, "quizid");
 
 $quizIDGet = filter_input(INPUT_GET, "quiz");
+$quizCreated = filter_input(INPUT_GET, "create");
+if ($quizCreated == "yes"){
+    $createQuizConfirmation = "Quiz Successfully created!";
+}
 
 if($_SERVER['REQUEST_METHOD'] === "POST"){
     

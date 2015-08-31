@@ -267,7 +267,6 @@ class DB {
         assert(is_string($tables));
         $columns = self::prepareInsertColumns($insertArray);
         $values = self::prepareInsertValues($insertArray);
-        echo "insert into $tables ($columns) values ($values);";
         $stmt = self::$connection->prepare("insert into $tables ($columns) values ($values);") or die('Problem preparing query');
         $stmt = self::bindParams($stmt, $insertArray);
         $stmt->execute();
@@ -380,7 +379,41 @@ class DB {
         }
         return $results;
     }
-    
+    /**
+     * Updates columns. runs query like: UPDATE quiz SET SHARED_QUIZ_ID =  '16' WHERE QUIZ_ID = 16 AND $colum = $otherColumn;
+     * 
+     * @param string $tables The tables to be selected by the SQL query. in the form of "xx, yyy, zzz etc"
+     * @param array $setColumnsArray The SET matching tables to be updated by the SQL query. in the form of $column => $value    
+     * @param array $whereValuesArray  The input for the where clause. form $column => $value
+     * @param array $whereColumnsArray The where matching tables to be selected by the SQL query. in the form of $column => $otherColumn  
+     * @return void
+     */
+    public function updateSetWhereColumns($tables, array $setColumnsArray,  array $whereValuesArray, array $whereColumnsArray) {
+        assert(is_string($tables));
+        $setColumns = self:: prepareSetValuesSQL($setColumnsArray); //the columns
+        $where = self::prepareWhereValuesSQL($whereValuesArray); //the values
+        $where = self::prepareWhereColumnsSQL($whereColumnsArray, $where); //the columns
+        $stmt = self::$connection->prepare("UPDATE $tables SET $setColumns WHERE $where;") or die('Problem preparing query');
+        $stmt = self::bindParams($stmt, $whereValuesArray);
+        $stmt->execute();
+    }
+    /**
+     * Updates columns. runs query like: UPDATE quiz SET SHARED_QUIZ_ID =  '16' WHERE QUIZ_ID = 16;
+     * 
+     * @param string $tables The tables to be selected by the SQL query. in the form of "xx, yyy, zzz etc"
+     * @param array $setColumnsArray The SET matching tables to be updated by the SQL query. in the form of $column => $value    
+     * @param array $whereValuesArray  The input for the where clause. form $column => $value  
+     * @return void
+     */
+    public function updateSetWhere($tables, array $setColumnsArray,  array $whereValuesArray) {
+        assert(is_string($tables));
+        $setColumns = self:: prepareSetValuesSQL($setColumnsArray); //the columns
+        $where = self::prepareWhereValuesSQL($whereValuesArray); //the values
+        $stmt = self::$connection->prepare("UPDATE $tables SET $setColumns WHERE $where;") or die('Problem preparing query');
+        $stmt = self::bindParams($stmt, $whereValuesArray);
+        $stmt = self::bindParams($stmt, $setColumnsArray);
+        $stmt->execute();
+    }
     /**
      * Cleans the output (to the web broswer) by running htmlentities on it fisrt (stop cross site scripting)
      * 
@@ -410,9 +443,9 @@ class DB {
     /**
      * Converts the Where data array to a string in preapation for PDO
      * 
-     * @param $whereValuesArray An assoicative array in the form of $column(or table.column) => $value 
-     * @param $where a string of the existing where sql query, values will be added on. (optional)
-     * @return $where Part of the SQL query
+     * @param array $whereValuesArray An assoicative array in the form of $column(or table.column) => $value 
+     * @param string $where a string of the existing where sql query, values will be added on. (optional)
+     * @return string $where Part of the SQL query
      */
     private static function prepareWhereValuesSQL(array $whereValuesArray, $where = ""){
         assert(is_string($where));
@@ -439,8 +472,8 @@ class DB {
     /**
      * Prepares the coloumn name (table.column) by replacing the dot with a underscore (doesn't affact the query)
      * 
-     * @param $columnName The name of the column to be renamed
-     * @return $stmt The binded stmt
+     * @param $columnName The name of the column to be renamed/prepared
+     * @return string $columnName The prepared column name
      */
     private static function prepareColumnNameForBinding($columnName){
         assert(is_string($columnName));
@@ -476,5 +509,20 @@ class DB {
             $columns .= $column;
         }
         return $columns;
+    }
+    /**
+     * Converts the Where data array to a string in preapation for PDO
+     * 
+     * @param array $setValuesArray An assoicative array for the SET query in the form of $column(or table.column) => $value 
+     * @param string $setColumns a part string of the existing set values query, form SET Column = value
+     * @return string $setColumns Part of the SQL query in SET Column = value
+     */
+    private static function prepareSetValuesSQL(array $setValuesArray, $setColumns = ""){
+        assert(is_string($setColumns));
+        foreach ($setValuesArray as $columnTemp => $valueTemp) {      //$value not used - it's in $data
+            $setColumns .= ($setColumns == "") ? "" : ", ";
+            $setColumns .= "$columnTemp = :" . self::prepareColumnNameForBinding($columnTemp); //replace dot with underscore for table.column
+        }
+        return $setColumns;
     }
 }

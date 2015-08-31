@@ -8,22 +8,120 @@
 class quizLogic
 {
     /**
-     * Returns the next question's data + feedback + question's connection_ID. returns false if fails validation
+     * Set the Shared Quiz ID of quiz, if sharedQuizID passed, make it this, otherwise, make it the same as quiz ID
      *
-     * @param $quizId The shared quiz id, as provided in the url by the user
-     * @return Returns actual quiz ID, false if shared quiz id doesn't exist
+     * @param string $quizId The actual quiz id
+     * @param string $sharedQuizID The shared Quiz ID to set the quiz to, else, make the same as quiz ID (optional)
+     * @return void
      */
-    static public function returnRealQuizID($quizId) {
+    public static function setSharedQuizId($quizId, $sharedQuizID = NULL){
+        assert(is_string($quizId));
+        if (is_null($sharedQuizID)){ //not passed, mkae it the sameas quizID
+            $updateSharedQuizID = $quizId;
+        } else {                    //shared ID passed, this is what we'll use
+            $updateSharedQuizID = $sharedQuizID;
+        }
+        $dbLogic = new DB();
+        
+        //set the shared quiz ID to the correct one
+        //UPDATE quiz SET SHARED_QUIZ_ID =  '16' WHERE QUIZ_ID = 16;
+        $setValue = array("SHARED_QUIZ_ID" => $updateSharedQuizID);
+        $where = array("QUIZ_ID" => $quizId);
+        $dbLogic->updateSetWhere("quiz", $setValue, $where);
+    }
+    
+    /**
+     * Returns the Shared Quiz ID for quiz.
+     *
+     * @param string $quizId The actual quiz id
+     * @return string Returns shared quiz ID
+     */
+    static public function returnSharedQuizID($quizId) {
+        assert(is_string($quizId));
+        $dbLogic = new DB();
+        
+        //return the real quiz ID
+        //SELECT SHARED_QUIZ_ID from quiz where quiz_id = 1;
+        $where = array("QUIZ_ID" => $quizId);
+        $result = $dbLogic->select("SHARED_QUIZ_ID", "quiz", $where);
+        return $result['SHARED_QUIZ_ID'];
+    }
+    
+    /**
+     * Returns the Real Quiz ID (latest version) for quiz.
+     *
+     * @param string $sharedQuizId The shared quiz id
+     * @return string Returns real quiz ID
+     */
+    static public function returnRealQuizID($sharedQuizId) {
+        assert(is_string($sharedQuizId));
+        $dbLogic = new DB();
+        
+        //return the shared quiz ID
+        //SELECT UIZ_ID from quiz where shared_quiz_id = 1;
+        $where = array("SHARED_QUIZ_ID" => $sharedQuizId);
+        $result = $dbLogic->select("max(QUIZ_ID)", "quiz", $where);
+        return $result['QUIZ_ID'];
+    }
+    
+    /**
+     * [not implemented yet] Clones all data associated with a quiz. new quiz shares same shared quiz id
+     *
+     * @param string $oldQuizId The the quiz to be cloned
+     * @return string The new quiz's id
+     */
+    static public function cloneQuiz($oldQuizId) {
+        die ("cloneQuiz not working yet");
+        assert(is_string($oldQuizId));
+        $dbLogic = new DB();
+        
+        //get the old quiz's data
+        $where = array("QUIZ_ID" => $oldQuizId);
+        $result = $dbLogic->select("QUIZ_ID", "quiz", $where);
+        //build an array for re-insertion
+        $newQuizData = array();
+        foreach ($result as $column => $value){
+            //TOD date
+            if ($column != "QUIZ_ID"){ //don't include the primary key
+                $newQuizData[$column] = $value;
+            }
+        }
+        //re-insert it now, except the primary key
+        $newQuizID = $dbLogic->insert($newQuizData, "quiz");
+        //for each table DIRECTLY relating to quizes, duplicatite it now
+        //$tableArray = array('question_answer', 'quiz_keyword');
+        $where = array("quiz_QUIZ_ID" => $oldQuizId);
+        $results = $dbLogic->select("*", 'question_answer', $where, false);
+        //TODO change ConnectionID etc
         
         
+        $results['quiz_QUIZ_ID'] = $newQuizID;
+        
+        $results = $dbLogic->select("*", 'quiz_keyword', $where, false);
+        $results['quiz_QUIZ_ID'] = $newQuizID;
+        $dbLogic->insert($results, "quiz_keyword");
+        
+        /*
+        //find the indirect ones
+        question
+        answer
+        answer_keyword
+        question_keyword
+        */
+        
+        
+        
+        
+        
+        return $newQuizID;
     }
     /**
      * Returns the next question's data + feedback + question's connection_ID. returns false if fails validation
      *
-     * @param $answerId The Answer ID just just submitted by the user. 
-     * @param $previousQuestionId The question ID aoosiated with the answer just done (validation)
-     * @param $quizId The quiz the user is on (validation)
-     * @return $questionDataAndFeedback An aossicatve array of the next question data, flase if fails validation
+     * @param string $answerId The Answer ID just just submitted by the user. 
+     * @param string $previousQuestionId The question ID aoosiated with the answer just done (validation)
+     * @param string $quizId The quiz the user is on (validation)
+     * @return array $questionDataAndFeedback An aossicatve array of the next question data, flase if fails validation
      */
     static public function nextQuestionDataFeedbackConnectionId($answerId, $previousQuestionId, $quizId) {
     

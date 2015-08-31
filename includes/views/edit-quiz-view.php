@@ -7,6 +7,8 @@ $templateLogic->startBody();
 ?>
                 
                 <div id="content-create-quiz">
+                    <span><?php echo $createQuizConfirmation; ?></span>
+                    <br />
                     <p>Welcome to the Edit Quiz Menu, please choose a option above to continue.</p>
                 </div>
 <?php
