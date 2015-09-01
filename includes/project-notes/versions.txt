@@ -1,3 +1,8 @@
+### version 5.5.3.4 - 01/09/2015 - edit question stuff
+=joshua
+removed (by merging add question) add intial question by message+link
+=added another dblogic function selectAll + sort by
+
 ### version 5.5.3.3 - 01/09/2015 - added db query
 =joshua
 added group by SQL query as per request

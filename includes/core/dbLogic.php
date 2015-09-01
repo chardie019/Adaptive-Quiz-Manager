@@ -214,12 +214,25 @@ class DB {
      * Runs a select ALL query like: ""SELECT * FROM $tables;""
      * 
      * @param string $tables The tables to be selected by the SQL query. in the form of "xx, yyy, zzz etc"
-     * @return array $results The results, eg result[15]['column'] or result['column']
+     * @return array The results, eg result[15]['column']
      */
     public function selectAll($tables) {
         assert(is_string($tables));
         $sql = "SELECT * FROM $tables;";
         return $this->runQueryReturnResults($sql);
+    }
+    /**
+     * Runs a select ALL query like: ""SELECT * FROM $tables ORDER BY $orderColumn;""
+     * 
+     * @param string $tables The tables to be selected by the SQL query. in the form of "xx, yyy, zzz etc"
+     * @param string $sortColumn The name of teh column to sort by
+     * @return array The results, eg result[15]['column']
+     */
+    public function selectAllOrder($tables, $sortColumn) {
+        assert(is_string($tables));
+        assert(is_string($sortColumn));
+        $sql = "SELECT * FROM $tables ORDER BY $sortColumn;";
+        return $this->runQueryReturnResults($sql, false);
     }
     /**
      * Runs a insert like: "insert into $table ($columns) values ($values);"
@@ -322,6 +335,36 @@ class DB {
         $sql = "SELECT $columns FROM $tables " . 
                 "LEFT JOIN $joinTable ON $joinWhere " . 
                 "LEFT JOIN $joinTable2 ON $joinWhere2 WHERE $where;";
+        return $this->runQueryReturnResults($sql, $singleRow, $whereData);
+    }
+        /**
+     * Runs a FULL outer join query like: ""SELECT $column FROM $table LEFT JOIN $joinTable ON $joinWhere LEFT JOIN $joinTable2 ON $joinWhere2 WHERE $where;""
+     * 
+     * @param string $columns The columns to be selected in the SQL query. In the form: "xx, yyy, max(zzz) etc"
+     * @param string $tables The tables to be selected by the SQL query. in the form of "xx, yyy, zzz etc"
+     * @param array $whereData  The input for the where clause. form $column => $value
+     * @param string $joinTable The table for the 1st join "LEFT JOIN $joinTable ON"
+     * @param array $tableArray The 1st ON (where) matching tables to be selected by the SQL query. in the form of $column => $otherColumn 
+     * @param string $joinTable2 The table for the 2nd join "LEFT JOIN $joinTable ON"  
+     * @param array $tableArray2 The 2nd ON (where) matching tables to be selected by the SQL query. in the form of $column => $otherColumn  
+     * @param string $sortColumn The name of teh column to sort by
+     * @param boolean $singleRow return one row of many? true is the default (single row)
+     * @return array The results, eg result[15]['column'] or result['column']
+     */
+    public function selectFullOuterJoinOrder($columns, $tables, array $whereData, $joinTable, 
+            $tableArray, $joinTable2, array $tableArray2, $sortColumn, $singleRow=True) {
+        assert(is_string($columns));
+        assert(is_string($tables));
+        assert(is_string($joinTable));
+        assert(is_string($joinTable2));
+        assert(is_string($sortColumn));
+        assert(is_bool($singleRow));
+        $where = self::prepareWhereValuesSQL($whereData);
+        $joinWhere = self::prepareWhereColumnsSQL($tableArray);
+        $joinWhere2 = self::prepareWhereColumnsSQL($tableArray2);
+        $sql = "SELECT $columns FROM $tables " . 
+                "LEFT JOIN $joinTable ON $joinWhere " . 
+                "LEFT JOIN $joinTable2 ON $joinWhere2 WHERE $where ORDER BY $sortColumn;";
         return $this->runQueryReturnResults($sql, $singleRow, $whereData);
     }
     /**

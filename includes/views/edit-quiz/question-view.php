@@ -58,28 +58,18 @@ $templateLogic->addCustomHeaders('
 $templateLogic->startBody();
 ?>
 <form  method="post" action="<?php echo htmlentities($_SERVER['PHP_SELF']) . '?quiz=' . $quizIDGet; ?>">
+    
+    <?php if($displayMessage == "initalQuestion"){ ?>
+    <div><span class="inputError">No Answer was selected, did you mean to add the first question? <br />
+        <a class="mybutton" href="<?php echo CONFIG_ROOT_URL . '/edit-quiz/question/add-initial-question.php?quiz=' . $quizIDGet ?>">Add Initial Question</a>
+        </span></div>
+    <?php } //end of display question ?>
+    <div><span class="inputError"><?php echo ($selectionError); ?></span></div>
 <div class="edit-question-area">
     <?php if (count($quizData) > 0) { // if there are questions ?>
-    <p> Demo tree view, input works - note:quiz_QUIZ_Id moved from question to the question_answer table </p>
-    <p> to use , import \includes\project-notes\aqm.sql table </p>
-    <div><span class="inputError"><?php echo ($selectionError); ?></span></div>
+    
     	<div id="myjstree" class="demo">
 <?php
-//connect to mysql and select db
-$conn = mysqli_connect('localhost', 'aqm', 'jc66882Dxc9D','aqm');
-
-if( !empty($conn->connect_errno)) die("Error " . mysqli_error($conn));
-
-
-//http://stackoverflow.com/a/15307555
-$sql = "select * from question_answer order by depth;";
-$result = mysqli_query($conn, $sql);
-
-$arrs = array();
-
-while ($row = mysqli_fetch_array($result, MYSQL_ASSOC)) {
-    $arrs[] = $row;
-}
 
 function build_tree($arrs, $parent_id="", $level=0) {
     $listNum = 0; //open first only
@@ -134,29 +124,7 @@ function build_tree($arrs, $parent_id="", $level=0) {
 build_tree($arrs);
 ?>
 </div>
-
-
-        
-        
-        
-    
-    <!-- old not needed
-    <p> (This will be replaced with a user friendly map/tree but submit values will be same though)</p>
-    <div><span class="inputError"><?php echo ($noQuestionSelectedError); ?></span></div>
-            <?php for ($i=0;$i<count($quizData);$i+=2){
-                echo '<input type="radio" name="question" id="' . 'Q'.$quizData[$i]['QUESTION_ID'] . '" value="' . $quizData[$i]['QUESTION_ID'] . '"/>'
-                        . PHP_EOL . '<label for="'.'Q'.$quizData[$i]['QUESTION_ID'] . '">' . $quizData[$i]['QUESTION'] . " | " 
-                        . $quizData[$i]['CONTENT'] . '</label><br>';
-                echo '<div class="nested"><input type="radio" name="answer" id="' . 'A'.$quizData[$i]['LINK'] . '" value="' . $quizData[$i]['LINK'] . '"/>'
-                        . PHP_EOL . '<label for="'.'A'.$quizData[$i]['LINK'] . '">' . $quizData[$i]['LINK'] . ". " 
-                        . $quizData[$i]['ANSWER'] . '</label></div>';
-                echo '<div class="nested"><input type="radio" name="answer" id="' . 'A'.$quizData[$i+1]['LINK'] . '" value="' . $quizData[$i+1]['LINK'] . '"/>'
-                        . PHP_EOL . '<label for="'.'A'.$quizData[$i+1]['LINK'] . '">' . $quizData[$i+1]['LINK'] . ". " 
-                        . $quizData[$i+1]['ANSWER'] . '</label></div>';
-            }
-            ?> 
-    -->
-        
+       
     <?php } else { //no questions ?>
     <p> There are no questions on this quiz, How about adding some? </p>
     <p> <a class="mybutton myReturn" href="<?php echo (CONFIG_ROOT_URL . '/edit-quiz/question/add-question.php?quiz=' . $quizIDGet) ?>">
@@ -186,9 +154,6 @@ build_tree($arrs);
         <br />
         <br />
         <input class="mybutton" type="reset" value="Clear" />
-        <br />
-        <br />
-        <a class="mybutton" href="<?php echo CONFIG_ROOT_URL . '/edit-quiz/question/add-initial-question.php?quiz=' . $quizIDGet ?>">Add Initial Question</a>
     </p>
 </div>
 </form>
