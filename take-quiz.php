@@ -84,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //next question
     
     if (empty($questionData)){
         //display the not found page (for hackers)  
-        include("404.php");
+        loadErrorPage();
         exit; //nothing to do past here
     }
 
@@ -161,7 +161,7 @@ $answerData = prepareViewPage();
         }else {                     //fail, no result
             //display the not found page
             header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
-            include("404.php");
+            loadErrorPage();
         }
     } 
 }

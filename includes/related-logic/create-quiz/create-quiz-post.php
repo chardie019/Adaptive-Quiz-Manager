@@ -235,8 +235,8 @@ $quizName = filter_input(INPUT_POST, "quizName");
             "DATE_CLOSED" => $dateClose,
             "INTERNAL_DESCRIPTION" => "",
             "IMAGE" => basename( $_FILES["quizImageUpload"]["name"]),
-            "IMAGE_ALT" => "$quizImageText"
-
+            "IMAGE_ALT" => "$quizImageText",
+            "IS_ENABLED" => "0" //not enabled yet
             );
 
         //Insert quiz into database

@@ -1,3 +1,12 @@
+### version 5.5.3.3 - 01/09/2015 - added db query
+=joshua
+added group by SQL query as per request
+trimmed dblogic down a little
+set default quiz creation message in edit-details
+made function to load 404 page (so can rename later)
+fixed quizLogic (renamed variable)
+set IS_ENABLED to 0 in quiz create
+
 ### version 5.5.3.2 - 31/08/2015 - fixed create quiz + some other functions
 =joshua
 fixed create quiz

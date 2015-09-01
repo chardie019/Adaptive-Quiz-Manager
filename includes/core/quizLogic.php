@@ -139,7 +139,7 @@ class quizLogic
         $feedback = $parentIDArray['FEEDBACK']; 
         //find the previous question using parent id
         //SELECT question_QUESTION_ID FROM `question_answer` where CONNECTION_ID = <parent_id> and quiz_QUIZ_ID = <quiz id>;
-        $where = array("CONNECTION_ID" => $parentIDArray['PARENT_ID'], "quiz_QUIZ_ID" => $quiz_Id);
+        $where = array("CONNECTION_ID" => $parentIDArray['PARENT_ID'], "quiz_QUIZ_ID" => $quizId);
         $previousQuestionIdArray = $dbLogic->select("question_QUESTION_ID", "question_answer", $where);
         //if question_QUESTION_ID != <question input>; returen false, else, keep going
         if ($previousQuestionIdArray['question_QUESTION_ID'] != $previousQuestionId){

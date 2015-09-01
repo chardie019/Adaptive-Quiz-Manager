@@ -18,6 +18,8 @@ $quizIDGet = filter_input(INPUT_GET, "quiz");
 $quizCreated = filter_input(INPUT_GET, "create");
 if ($quizCreated == "yes"){
     $createQuizConfirmation = "Quiz Successfully created!";
+} else {
+    $createQuizConfirmation = "";
 }
 
 if($_SERVER['REQUEST_METHOD'] === "POST"){
