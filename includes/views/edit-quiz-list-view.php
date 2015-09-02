@@ -37,7 +37,7 @@ $templateLogic->startBody();
                     <br />
                     <?php echo "<input type=\"hidden\" name=\"selectQuizId\" value=". ($answerRow["QUIZ_ID"])." />"?>
 
-                        <button class="mySubmit" type="submit" name="selectQuiz" value="Select Quiz">
+                        <button class="mybutton mySubmit" type="submit" name="selectQuiz" value="Select Quiz">
                             Select Quiz
                         </button>
                     </form>

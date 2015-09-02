@@ -258,6 +258,13 @@ select.quiz_list {
     float: right;
 }
 
+.myEnabled{
+    background-color: #404040;    
+}
+.myEnabled:hover{
+    background-color: #404040; 
+}
+
 #buttonborder1, #buttonborder2, #buttonborder3, #buttonborder4, #buttonborder5, #buttonborder6 {
     border: 1px solid black;
     border-radius: 4px;

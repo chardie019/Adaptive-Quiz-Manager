@@ -12,7 +12,15 @@ require_once("includes/config.php");
 
 $dbLogic = new DB();
 
-$quizIDPost = filter_input(INPUT_POST, "quizid");
+/*
+ * Store quizid from edit-quiz-list in session variable to be used in edit-quiz-view.php 
+ * as it passes as empty after the first time it is posted from edit-quiz-list and cant be accessed.
+ */
+if(!empty($_POST["quizid"])){
+    $quizIDPost = filter_input(INPUT_POST, "quizid");
+    $_SESSION['CURRENT_EDIT_QUIZ_ID'] = $quizIDPost;
+}
+
 
 $quizIDGet = filter_input(INPUT_GET, "quiz");
 $quizCreated = filter_input(INPUT_GET, "create");
@@ -22,29 +30,79 @@ if ($quizCreated == "yes"){
     $createQuizConfirmation = "";
 }
 
+//Set default value used to set the colour of the active enable/disable button in edit-quiz-view
+$_SESSION['enableButton'] = "myEnabled";
+
 if($_SERVER['REQUEST_METHOD'] === "POST"){
     
-    //$_SESSION['CURRENT_CREATE_QUIZ_ID'] = "$quizID";
-    
-    //html
+    /* User can only edit quiz information if IS_ENABLED is set to inactive so as not to disrupt users. 
+     * Check if IS_ENABLED is already set for validation in editing details, questions, editors, takers.
+     */
+    $checkEnable = array(
+        "QUIZ_ID" => $_SESSION['CURRENT_EDIT_QUIZ_ID']
+    );
+        
+    $isEnabled = $dbLogic->select("IS_ENABLED", "QUIZ", $checkEnable, true);
+    if($isEnabled['IS_ENABLED'] == '1'){
+        $_SESSION["IS_QUIZ_ENABLED"] = true;
+        
+    }else{
+        $_SESSION["IS_QUIZ_ENABLED"] = false;
+    }
+        
+    //If ENABLE button is pushed, update row in database
+    if (isset($_POST['confirmEnabled'])) {    
+        $quizIDPost = filter_input(INPUT_POST, "quizID");
+        
+        $setColumnsArray = array(
+            "IS_ENABLED" => "1"
+        );
+        $whereValuesArray = array(
+            "QUIZ_ID" => $quizIDPost
+        );
+        $dbLogic->updateSetWhere("QUIZ", $setColumnsArray, $whereValuesArray);
+        $confirmActive = "Quiz is now ENABLED, and CAN be attempted by users.";
+        //Set flag variable that is checked before commiting edits in other pages
+        $_SESSION["IS_QUIZ_ENABLED"] = true;
+        
+    //If DISABLE button is pressed, update row in database 
+    }else if(isset($_POST['confirmDisabled'])){
+        
+        $quizIDPost = filter_input(INPUT_POST, "quizID");
+
+        $setColumnsArray = array(
+            "IS_ENABLED" => "0"
+        );
+        $whereValuesArray = array(
+            "QUIZ_ID" => $quizIDPost
+        );
+        $dbLogic->updateSetWhere("QUIZ", $setColumnsArray, $whereValuesArray);
+        $confirmActive = "Quiz is now DISABLED, and CANNOT be attempted by users.";
+        //Set flag variable that is checked before commiting edits in other pages
+        $_SESSION["IS_QUIZ_ENABLED"] = false;
+    }
+        
+    //Page is being loaded from edit-quiz-list with quizid selected    
+      
     header('Location: ' . CONFIG_ROOT_URL . '/edit-quiz.php?quiz=' . $quizIDPost);
     stop();
     
-}
-//If coming from home page, display quiz list for user to select
-else if(is_null($quizIDGet)){
     
+//If coming from home page, display quiz list for user to select
+}else if(is_null($quizIDGet)){
+
     $uid = $_SESSION["username"];
     //where coloumns
 
-    $dataArray = array(
+    $whereValuesArray = array(
         "user_USERNAME" => "$uid"
         );
-    $columnWhere = array(
-        "quiz_QUIZ_ID" => "QUIZ_ID"
+    $whereColumnsArray = array(
+        "quiz_QUIZ_ID" => "SHARED_QUIZ_ID"
         );
     
-    ($quizEditId = $dbLogic->selectDistinct("QUIZ_NAME, QUIZ_ID", "quiz, editor", $dataArray, $columnWhere, false));
+        $quizEditId = $dbLogic->selectWithColumnsGroupBy("QUIZ_NAME, IS_ENABLED, MAX(QUIZ_ID) as QUIZ_ID , MAX(VERSION) as VERSION", "QUIZ, EDITOR", 
+        $whereValuesArray, $whereColumnsArray, 'SHARED_QUIZ_ID', false);
       
     include('edit-quiz-list-view.php');
     

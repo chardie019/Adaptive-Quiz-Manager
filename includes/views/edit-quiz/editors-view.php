@@ -7,6 +7,7 @@ $templateLogic->startBody();
 ?>
 <?php echo "<p class=\"inputError\">$confirmAddMessage</p>"; ?>
 <br />
+<?php echo "<p class=\"inputError\">$confirmRemoveMessage</p>"; ?>
 <br />
 
 <p>Adding an 'Editor' enables a user to perform all edit functions including: <br />

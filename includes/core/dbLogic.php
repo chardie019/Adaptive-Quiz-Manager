@@ -255,13 +255,11 @@ class DB {
      * 
      * @param string $tables The tables to be selected by the SQL query. in the form of "xx, yyy, zzz etc"
      * @param array $deleteValues  The input for the where clause. form $column => $value
-     * @param array $deleteColumns The where matching tables to be selected by the SQL query. in the form of $column => $otherColumn
      * @return string Returns the primary key of the insertion (eg quiz_id)
      */
-    public function delete($tables, $deleteValues, $deleteColumns) {
+    public function delete($tables, $deleteValues) {
         /* @var $where string */
-        $where = self::prepareWhereValuesSQL($deleteValues); //the values
-        $where = self::prepareWhereColumnsSQL($deleteColumns, $where); //the columns
+        $where = self::prepareWhereValuesSQL($deleteValues); //the values        
         $sql = "delete from $tables where $where;";
         $this->runQuery($sql, $deleteValues);
     }

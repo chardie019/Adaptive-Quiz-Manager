@@ -1,4 +1,13 @@
-### version 5.5.3.4 - 01/09/2015 - edit question stuff
+### version 5.5.4 - 02/09/2015 - Finalise Edit Quiz functionality
+=Harry
+- Implemented Enable/Disable buttons, quiz can only be edited if quiz is disabled for takers
+- Buttons change colour depending on whether quiz is enabled or not
+- Fixed issue with takers.php and editors.php to use SHARED_QUIZ_ID when adding/removing
+- dbLogic: Adjusted delete() function as it was requiring too many arguments
+- Implemented Update validation for details.php when user changes quiz details
+- Added details.php image validation to accept new image, re-use current image or delete current image
+- Display messages on successful/unsuccessful add/remove of user takers. 
+
 =joshua
 removed (by merging add question) add intial question by message+link
 =added another dblogic function selectAll + sort by
