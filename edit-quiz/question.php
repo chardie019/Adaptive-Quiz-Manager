@@ -4,10 +4,9 @@
 // include php files here 
 //kick the user back if they haven't selected quiz
 require_once("../includes/config.php");
-include ("check-quiz-id-edit-quiz.php");
 // end of php file inclusion
 
-$quizIDGet = filter_input(INPUT_GET, "quiz");
+$quizIDGet = quizLogic::getQuizIdFromUrlElseReturnToEditQuiz();
 $selectionError = "";
 
 if ($_SERVER['REQUEST_METHOD'] === "POST") { //pastt the appropiate page
@@ -68,7 +67,7 @@ $dbLogic = new DB();
 
         //Insert quiz into database
         $quizData = ($dbLogic->selectFullOuterJoinOrder("*", "question_answer", $where, "question", $jointable, "answer", $jointable2, "depth", false));
-  
+
 //$dbLogic = new DB();
 
 //"select * from question_answer order by depth;

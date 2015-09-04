@@ -1,3 +1,10 @@
+### version 5.5.4.1 - 05/09/2015 - Draft Initial Add Question
+=Joshua
+Draft Intial Add Question
+made URLS support Shared quiz Id now (users can bookmark)
+made function to grab the shared id and get the real quiz id
+minor chnage to database. Answer table didn't have auto incredment (see v2 to v3 sql file)
+
 ### version 5.5.4 - 02/09/2015 - Finalise Edit Quiz functionality
 =Harry
 - Implemented Enable/Disable buttons, quiz can only be edited if quiz is disabled for takers

@@ -37,6 +37,24 @@ class DB {
      * @param string  $columns The columns to be selected in the SQL query. In the form: "xx, yyy, max(zzz) etc"
      * @param string $tables The tables to be selected by the SQL query. in the form of "xx, yyy, zzz etc"
      * @param array $whereValuesArray  The input for the where clause. form $column => $vlaue
+     * @param array $whereNullArray the column in the where that should be NULL - form array($col,col2, col3 etc)
+     * @param boolean $singleRow return one row of many? true is the default (single row)
+     * @return array The results, eg result[15]['column'] or result['column']
+     */
+    public function selectAndWhereIsNull($columns, $tables, array $whereValuesArray, array $whereNullArray, $singleRow=True) {
+        assert(is_string($columns));
+        assert(is_bool($singleRow));
+        $where = self::prepareWhereValuesSQL($whereValuesArray); //the values
+        $where = self::prepareWhereIsNullColumnsSQL($whereNullArray, $where);
+        $sql = "SELECT $columns FROM $tables WHERE $where;";
+        return $this->runQueryReturnResults($sql, $singleRow, $whereValuesArray);
+    }
+    /**
+     * Runs a select query like: "SELECT $column FROM $table WHERE $whereValues AND $column IS NULL;"
+     * 
+     * @param string  $columns The columns to be selected in the SQL query. In the form: "xx, yyy, max(zzz) etc"
+     * @param string $tables The tables to be selected by the SQL query. in the form of "xx, yyy, zzz etc"
+     * @param array $whereValuesArray  The input for the where clause. form $column => $vlaue
      * @param boolean $singleRow return one row of many? true is the default (single row)
      * @return array The results, eg result[15]['column'] or result['column']
      */
@@ -238,8 +256,7 @@ class DB {
      * Runs a insert like: "insert into $table ($columns) values ($values);"
      * 
      * @param string $tables The tables to be selected by the SQL query. in the form of "xx, yyy, zzz etc"
-     * @param array $whereValuesArray  The input for the where clause. form $column => $value
-     * @param array $whereColumnsArray The where matching tables to be selected by the SQL query. in the form of $column => $otherColumn
+     * @param array $insertArray  The input for the columns/values clause. form $column => $value
      * @return string Returns the primary key of the insertion (eg quiz_id)
      */
     public function insert(array $insertArray, $tables) {
@@ -462,6 +479,21 @@ class DB {
         foreach ($whereColumnsArray as $columnTemp => $valueTemp) {      //build coloumn where query
             $where .= ($where == "") ? "" : " AND ";
             $where .= "$columnTemp = $valueTemp";
+        }
+        return $where;
+    }
+        /**
+     * Converts the Where data (IS NULL column) array to a string in preapation for PDO
+     * 
+     * @param array $whereColumnsArray An  array in the form array($col2, $col2, $col3 etc);
+     * @param string $where a string of the existing where sql query, values will be added on. (optional)
+     * @return string Part of the SQL query
+     */
+    private static function prepareWhereIsNullColumnsSQL(array $whereColumnsArray, $where = ""){
+        assert(is_string($where));
+        foreach ($whereColumnsArray as $columnTemp) {      //build coloumn where query
+            $where .= ($where == "") ? "" : " AND ";
+            $where .= "$columnTemp IS NULL";
         }
         return $where;
     }

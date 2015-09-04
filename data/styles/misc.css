@@ -1,0 +1,6 @@
+/*Force the content to expand to accommodate the floating elements */
+#content:after {
+    content:"";
+    display:table;
+    clear:both;
+}

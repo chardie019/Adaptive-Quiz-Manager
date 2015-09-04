@@ -84,7 +84,7 @@ function build_tree($arrs, $parent_id="", $level=0) {
                     $typeList= "question-list". $addClass;
                     $jsTreeType = "question";
                     $letter = "Q";
-                    $item = $letter . ":  " . $arr['question_QUESTION_ID'];
+                    $item = $letter . ":  " . $arr['question_QUESTION_ID']." - ".$arr['QUESTION'];
                     $id = $letter . $arr['question_QUESTION_ID'];
                     $value = $arr['question_QUESTION_ID'];
                 } else {
@@ -92,7 +92,7 @@ function build_tree($arrs, $parent_id="", $level=0) {
                     $typeList = "answer-list";
                     $jsTreeType = "answer";
                     $letter = "A";
-                    $item = $letter . ":  " . $arr['answer_ANSWER_ID'];
+                    $item = $letter . ":  " . $arr['answer_ANSWER_ID']." - ".$arr['ANSWER'];
                     $id = $letter . $arr['answer_ANSWER_ID'];
                     $value = $arr['answer_ANSWER_ID'];
                 }

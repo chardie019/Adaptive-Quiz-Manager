@@ -50,14 +50,14 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //next question
     }           
     if ($quizConfirmPosted != "") {
         $_SESSION["QUIZ_CONFIRMED"] = $quizConfirmIdPosted;
-        header('Location: '. CONFIG_ROOT_URL . '/take-quiz.php?quiz='.$_SESSION["QUIZ_CONFIRMED"]);   
-        stop(); //refresh the page an rerun script
+        header('Location: '. CONFIG_ROOT_URL . '/take-quiz.php?quiz='.quizLogic::returnSharedQuizID($_SESSION["QUIZ_CONFIRMED"]));   
+        exit; //refresh the page an rerun script
     }
     if ($quizNotConfirmPosted != "") {
         $_SESSION["QUIZ_CONFIRMED"] = ""; //not confirmed anymore
         echo ("notconfirm");
         header('Location: ' . CONFIG_ROOT_URL . '/take-quiz.php');   
-        stop(); //refresh the page an rerun script (with no quiz this time)
+        exit; //refresh the page an rerun script (with no quiz this time)
     }
 
         

@@ -1,14 +1,11 @@
 <?php
     
     
-    // include php files here 
+// include php files here 
 //kick the user back if they haven't selected quiz
 require_once("../includes/config.php");
-include ("check-quiz-id-edit-quiz.php");
-
+$quizID = quizLogic::getQuizIdFromUrlElseReturnToEditQuiz();
 // end of php file inclusion
-
-$quizID = filter_input(INPUT_GET, "quiz");
 
 //Set page error messages blank upon initial loading
 $quizNameError = "";

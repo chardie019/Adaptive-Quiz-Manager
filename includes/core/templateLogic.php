@@ -39,6 +39,7 @@ class templateLogic {
     function __construct() {
         //add these to all pages
         $this->addCSS("style.css");
+        $this->addCSS("misc.css");
         $this->addJavascriptTop("jquery-1.11.2.min.js");
     }
     /** 
@@ -72,17 +73,36 @@ class templateLogic {
     
     }
     /** 
-     * This function adds a Javascript file to head of the html page 
+     * This function data data to the top of the HTML page using string parameter. 
      * 
-     * Use ths function to set page specific CSS, &lt;style&gt;,
-     * if templateLogic is doesn't have funcationality you need
-     * or the use case is rare
+     * Recommended to use addCustomHeadersStart/End for syntax highlighting instead though.
      * 
-     * @param string $inputString The string to be added to the html page
      * @return void
      */
     function addCustomHeaders($inputString) {
         $this->customHeaders .= $inputString;   //add to string
+    }
+    /** 
+     * This function starts adding data to the top of the HTML page.
+     * 
+     * Put the data in-between this and addCustomHeadersEnd to achieve result.
+     * (like startbody and endbody)
+     * 
+     * @return void
+     */
+    function addCustomHeadersStart() {
+        ob_start();
+    }
+    /** 
+     * This functionends adding data to the top of the HTML page.
+     * 
+     * Put the data in-between this and addCustomHeadersStart to achieve result.
+     * (like startbody and endbody)
+     * 
+     * @return void
+     */
+    function addCustomHeadersEnd() {
+        $this->customHeaders .= ob_get_clean();   //add the output to string
     }
     /** 
      * This function sets the Title of the page in the "title" tag
@@ -232,12 +252,36 @@ class templateLogic {
      * 
      * Use for page specifc styling, of if functionality is present in this 
      * template
+     * Note: recommended to use addCustomBottom/End for syntax highlighting
      * 
      * @param string $inputString The filename of the JS script
      * @return void
      */
     function addCustomBottom($inputString) {
         $this->customBottom .= $inputString;    //add to string
+    }
+
+    /** 
+     * This function starts adding data to the bottom of the HTML page.
+     * 
+     * Put the data in-between this and addCustomBottomEnd to achieve result.
+     * (like startbody and endbody)
+     * 
+     * @return void
+     */
+    function addCustomBottomStart($inputString) {
+        ob_start();
+    }
+    /** 
+     * This functionends adding data to the top of the HTML page.
+     * 
+     * Put the data in-between this and addCustomBottomStart to achieve result.
+     * (like startbody and endbody)
+     * 
+     * @return void
+     */
+    function addCustomBottomEnd() {
+        $this->customHeaders .= ob_get_clean();   //add the output to string
     }
     /** 
      * Ensures that the core places of the page are set

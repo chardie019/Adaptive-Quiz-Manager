@@ -8,6 +8,87 @@
 class quizLogic
 {
     /**
+     * Inserts a question and answer infront of the first question
+     * 
+     * @param string $quizId The Current quiz (real quiz)
+     * @param string $questionTitle The Question Heading
+     * @param string $questionContent The paragraph about the question
+     * @param string $questionImageUploadfile - the file to upload
+     * @param string $questionAlt The ALt text for the image
+     * @param string $answerContent The answer for teh first question
+     * @param string $feedbackContent The feedback for the answer
+     * @param string $isCorrect A number that shows if teh answer corretc, not or neutral
+     * @return void
+     */
+    public static function insertInitalQuestionAnswer($quizId, $questionTitle, $questionContent, $questionImageUploadfile, $questionAlt, 
+            $answerContent, $feedbackContent, $isCorrect) {
+        
+        //TODO recalculate the depth
+        
+        $dbLogic = new DB();
+        
+        //inset the question and rcord the id
+         $insertArray = array(
+            "QUESTION" => $questionTitle,
+             "CONTENT" => $questionContent,
+             "IMAGE" => $questionImageUploadfile,
+             "IMAGE_ALT" => $questionAlt
+        );
+        $questionId = $dbLogic->insert($insertArray, "question");
+        
+        //insert the answe and record the answer
+        $insertArray = array(
+            "ANSWER" => $answerContent,
+            "FEEDBACK" => $feedbackContent,
+            "IS_CORRECT" => $isCorrect
+        );
+        $answerId = $dbLogic->insert($insertArray, "answer");
+        
+        //get the root node of the quiz in question_answer before mofification
+        $whereValueArray = array(
+            "quiz_QUIZ_ID" => $quizId
+        );
+        $rootQuestionAnswer = $dbLogic->selectAndWhereIsNull("CONNECTION_ID", "question_answer", $whereValueArray, array("PARENT_ID"));
+        $rootQuestionAnswerConId = $rootQuestionAnswer["CONNECTION_ID"];
+        
+        //insert question to question_answer using above question_ID
+         $insertArray = array(
+            "question_QUESTION_ID" => $questionId,
+             "TYPE" => "question",
+             "quiz_QUIZ_ID" => $quizId
+        );
+        $questionConnectionId = $dbLogic->insert($insertArray, "question_answer");
+        
+        //insert question to question_answer using above question_ID
+        $insertArray = array(
+            "answer_ANSWER_ID" => $answerId,
+             "TYPE" => "answer",
+            "PARENT_ID" => $questionConnectionId,
+            "quiz_QUIZ_ID" => $quizId,
+        );
+        $answerConnectionId = $dbLogic->insert($insertArray, "question_answer");
+        
+        //attach the root node to the new answer
+        $setColumnsArray = array("PARENT_ID" => $answerConnectionId);
+        $whereValuesArray = array("CONNECTION_ID" => $rootQuestionAnswerConId);//the root)
+        $dbLogic->updateSetWhere("question_answer", $setColumnsArray, $whereValuesArray);
+    }
+    /**
+     * Gets the shared quiz ID from the URL and returns the real ID, otherwise, back to edit-quiz.
+     *
+     * @return string The Real Quiz ID
+     */
+    public static function getQuizIdFromUrlElseReturnToEditQuiz() {
+        $quizIDGet = quizLogic::returnRealQuizID(filter_input(INPUT_GET, "quiz"));
+        if(is_null($quizIDGet)){
+            //back to edit quiz
+            header('Location: ' . CONFIG_ROOT_URL . '/edit-quiz.php?no-quiz-selected=yes');
+            exit;  
+        }
+        return $quizIDGet;
+    }
+    
+    /**
      * Set the Shared Quiz ID of quiz, if sharedQuizID passed, make it this, otherwise, make it the same as quiz ID
      *
      * @param string $quizId The actual quiz id
@@ -60,7 +141,7 @@ class quizLogic
         //return the shared quiz ID
         //SELECT UIZ_ID from quiz where shared_quiz_id = 1;
         $where = array("SHARED_QUIZ_ID" => $sharedQuizId);
-        $result = $dbLogic->select("max(QUIZ_ID)", "quiz", $where);
+        $result = $dbLogic->select("max(QUIZ_ID) as QUIZ_ID", "quiz", $where);
         return $result['QUIZ_ID'];
     }
     

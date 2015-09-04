@@ -84,7 +84,7 @@ if($_SERVER['REQUEST_METHOD'] === "POST"){
         
     //Page is being loaded from edit-quiz-list with quizid selected    
       
-    header('Location: ' . CONFIG_ROOT_URL . '/edit-quiz.php?quiz=' . $quizIDPost);
+    header('Location: ' . CONFIG_ROOT_URL . '/edit-quiz.php?quiz=' . $quizIDGet = quizLogic::returnSharedQuizID($quizIDPost));
     stop();
     
     
