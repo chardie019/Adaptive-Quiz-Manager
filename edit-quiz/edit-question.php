@@ -39,8 +39,11 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //pastt the appropiate page
             $selectionError="Please choose a question to edit before continuing e.g to delete or add answers to.";
     }else if (isset($addQuestionButtonPost) || isset($removeAnswerButtonPost)){
             $selectionError="Please choose a answer to edit before continuing e.g to delete or add questions to.";
-    } else if (isset($inspectButtonPost) && (isset($answerPost)) || isset($questionPost)) {
-            header('Location: ' . CONFIG_ROOT_URL . "/edit-quiz/edit-question/inspect.php$quizUrl");
+    } else if (isset($inspectButtonPost) && isset($answerPost)) {
+            header('Location: ' . CONFIG_ROOT_URL . "/edit-quiz/edit-question/inspect.php$quizUrl&answer=$answerPost");
+            exit;
+    } else if (isset($inspectButtonPost) && (isset($questionPost))) {
+            header('Location: ' . CONFIG_ROOT_URL . "/edit-quiz/edit-question/inspect.php$quizUrl&question=$questionPost");
             exit;
     } else {
         //no button pressed, reload page

@@ -8,7 +8,30 @@
 class quizLogic
 {
     /**
-     * Re
+     * Returns the Data of question or Answer
+     * 
+     * @param string $questionOrAnswerId the ID of the question or answer
+     * @param string $type indicates if teh id is a question or an answer ("question" for question etc)
+     * @return array|boolean return the result array, false if operation fails
+     */
+    public static function returnQuestionOrAnswerData($questionOrAnswerId, $type){
+        $dbLogic = new DB();
+        if ($type == "question"){
+            $whereValuesArray = array("QUESTION_ID" => $questionOrAnswerId);
+            $result = $dbLogic->select("CONTENT, QUESTION, IMAGE, IMAGE_ALT", "question", $whereValuesArray);
+        } else { //$type == "answer"
+            $whereValuesArray = array("ANSWER_ID" => $questionOrAnswerId);
+            $result = $dbLogic->select("ANSWER, FEEDBACK, IS_CORRECT", "answer", $whereValuesArray);
+        }
+        if (count($result) > 0){
+            return $result;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Returns the parent ID of a question or Answer
      * 
      * @param DB $dbLogic reuse the current connection the databse
      * @param string $questionOrAnswerId the If of teh question or answer

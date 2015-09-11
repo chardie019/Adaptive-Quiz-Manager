@@ -54,7 +54,7 @@ if (!isset($isCorrectError)){$isCorrectError = "";}
 
 if (!isset($answerContent)){$answerContent = "";}
 if (!isset($feedbackContent)){$feedbackContent = "";}
-if (!isset($isCorrect)){$isCorrect = "3";}
+if (!isset($isCorrect)){$isCorrect = "2";}
 
 
 //html

@@ -29,8 +29,10 @@ $_SESSION["usertype"] = "stub";
 //once logged in, check things
 if (!empty($_SESSION["username"])){
         $userBean = new userBean();
-    if ($userBean->exists($_SESSION["username"]) == False) {
+    if (empty($_SESSION["USERLOGIC_USER_EXISTS"]) && $userBean->exists($_SESSION["username"]) == False) {
         $userBean->create($_SESSION["username"]);
+    } else {
+        $_SESSION["USERLOGIC_USER_EXISTS"] = true;
     }
     
 }
