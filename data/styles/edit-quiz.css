@@ -1,0 +1,52 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 10/09/2015, 3:14:05 PM
+    Author     : Silverham
+*/
+
+.tree-area{
+    background-color: #E2E2E2;
+    /* set on each page 
+    width: 80%;
+    height: 30em; */
+    float: left;
+    overflow-y: scroll;
+}
+
+.answer {
+        background-color: burlywood;
+    }
+    
+    .nested {
+        padding-left: 2em;
+    }
+    /* non-js styles */
+    li 
+    { 
+        position: relative; 
+        margin-left: -15px;
+        list-style: none;
+    } 
+    .question-list {
+        border-left: black 1px solid;
+    }
+    /* remove non-js styles */
+    .jstree-children .question-list {
+        border-left: initial;
+    }
+    .jstree-children li 
+    { 
+        position: initial; 
+        margin-left: initial;
+        list-style: initial;
+    } 
+    .jstree-children .answer {
+        background-color: initial;
+    }
+    .jstree-children .question {
+        font-weight: bold;
+    }

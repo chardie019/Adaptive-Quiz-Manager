@@ -1,14 +1,21 @@
 <?php
-function echoClassIfRequestMatches($requestUri, $class, $rootLink = false)
+function echoClassIfRequestMatches($requestUri, $class, $rootLink = false /* otherUri's */)
 {
+    //get the 4 and above augments + normal requestUri and put in array
+    $args = array_slice(func_get_args(), 2); //ignore first two parameters
+    $args[] = $requestUri; //add to array
+        
     $currentFileName = basename($_SERVER['REQUEST_URI'], ".php");
     $url = $_SERVER['REQUEST_URI'];
     $inUrl = FALSE;
 
     $isRoot = false;
     if ($rootLink == false){
-        if (strpos($url, $requestUri) !== false) {
-            $inUrl = true;
+        foreach ($args as $requestUriArg) {
+            //if in url
+            if (strpos($url, $requestUriArg) !== false) {
+                $inUrl = true;
+            }
         }
     }
     if ($rootLink == True){

@@ -18,28 +18,29 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //pastt the appropiate page
     $removeAnswerButtonPost = filter_input (INPUT_POST, "removeAnswer");
     $inspectButtonPost = filter_input (INPUT_POST, "inspect");
     
+    $quizUrl = "?quiz=$quizIDGet";
     if (isset($addQuestionButtonPost)){
         if (isset($answerPost)) {
-            include("add-question.php");
+            header('Location: ' . CONFIG_ROOT_URL . "/edit-quiz/edit-question/add-question.php$quizUrl&answer=$answerPost");
             exit;
         } else {
             $displayMessage = "initalQuestion";
         }
     } else if (isset($removeQuestionButtonPost) && isset($questionPost)) {
-            include('remove-question.php');
+            header('Location: ' . CONFIG_ROOT_URL . "/edit-quiz/edit-question/remove-question.php$quizUrl&question=$questionPost");
             exit;
     } else if (isset($addAnswerButtonPost) && isset($questionPost)){
-            include('add-answer.php');
+            header('Location: ' . CONFIG_ROOT_URL . "/edit-quiz/edit-question/add-answer.php$quizUrl&question=$questionPost");
             exit;
     } else if (isset($removeAnswerButtonPost) && isset($answerPost)) {
-            include('remove-answer.php');
+            header('Location: ' . CONFIG_ROOT_URL . "/edit-quiz/edit-question/add-answer.php$quizUrl&answer=$answerPost");
             exit;
     } else if (isset($removeQuestionButtonPost) || isset($addAnswerButtonPost)){
             $selectionError="Please choose a question to edit before continuing e.g to delete or add answers to.";
     }else if (isset($addQuestionButtonPost) || isset($removeAnswerButtonPost)){
             $selectionError="Please choose a answer to edit before continuing e.g to delete or add questions to.";
     } else if (isset($inspectButtonPost) && (isset($answerPost)) || isset($questionPost)) {
-            include('inspect.php');
+            header('Location: ' . CONFIG_ROOT_URL . "/edit-quiz/edit-question/inspect.php$quizUrl");
             exit;
     } else {
         //no button pressed, reload page
@@ -47,32 +48,33 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //pastt the appropiate page
     }
 }
 
+$feedbackMessageURL = filter_input(INPUT_GET, "feedback");
+
+switch ($feedbackMessageURL){
+    case "initial-question":
+        $message = "Initial Question created.";
+        $messageClass = "feedback-span";
+        break;
+    case "question":
+        $message = "Question added.";
+        $messageClass = "feedback-span";
+        break;
+    default:
+        $feedbackMessage = "";
+}
+if ($selectionError != ""){
+    $messageClass = "inputError";
+    $message = $selectionError;
+}
+//set to display errors or not
 if (!isset($displayMessage)){
     $displayMessage = "0"; //no message if not set
 }
-
-//if if there are any questions
+if (!isset($message)){
+    $message = ""; //no message if not set
+}
 $dbLogic = new DB();
-
-        //Create array for Outer join
-        $where = array(
-            "quiz_QUIZ_ID" => "$quizIDGet" 
-        );
-        $jointable = array(
-            "QUESTION_ID" => "question_QUESTION_ID"
-        );
-        $jointable2 = array(
-            "ANSWER_ID" => "answer_ANSWER_ID"
-        );
-
-        //Insert quiz into database
-        $quizData = ($dbLogic->selectFullOuterJoinOrder("*", "question_answer", $where, "question", $jointable, "answer", $jointable2, "depth", false));
-
-//$dbLogic = new DB();
-
-//"select * from question_answer order by depth;
-//$results = $dbLogic->selectAllOrder("question_answer", "depth");
-$arrs = array_values($quizData); //aossoiative to simple array of values
+$quizData = quizHelper::prepare_tree($quizIDGet, $dbLogic);
 
 //http://stackoverflow.com/a/15307555\
 

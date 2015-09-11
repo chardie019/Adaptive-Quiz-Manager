@@ -1,3 +1,11 @@
+### version 5.5.5 - 05/09/2015 - More edit-quiz operations
+=Joshua
+Initial Add Question, Create Question, Create Answer all working
+rename of question.php to edit-question
+DbLogic, TemplateLogic + other helpers improved
+Added indexes and renamed quiz_QUIZ_ID  to shared_SHARED_QUIZ_ID on some tables
+db version is now v4, upgrade files included
+
 ### version 5.5.4.1 - 05/09/2015 - Draft Initial Add Question
 =Joshua
 Draft Intial Add Question

@@ -24,7 +24,7 @@ function assertFailed($file, $line, $expr) {
     print "Assertion failed in $file on line $line: $expr\n";
 }
 
-function loadErrorPage() {
+function loadErrorPage($errorMessage = "", $errorMessageSpecific = "") {
     include '404.php';
     exit;
 }

@@ -25,9 +25,11 @@ class DB {
                 if (CONFIG_DEV_ENV == true){
                 /* @var $errorMessageSpecific type */
                 $errorMessageSpecific = $e->getMessage();
+                } else {
+                    $errorMessageSpecific = "";
                 }
                 $errorMessage = "There was an error connecting to the database.";
-                loadErrorPage();
+                loadErrorPage($errorMessage, $errorMessageSpecific);
                 exit;
             }
     }
@@ -255,8 +257,8 @@ class DB {
     /**
      * Runs a insert like: "insert into $table ($columns) values ($values);"
      * 
-     * @param string $tables The tables to be selected by the SQL query. in the form of "xx, yyy, zzz etc"
      * @param array $insertArray  The input for the columns/values clause. form $column => $value
+     * @param string $tables The tables to be selected by the SQL query. in the form of "xx, yyy, zzz etc"
      * @return string Returns the primary key of the insertion (eg quiz_id)
      */
     public function insert(array $insertArray, $tables) {
@@ -267,7 +269,29 @@ class DB {
         $this->runQuery($sql, $insertArray);
         return $lastInsertID = self::$connection->lastInsertID();
     }
-     /**
+    /**
+     * Runs a insert like: "INSERT INTO $table ($columns [and $insertValues]) SELECT $columns, $values  FROM $table WHERE $whereValues"
+     * 
+     * @param string  $insertTables The tables for teh data to be insert into. form "table1, table2 etc"
+     * @param string $insertColumns The columns to be have data put into. form "col1, col2, col3 etc"
+     * @param string $selectColumns The columns to be slected by the slect query. Can also column a variable as well. eg "col1, col2 etc."
+     * @param string $selectTables The tables to be selected by the SQL query. in the form of "table1, table2 etc"
+     * @param array $whereValuesArray  The input for the where clause (values). form $column => $value
+     * @param string $insertValuesArray The insert values for binding, in addition to the select clause (optional)
+     * @return string Returns the primary key of the insertion (eg quiz_id)
+     */
+    public function insertWithSelectWhere($insertTables, $insertColumns, $selectColumns, $selectTables, array $whereValuesArray, $insertValuesArray = array()) {
+        assert(is_string($insertTables));
+        assert(is_string($insertColumns));
+        assert(is_string($selectTables));
+        $where = self::prepareWhereValuesSQL($whereValuesArray); //the values
+        $selectColumns = self::prepareInsertValues($insertValuesArray, $selectColumns);
+        $sql = "INSERT INTO $insertTables ($insertColumns) ".
+                "SELECT $selectColumns FROM $selectTables WHERE $where;";
+        $this->runQuery($sql, $whereValuesArray, $insertValuesArray);
+        return $lastInsertID = self::$connection->lastInsertID();
+    }
+    /**
      * Runs a delete like: "delete from $tables where $whereValuesArray AND "
      * 
      * @param string $tables The tables to be selected by the SQL query. in the form of "xx, yyy, zzz etc"
@@ -386,7 +410,7 @@ class DB {
      * Updates columns. runs query like: UPDATE quiz SET SHARED_QUIZ_ID =  '16' WHERE QUIZ_ID = 16 AND $colum = $otherColumn;
      * 
      * @param string $tables The tables to be selected by the SQL query. in the form of "xx, yyy, zzz etc"
-     * @param array $setColumnsArray The SET matching tables to be updated by the SQL query. in the form of $column => $value    
+     * @param array $setColumnsArray The SET matching columns to be updated by the SQL query. in the form of $column => $value    
      * @param array $whereValuesArray  The input for the where clause. form $column => $value
      * @param array $whereColumnsArray The where matching tables to be selected by the SQL query. in the form of $column => $otherColumn  
      * @return void
@@ -398,6 +422,23 @@ class DB {
         $where = self::prepareWhereColumnsSQL($whereColumnsArray, $where); //the columns
         $sql = "UPDATE $tables SET $setColumns WHERE $where;";
         $this->runQuery($sql, $whereValuesArray, $setColumnsArray);
+    }
+    /**
+     * Updates columns. runs query like: UPDATE quiz SET SHARED_QUIZ_ID =  SHARED_QUIZ_ID+1 WHERE QUIZ_ID = 16 AND $colum = $otherColumn;
+     * 
+     * This function does not escape/bind $setColumns. This is useful to increment a column etc
+     * 
+     * @param string $tables The tables to be selected by the SQL query. in the form of "xx, yyy, zzz etc"
+     * @param array $setColumns The SET matching columns to be updated by the SQL query. in the form of $column => $column  
+     * @param array $whereValuesArray  The input for the where clause. form $column => $value
+     * @return void
+     */
+    public function updateSetButSetNotEscaped($tables, array $setColumnsArray, array $whereValuesArray) {
+        assert(is_string($tables));
+        $setColumns = self::prepareSetValuesSQLNoBinding($setColumnsArray); //the columns
+        $where = self::prepareWhereValuesSQL($whereValuesArray); //the values
+        $sql = "UPDATE $tables SET $setColumns WHERE $where;";
+        $this->runQuery($sql, $whereValuesArray);
     }
     /**
      * Updates columns. runs query like: UPDATE quiz SET SHARED_QUIZ_ID =  '16' WHERE QUIZ_ID = 16;
@@ -580,6 +621,21 @@ class DB {
         foreach ($setValuesArray as $columnTemp => $valueTemp) {      //$value not used - it's in $data
             $setColumns .= ($setColumns == "") ? "" : ", ";
             $setColumns .= "$columnTemp = :" . self::prepareColumnNameForBinding($columnTemp); //replace dot with underscore for table.column
+        }
+        return $setColumns;
+    }
+    /**
+     * Converts the Where data array to a string in preapation for PDO The vlaue is not escaped, use with caution
+     * 
+     * @param array $setValuesArray An assoicative array for the SET query in the form of $column(or table.column) => $column+1 etc
+     * @param string $setColumns a part string of the existing set values query, form SET Column = value
+     * @return string Part of the SQL query in SET Column = value
+     */
+    private static function prepareSetValuesSQLNoBinding(array $setValuesArray, $setColumns = ""){
+        assert(is_string($setColumns));
+        foreach ($setValuesArray as $columnTemp => $valueTemp) {      //$value not used - it's in $data
+            $setColumns .= ($setColumns == "") ? "" : ", ";
+            $setColumns .= "$columnTemp = $valueTemp"; //replace dot with underscore for table.column
         }
         return $setColumns;
     }

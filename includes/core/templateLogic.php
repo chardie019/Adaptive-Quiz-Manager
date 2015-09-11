@@ -148,7 +148,7 @@ class templateLogic {
      * Applicable types are "take-quiz", "create-quiz", "edit-quiz", "stats", "about" & "help" 
      * 
      * @param string $inputType The type to be set
-     * @param string $index Teels the submenu which is NOT the index, set to the page name
+     * @param string $inputIndex sets the submenu, set to the page name (take-quiz, create-quiz, edit-quiz, stats, help)
      */
     function setSubMenuType($inputType = NULL, $inputIndex = NULL) {
         //choose which file to include on the template page
@@ -269,7 +269,7 @@ class templateLogic {
      * 
      * @return void
      */
-    function addCustomBottomStart($inputString) {
+    function addCustomBottomStart() {
         ob_start();
     }
     /** 
@@ -281,7 +281,7 @@ class templateLogic {
      * @return void
      */
     function addCustomBottomEnd() {
-        $this->customHeaders .= ob_get_clean();   //add the output to string
+        $this->customBottom .= ob_get_clean();   //add the output to string
     }
     /** 
      * Ensures that the core places of the page are set

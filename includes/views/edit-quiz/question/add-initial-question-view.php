@@ -17,11 +17,6 @@ $templateLogic->addCustomHeadersStart();
         float:right;
         clear:right;
     }
-    form:after {
-    display: table;
-    content: "";
-    clear: both;
-}
 </style>
 <?php
 $templateLogic->addCustomHeadersEnd();
@@ -33,7 +28,7 @@ $templateLogic->addCustomHeadersEnd();
     
 <form action='#' method='post' enctype="multipart/form-data" >
     <div id="question-details" >
-        <h3>Please the Details for the new question.</h3>
+        <h3>Please add the Details for the new question.</h3>
         <p class="label">Please enter the Question:</p>
         <input type='text' id='question-title' name='question-title' size='30' value="<?php echo $questionTitle ?>" />
         <br />
@@ -77,7 +72,7 @@ $templateLogic->addCustomHeadersEnd();
         <?php echo "<span class=\"inputError\">".$isCorrectError."</span>"?> 
     </div>
     <div style="clear:both"></div>
-    <p><a class="mybutton myReturn" href="<?php echo (CONFIG_ROOT_URL . '/edit-quiz/question.php?quiz=' . $quizIDGet) ?>">Back</a></p>
+    <p><a class="mybutton myReturn" href="<?php echo (CONFIG_ROOT_URL . '/edit-quiz/edit-question.php?quiz=' . $quizIDGet) ?>">Back</a></p>
     <button class="mybutton mySubmit" type="submit" name="confirmQuiz" value="Enter">Create</button>
 </form>
     

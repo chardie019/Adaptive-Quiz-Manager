@@ -43,7 +43,7 @@ $templateLogic->startBody();
 <br />
 <p>
 <?php
-$buildNumber = 3;
+$buildNumber = 4;
 $con = mysqli_connect(DB_HOST,DB_USERNAME,DB_PASSWORD,DB_DB);
 
 // Check connection
@@ -63,7 +63,7 @@ if (mysqli_connect_errno()){
     } else { //fail
         echo "Database Version Check";
         echo "<br />"; 
-        echo "Fail: Build ".$row['BUILD_NUMBER']." is NOT the correct database version.";
+        echo "Fail: Build ".$row['BUILD_NUMBER']." is NOT the correct database version, $buildNumber is.";
          echo "<br /><br />";
          echo 'Please <a href="/phpmyadmin/db_export.php?db=aqm" target="_blank">backup your database</a>' . 
                  ' and overide with <a href="/phpmyadmin/db_import.php?db=aqm" target="_blank">latest version</a>.';
