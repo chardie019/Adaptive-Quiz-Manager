@@ -15,9 +15,9 @@ $uid = $_SESSION["username"];
         "user_USERNAME" => "$uid"
         );
     $columnWhere = array(
-        "quiz_QUIZ_ID" => "QUIZ_ID"
+        "shared_SHARED_QUIZ_ID" => "QUIZ_ID"
     );
-    ($answerID = $dbLogic->selectDistinct("QUIZ_NAME, DESCRIPTION, QUIZ_ID", "quiz, taker", $dataArray, $columnWhere, false));
+    ($answerID = $dbLogic->selectDistinctWithColumnsOrAnd("QUIZ_NAME, DESCRIPTION, QUIZ_ID", "quiz, taker", $dataArray, $columnWhere, false));
     //QUIZ_ID needed as you can put it in the URL maybe?
 
 

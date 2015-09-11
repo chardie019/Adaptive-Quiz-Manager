@@ -203,6 +203,28 @@ class DB {
         $sql = "SELECT $columns FROM $tables WHERE $where;";
         return $this->runQueryReturnResults($sql, $singleRow, $whereValuesArray, $whereValuesArray2);
     }
+    
+    /**
+     * Runs a select query like: "SELECT $column FROM $table WHERE $whereValues GROUP BY $groupColumn"
+     * 
+     * @param string  $columns The columns to be selected in the SQL query. In the form: "xx, yyy, max(zzz) etc"
+     * @param string $tables The tables to be selected by the SQL query. in the form of "xx, yyy, zzz etc"
+     * @param array $whereValuesArray  The input for the where clause. form $column => $value
+     * @param string $groupColumn The name of the column to group by
+     * @param boolean $singleRow return one row of many? true is the default (single row)
+     * @return array The results, eg result[15]['column'] or result['column']
+     */
+    public function selectGroupBy($columns, $tables, array $whereValuesArray, $groupColumn, $singleRow=True) {
+        assert(is_string($columns));
+        assert(is_string($tables));
+        assert(is_string($groupColumn));
+        assert(is_bool($singleRow));
+        $where = self::prepareWhereValuesSQL($whereValuesArray); //the values
+        $sql = "SELECT $columns FROM $tables WHERE $where GROUP BY $groupColumn;";
+        return $this->runQueryReturnResults($sql, $singleRow, $whereValuesArray);
+    }
+    
+    
     /**
      * Runs a select query like: "SELECT DISTINCT $column FROM $table WHERE $whereValues & $whereColumns OR ($whereValues & $whereColumns)"
      * 
@@ -230,6 +252,22 @@ class DB {
         $sql = "SELECT DISTINCT $columns FROM $tables WHERE $where;";
         return $this->runQueryReturnResults($sql, $singleRow, $whereValuesArray, $whereValuesArray2);
     }
+    
+     //This is how the query needs to look for quiz-list.php to retrieve quizzes to be able to 'take quiz'
+    //Also added the prepareWhereValuesSQLOr function, see bottom of page Line 522?
+    //This query will likely change again as we implement 'taking the most recent version' of a quiz.
+     public function selectDistinctWithColumnsOrAnd($columns, $tables, array $whereValuesArray,
+            array $whereValuesArray2, $singleRow=True) {
+        assert(is_string($columns));
+        assert(is_string($tables));
+        assert(is_bool($singleRow));
+        $where = self::prepareWhereValuesSQLOr($whereValuesArray); //the values
+        $where = self::prepareWhereValuesSQL($whereValuesArray2, $where); //the values
+        $sql = "SELECT DISTINCT $columns FROM $tables WHERE $where;";
+        return $this->runQueryReturnResults($sql, $singleRow, $whereValuesArray, $whereValuesArray2);
+    }
+     
+    
     /**
      * Runs a select ALL query like: ""SELECT * FROM $tables;""
      * 
@@ -550,6 +588,15 @@ class DB {
         assert(is_string($where));
         foreach ($whereValuesArray as $columnTemp => $valueTemp) {      //$value not used - it's in $data
             $where .= ($where == "") ? "" : " AND ";
+            $where .= "$columnTemp = :" . self::prepareColumnNameForBinding($columnTemp); //replace dot with underscore for table.column
+        }
+        return $where;
+    }
+    
+        private static function prepareWhereValuesSQLOr(array $whereValuesArray, $where = ""){
+        assert(is_string($where));
+        foreach ($whereValuesArray as $columnTemp => $valueTemp) {      //$value not used - it's in $data
+            $where .= ($where == "") ? "" : " OR ";
             $where .= "$columnTemp = :" . self::prepareColumnNameForBinding($columnTemp); //replace dot with underscore for table.column
         }
         return $where;

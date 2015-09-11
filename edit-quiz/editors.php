@@ -1,10 +1,8 @@
 <?php
-    
-    
-// include php files here 
+ // include php files here 
 //kick the user back if they haven't selected quiz
 require_once("../includes/config.php");
-$quizIDGet = quizLogic::getQuizIdFromUrlElseReturnToEditQuiz();
+include ("check-quiz-id-edit-quiz.php");
 // end of php file inclusion
 
 $confirmAddMessage = " ";
@@ -14,8 +12,8 @@ $dbLogic = new DB();
 
 if ($_SERVER['REQUEST_METHOD'] === "POST") { 
 
-    $confirmUsername = filter_input(INPUT_POST, "addNewUser");
-    $confirmRemoveUsername = filter_input(INPUT_POST, "removeUser");
+    $confirmUsername = filter_input(INPUT_POST, "newUser");
+    
     
     //First retrieve whether quiz is public or private, must be private to add/remove users from, and SHARED_ID is needed
     $dataArray = array(
@@ -64,10 +62,10 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     else if (isset($_POST['confirmRemoveUser'])) {
         if($_SESSION['IS_QUIZ_ENABLED'] == false){
             //Check username is number and letters, then check it doesnt exist before removing from 'editor'
-            if (preg_match("/^([A-Za-z0-9]+)$/", $confirmRemoveUsername)) {
+            if (preg_match("/^([A-Za-z0-9]+)$/", $confirmUsername)) {
 
                 $array = array(
-                    "user_USERNAME" => $confirmRemoveUsername,
+                    "user_USERNAME" => $confirmUsername,
                     "quiz_QUIZ_ID" => $quizDetails['SHARED_QUIZ_ID']
                 );
 
@@ -75,11 +73,11 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
                 if(!empty($userResults)){
                     $removeArray = array(
-                        "user_USERNAME" => $confirmRemoveUsername,
+                        "user_USERNAME" => $confirmUsername,
                         "quiz_QUIZ_ID" => $quizDetails['SHARED_QUIZ_ID']
                     );           
                     $removeUserResults = ($dbLogic->delete("editor", $removeArray));     
-                    $confirmRemoveMessage = 'User '.$confirmRemoveUsername.' has been successfully removed from the list of approved takers.';
+                    $confirmRemoveMessage = 'User '.$confirmUsername.' has been successfully removed from the list of approved editors.';
 
                 }
                 else{

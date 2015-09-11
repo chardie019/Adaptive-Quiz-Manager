@@ -23,8 +23,8 @@ $templateLogic->startBody();
                             ?>
                         </p>
                         <input type="hidden" name="quizID" value='<?php echo $_SESSION['CURRENT_EDIT_QUIZ_ID'];?>' >
-                        <button class=" mybutton <?php if($_SESSION['IS_QUIZ_ENABLED'] == true){echo $_SESSION['enableButton'];} ?> " type="submit" name="confirmEnabled" >Enable</button>
-                        <button class=" mybutton <?php if($_SESSION['IS_QUIZ_ENABLED'] == false){echo $_SESSION['enableButton'];} ?> " type="submit" name="confirmDisabled" >Disable</button>
+                        <button class=" mybutton <?php if($_SESSION['IS_QUIZ_ENABLED'] == true){echo $_SESSION['enableButton'];}else{echo 'myDisabled';} ?> " type="submit" name="confirmEnabled" >Enable</button>
+                        <button class=" mybutton <?php if($_SESSION['IS_QUIZ_ENABLED'] == false){echo $_SESSION['enableButton'];}else{echo 'myDisabled';} ?> " type="submit" name="confirmDisabled" >Disable</button>
                     </form>
                 </div>
 <?php

@@ -98,7 +98,7 @@ if($_SERVER['REQUEST_METHOD'] === "POST"){
         "user_USERNAME" => "$uid"
         );
     $whereColumnsArray = array(
-        "quiz_QUIZ_ID" => "SHARED_QUIZ_ID"
+        "shared_SHARED_QUIZ_ID" => "SHARED_QUIZ_ID"
         );
     
         $quizEditId = $dbLogic->selectWithColumnsGroupBy("QUIZ_NAME, IS_ENABLED, MAX(QUIZ_ID) as QUIZ_ID , MAX(VERSION) as VERSION", "QUIZ, EDITOR", 

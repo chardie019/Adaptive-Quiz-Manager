@@ -259,10 +259,17 @@ select.quiz_list {
 }
 
 .myEnabled{
-    background-color: #404040;    
+    background-color: #66CC00;    
 }
 .myEnabled:hover{
-    background-color: #404040; 
+    background-color: #66CC00; 
+}
+
+.myDisabled{
+    background-color: #FF3300;
+}
+.myDisabled:hover{
+    background-color: #404040;
 }
 
 #buttonborder1, #buttonborder2, #buttonborder3, #buttonborder4, #buttonborder5, #buttonborder6 {
@@ -352,4 +359,37 @@ border-top:1px solid #ccc;
  
 #footer p {
 padding:10px;
+}
+
+#content-charts{  
+    width:100%;
+    padding-top: 25px;
+    padding-bottom: 75px;
+    margin-bottom: 100px;  
+}
+#content-table-data{
+    width:79%;
+    padding-top: 25px;
+    padding-bottom: 25px;
+    padding-left: 10px;
+    margin-bottom: 25px; 
+    border: 1px solid black;
+    border-radius: 4px;
+    background-color:  #FFFFFF;
+    float: left;
+}
+
+#displayCharts{
+    border: 1px solid black;
+    border-radius: 4px;
+    width:80%;
+    float: left;
+    background-color: #FFFFFF;
+}
+
+#chart-actions{
+    
+    float: right;  
+    width: 15%;
+    height: 1000px;
 }

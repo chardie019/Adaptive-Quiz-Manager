@@ -1,3 +1,16 @@
+###Version 5.5.6 - 11/09/2015 - View statistics
+= Harry
+- Implemented Google charts into stats.php page and stats-quiz-graph-view.php
+- Pie charts load the number of times each answer was chosen for every question within a given quiz
+- Stats page also displays average completion time, shortest time, longest time, total number of attempts
+- Ability to view the stats for only the most current version of a quiz, or for all versions of the quiz combined
+- dbLogic updates to provide functionality for take-quiz after last major db update
+- quiz-complete.php now records and inserts FINISHED_AT time into database upon completion of a quiz atttempt
+- changed editors, takers to a single text box with red/green action buttons (colours not final)
+- ***NOTE***: Database does not have FINISHED_AT column populated in result table, so that data will be way off until this is corrected/input
+- 
+
+
 ### version 5.5.5 - 05/09/2015 - More edit-quiz operations
 =Joshua
 Initial Add Question, Create Question, Create Answer all working
