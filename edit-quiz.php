@@ -101,7 +101,7 @@ if($_SERVER['REQUEST_METHOD'] === "POST"){
         "shared_SHARED_QUIZ_ID" => "SHARED_QUIZ_ID"
         );
     
-        $quizEditId = $dbLogic->selectWithColumnsGroupBy("QUIZ_NAME, IS_ENABLED, MAX(QUIZ_ID) as QUIZ_ID , MAX(VERSION) as VERSION", "QUIZ, EDITOR", 
+        $quizEditId = $dbLogic->selectWithColumnsGroupBy("QUIZ_NAME, IS_ENABLED, MAX(QUIZ_ID) as QUIZ_ID , MAX(VERSION) as VERSION", "quiz, editor", 
         $whereValuesArray, $whereColumnsArray, 'SHARED_QUIZ_ID', false);
       
     include('edit-quiz-list-view.php');
