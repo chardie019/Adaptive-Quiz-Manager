@@ -131,3 +131,5 @@ ALTER TABLE  `taker` ADD FOREIGN KEY (  `ADDED_BY` ) REFERENCES  `aqm`.`user` (
 ) ON DELETE RESTRICT ON UPDATE RESTRICT ;
 
 UPDATE `aqm`.`answer` SET `IS_CORRECT` = '2' WHERE `IS_CORRECT` = '3';
+
+UPDATE  `aqm`.`version` SET  `BUILD_NUMBER` =  '5';
