@@ -8,19 +8,50 @@
 class quizHelper
 {
     /**
+     * Returns the web image path
+     * 
+     * @param string $targetFileName The image filename
+     * @param string $quizId the quiz the image belongs to
+     * @return string The real file path and $targetFileName(in the same string, if provided eg C:\images\1.png
+     */
+    public static function returnWebImageFilePath ($quizId, $targetFileName = NULL){
+        $target_dir = STYLES_QUIZ_IMAGES_LOCATION . "/$quizId/";
+        if (is_null($targetFileName)){
+            return $target_dir;
+        } else {
+            return $target_dir . $targetFileName;
+        }
+    }
+    /**
+     * Return the local image path
+     * 
+     * @param string $targetFileName The image filename
+     * @param string $quizId the quiz the image belongs to
+     * @return string The real file path and $targetFileName(in the same string, if provided eg C:\images\1.png
+     */
+    public static function returnRealImageFilePath ($quizId, $targetFileName = NULL){
+        $target_dir = STYLES_QUIZ_IMAGES_LOCATION_DIR . "/$quizId/";
+        if (is_null($targetFileName)){
+            return $target_dir;
+        } else {
+            return $target_dir . $targetFileName;
+        }
+    }
+    /**
      * Uploads an image for the quiz question
      * 
      * @param array $_FILES The file post array
      * @param string $targetFileName The name of the file being uploaded
      * @param string $quizId The id of the quiz assoicated
-     * @return array ['result'] is false on fail. otherwise is true and ['imageUploadError'] is a message and ['imageAltError'] is also a message
-     *                      ['targetDir'] is the upload directory
+     * @return array|boolean false on fail. otherwise ['imageUploadError'] is a message and 
+     * ['imageAltError'] is the alt error message
+     * ['targetDir'] is the upload directory
      */
     public static function handleImageUploadValidation($_FILES, $targetFileName, $quizId, $questionAlt) {
         //Validate Image upload
         //Double \\ is needed at the end of path to cancel out the single \ effect leading into "
         //$target_dir = "C:\xampp\htdocs\aqm\data\quiz-images\\"; 
-        $target_dir = STYLES_QUIZ_IMAGES_LOCATION_DIR . "/$quizId/";  
+        $target_dir = self::returnRealImageFilePath($quizId);
         $result['targetDir'] = $target_dir;
         $target_file = $target_dir . $targetFileName;
         $uploadOk = 1;
@@ -52,6 +83,14 @@ class quizHelper
                 $result['imageAltError'] = "Error: Please enter alternative text to the question more accessible.";
                 $uploadOk = 0;
             }
+            //still good
+            if ($uploadOk == 1){
+                if (move_uploaded_file($_FILES["questionImageUpload"]["tmp_name"], $target_file)) {
+                    //uploaded
+                } else { //nope it failed
+                    $uploadOk  = 0;
+                }
+            }
         }
         // Check if $uploadOk is set to 0 by an upload error. Exit if true.
         if ($uploadOk == 0) {
@@ -63,7 +102,7 @@ class quizHelper
         } else{
             $result['result'] = true;
         }
-        return $result;
+        return $result; //retrun the array now
     }
     /**
      * Prints a tree of question answers using ul and li's (and jstree)

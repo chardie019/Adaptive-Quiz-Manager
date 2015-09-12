@@ -29,7 +29,95 @@ class quizLogic
             return false;
         }
     }
-    
+    /**
+     * Removes a image from a question and it's file
+     * 
+     * @param string $quizId  The quiz associated 
+     * @param string $questionId The question ID associated
+     * @return void
+     */
+    public static function removeImagefromQuestion($quizId, $questionId){
+        $dbLogic = new DB();
+        //check the question is on the same quiz
+        $prevConAnswerConId = self::checkQuestionBelongsToQuiz($dbLogic, $quizId, $questionId);
+        if ($prevConAnswerConId == false){
+            return false;
+        }
+        $result = quizLogic::returnQuestionOrAnswerData($questionId , "question"); //get the image filename
+        //remove the image from db
+        $whereValuesArray = array("QUESTION_ID" => $questionId);
+        $setColumnsArray = array("IMAGE" => NULL);
+        $dbLogic->updateSetWhere("question", $setColumnsArray, $whereValuesArray);
+        //delete current image file
+        unlink(quizHelper::returnRealImageFilePath($quizIDGet, $result['IMAGE']));
+    }
+    /**
+     * Updates a question in the database
+     * 
+     * @param string $quizId  The quiz associated 
+     * @param string $questionId The question ID to update
+     * @param string $questionTitle The question's heading
+     * @param string $questionContent The paragraph for the question
+     * @param string $questionAlt The alternate text for those impaired
+     * @param string $targetFileName The filename of the image for the question (optional, keeps old image)
+     * @return boolean false if operation fails, true if success
+     */
+    public static function updateQuestion($quizId, $questionId, $questionTitle, $questionContent, $questionAlt, $targetFileName = NULL){
+        $dbLogic = new DB();
+        //check the question is on the same quiz
+        $prevConAnswerConId = self::checkQuestionBelongsToQuiz($dbLogic, $quizId, $questionId);
+        if ($prevConAnswerConId == false){
+            return false;
+        }
+        $whereValuesArray = array("QUESTION_ID" => $questionId);
+        if (is_null($targetFileName)){
+            $setColumnsArray = array(
+                "QUESTION" => $questionTitle,
+                "CONTENT" => $questionContent,
+                "IMAGE_ALT" => $questionAlt
+            );
+        } else {
+            //delete the existing file
+            $result = $dbLogic->select("IMAGE", "question", $whereValuesArray);
+            unlink(quizHelper::returnRealImageFilePath($quizId, $result['IMAGE']));
+            //prepare update arrays
+            $setColumnsArray = array(
+                "QUESTION" => $questionTitle,
+                "CONTENT" => $questionContent,
+                "IMAGE" => $targetFileName,
+                "IMAGE_ALT" => $questionAlt
+            );
+        }
+        $dbLogic->updateSetWhere("question", $setColumnsArray, $whereValuesArray);
+        //all good, so returnn true
+        return true;
+    }
+        /**
+     * Updates a question in the database
+     * 
+     * @param string $quizId The quiz associated 
+     * @param string $answerId The answer assiocated
+     * @param string $answerContent The actual answer
+     * @param string $feedbackContent The feedback when choosing that answer
+     * @param string $isCorrect is it correct 0,2, or 2 (0 is incorrect, 1 is correct, 2 is neutral)
+     * @return void
+     */
+    public static function updateAnswer($quizId, $answerId, $answerContent, $feedbackContent, $isCorrect){
+        $dbLogic = new DB();
+        //check the question is on the same quiz
+        $prevConAnswerConId = self::checkAnswerBelongsToQuiz($dbLogic, $quizId, $answerId);
+        if ($prevConAnswerConId == false){
+            return false;
+        }
+        $whereValuesArray = array("ANSWER_ID" => $answerId);
+        //prepare update arrays
+        $setColumnsArray = array(
+            "ANSWER" => $answerContent,
+            "FEEDBACK" => $feedbackContent,
+            "IS_CORRECT" => $isCorrect
+        );
+        $dbLogic->updateSetWhere("answer", $setColumnsArray, $whereValuesArray);
+    }
     /**
      * Returns the parent ID of a question or Answer
      * 

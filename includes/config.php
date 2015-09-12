@@ -8,8 +8,13 @@
 // Report all PHP errors (disable to hide mysql error)
 //error_reporting(-1);
 
-
-define( 'CONFIG_DEV_ENV', true); //are developing
+//are developing
+define( 'CONFIG_DEV_ENV', true);
+//DB variables
+define( 'DB_HOST', "localhost");
+define( 'DB_DB', "aqm");
+define( 'DB_USERNAME', "aqm");
+define( 'DB_PASSWORD', "jc66882Dxc9D");
 
 if (CONFIG_DEV_ENV == true){
     assert_options(ASSERT_ACTIVE, 1); //enable asseration
@@ -28,13 +33,6 @@ function loadErrorPage($errorMessage = "", $errorMessageSpecific = "") {
     include '404.php';
     exit;
 }
-
-//DB variables
-define( 'DB_HOST', "localhost");
-define( 'DB_DB', "aqm");
-define( 'DB_USERNAME', "aqm");
-define( 'DB_PASSWORD', "jc66882Dxc9D");
-
 
 //define site variables (not styles)
 define( 'CONFIG_ROOT_DIR', dirname(dirname(__FILE__))); // C:\xampp\htdocs\aqm <inlude file from another location relative to here? >

@@ -62,6 +62,14 @@ switch ($feedbackMessageURL){
         $message = "Question added.";
         $messageClass = "feedback-span";
         break;
+    case "question-update":
+        $message = "Question Updated.";
+        $messageClass = "feedback-span";
+        break;
+    case "answer-update":
+        $message = "Answer Updated.";
+        $messageClass = "feedback-span";
+        break;
     default:
         $feedbackMessage = "";
 }
@@ -82,4 +90,4 @@ $quizData = quizHelper::prepare_tree($quizIDGet, $dbLogic);
 //http://stackoverflow.com/a/15307555\
 
 //html
-include("question-view.php");
+include("edit-question-view.php");

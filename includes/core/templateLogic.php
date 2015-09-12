@@ -40,6 +40,7 @@ class templateLogic {
         //add these to all pages
         $this->addCSS("style.css");
         $this->addCSS("misc.css");
+        $this->addCSS("misc2.css");
         $this->addJavascriptTop("jquery-1.11.2.min.js");
     }
     /** 

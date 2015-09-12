@@ -31,43 +31,25 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING) === "PO
         $questionContentError = "Error: You must enter the question's content.";
         $error = 1;
     }
-    //image upload and validate function
-    $targetFileName = basename($_FILES["questionImageUpload"]["name"]);
-    $imageResult = quizHelper::handleImageUploadValidation($_FILES, $targetFileName, $quizID, $questionAlt);
-    if($imageResult['result'] == false){ //fail
-        $error = 1;
-        $imageUploadError = $imageResult['imageUploadError'];
-        $questionAltError = $imageResult['imageAltError'];
-    } else {
-        //extract the result
-        $target_file = $imageResult['targetDir'];
-    }
     if ($error == 0){
-        // If image passed all criteria, attempt to upload
-            if (move_uploaded_file($_FILES["questionImageUpload"]["tmp_name"], $target_file)) {
-                //echo "The file ". basename($_FILES["questionImageUpload"]["name"]). " has been uploaded.";
-                //success
-            } else {
-                $imageUploadError = "Sorry, there was an error uploading your file.";
+        if (is_uploaded_file($_FILES["questionImageUpload"]["tmp_name"])) { //image is optional
+            // If image passed all criteria, attempt to upload
+            $targetFileName = basename($_FILES["questionImageUpload"]["name"]);
+            $imageResult = $quizHelper::handleImageUploadValidation($_FILES, $targetFileName, $quiz, $questionAlt);
+            if($imageResult['RESULT'] == false){
                 $error = 1;
-            }
-        //all good
-        $result = quizLogic::insertQuestion($quizID, $prevAnswerId, $questionTitle, $questionContent, $targetFileName, $questionAlt);
-        if ($result == true){
-            //show soe the new question added
-            header('Location: '. CONFIG_ROOT_URL . '/edit-quiz/edit-question.php?quiz='.quizLogic::returnSharedQuizID($quizIDGet)."&feedback=question");
-            exit();
-        } else {
-            loadErrorPage("There was Problem adding a question");
-            //delete the upload file if any
-            if(file_exists($target_file)){
-                unlink($target_file);
-            }else{
-                //echo 'file not found';
+                $imageUploadError = $imageResult['imageUploadError'];
+                $questionAltError = $imageResult['imageAltError'];
             }
         }
+        if ($error == 0) {//all good
+            quizLogic::insertInitalQuestionAnswer($quizIDGet, $questionTitle, $questionContent, $targetFileName, $questionAlt, $answerContent, $feedbackContent, $isCorrect);
+            //show soe the new question added
+            header('Location: '. CONFIG_ROOT_URL . '/edit-quiz/edit-question.php?quiz='.quizLogic::returnSharedQuizID($quizIDGet)."&feedback=initial-question");
+            exit();
+        }
     }
-    
+
 }
 
 $dbLogic = new DB();

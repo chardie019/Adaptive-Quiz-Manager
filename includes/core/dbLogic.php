@@ -146,7 +146,7 @@ class DB {
         $where = self::prepareWhereValuesSQL($whereValuesArray); //the values
         $where = self::prepareWhereColumnsSQL($whereColumnsArray, $where); //the columns
         $sql = "SELECT $columns FROM $tables WHERE $where ORDER BY $sortColumn;";
-        return $this->runQueryReturnResults($sql, $singleRow, $whereValuesArray);
+        return $this->runQueryReturnResults($sql, $whereValuesArray);
     }
     /**
      * Runs a select query like: "SELECT $column FROM $table WHERE $whereValues & $whereColumns OR ($whereValues & $whereColumns) ORDER BY $sortColumn"

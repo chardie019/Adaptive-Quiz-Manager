@@ -61,7 +61,7 @@ $templateLogic->startBody();
         <?php echo "<span class=\"inputError\">".$isCorrectError."</span>"?> 
     </div>
     <p><a class="mybutton myReturn" href="<?php echo (CONFIG_ROOT_URL . '/edit-quiz/edit-question.php?quiz=' . $quizIDGet) ?>">Back</a></p>
-    <button class="mybutton mySubmit" type="submit" name="confirmQuiz" value="Enter">Create</button>
+    <button class="mybutton mySubmit" type="submit" name="answer-submit" value="Enter">Update</button>
 </form>
 <?php
 $templateLogic->endBody();
