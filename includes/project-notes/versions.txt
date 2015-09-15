@@ -1,3 +1,16 @@
+###Version 5.5.6 - 11/09/2015 - View statistics
+= Harry
+- Display table/select list (depends on what team votes for) in Takers/Editors pages of current users
+- Added square framed divs around content areas on all select pages
+- User now selects whether they want to view their personal stats for a quiz they attempted or they created
+- User can see their personal attempt results for both most current version of a quiz and all versions of that quiz
+- Updated quiz list queries to include most recent versions of quizzes 9take quiz, edit quiz, stats-editor, stats-taker)
+- Created Empty result page should no attempts have occurred on a specific quiz, user is informed of this
+- Other minor bug fixes, query updates
+NOTES:
+ --- Need team to decide on select box or table for displaying current takers/editors
+ --- Fix up the Take Quiz radio button list THEN update other lists to match if thats decided upon
+
 ###Version 5.6 - 15/09/2015 - Inspect & add/remove Q & A
 = Joshua
 - Inspect & add/remove Q & A all work

@@ -5,26 +5,27 @@ $templateLogic->setTitle('Edit Quiz');
 $templateLogic->setHeading('Edit Quiz');
 $templateLogic->startBody();
 ?>
-            <div id="content-centre">
+            
+   <div id="content-centre">
+                <h2>Update quiz information and content</h2>
                 
                 <?php if (count($quizEditId) > 0) { //there are quizes?>
 
                 <form action="#" method="post">
                     <br />
-
                     
-                    <label class="label">Select Quiz: </label>
+                    <p id="label">Select Quiz:
                         
                     <select class="quiz_list" name="quizid">
                     <?php
-                    foreach ($quizEditId as $answerRow) {
+                    foreach ($nameArray as $answerRow) {
                     echo "<option value = ".($answerRow["QUIZ_ID"])."> ".$answerRow["QUIZ_NAME"]."</option>";
                     };?>
                     </select>
                     <!-- pad  the space between submit button and dropdown box -->
                     <br />
                     <br />
-                    
+                    </p>
                     <p>
                         Select a quiz from the list above to edit. It contains all quizzes on 
                         which your account is listed with Edit permissions.
@@ -56,8 +57,9 @@ $templateLogic->startBody();
                 </p>
                 
                 <?php }//end quiz if statement ?> 
-
-
+                
+                
+            </div>
 
 <?php
 $templateLogic->endBody();

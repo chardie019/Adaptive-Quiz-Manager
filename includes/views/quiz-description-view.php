@@ -32,16 +32,22 @@ $templateLogic->startBody();
 <!-- Quiz confirmed, user and form are sent to /take-quiz/QUIZ_CURRENT_QUIZ_ID, which is question 1 of quiz-->
 
     <?php 
-    if($attemptsReached == false){
+    if($attemptsReached == false && $isEnabled == true){
         echo "<form action=\"#\" method=\"post\">";
         echo "<input type=\"hidden\" name=\"confirmQuizId\" value=\"" . $_SESSION['QUIZ_CURRENT_QUIZ_ID'] . "\" />"; 
         echo "<button class=\"mybutton mySubmit\" type=\"submit\" name=\"confirmQuiz\" value=\"Enter\">Begin</button>";
         echo "</form>";
         
     }
-    else{
-        echo "<span class=\"label\"> You have reached your maximum number of attempts. Please select another quiz. </span>";
+    else if($attemptsReached == true){
+        echo "<span class=\"inputError\"> You have reached your maximum number of attempts. Please select another quiz. </span>";
     }
+    else if($isEnabled == false){
+        echo "<span class=\"inputError\"> This quiz is currently under revision. As a result, it is disabled to takers. "
+            . "Please contact one of the quiz editors to gain further information on this quiz's status. </span>";
+    }
+    
+    
         ?>
 
 <form action="" method="post"> 

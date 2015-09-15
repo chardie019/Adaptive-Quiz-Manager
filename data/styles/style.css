@@ -102,19 +102,22 @@ background-color:#f1f1f1;
     padding:10px;
 }
 
-#content h1 {
+#content h1, h2 {
     text-align: center;
 }
 
 /*Styles for Create-Quiz-View double column*/
 #content-create-quiz{
     position: relative;
-    width:100%;
-    float:left;
-    margin-left: 10%;
+    width:90%;
+    float:left;  
     padding: 10px;
     padding-bottom: 75px;
+    padding-left: 10%;
     margin-bottom: 100px;
+    background-color: #F0F0F0;
+    border: 1px solid black;
+    border-radius: 4px;
 }
 
     #content-create-quiz .label{
@@ -201,12 +204,17 @@ background-color:#f1f1f1;
 /*Creates a thinner middle column*/
 #content-centre{
 position: relative;
-width:50%;
+width:75%;
 float:left;
-margin-left: 25%;
-padding: 10px;
+
+
+padding-right: 130px;
+padding-left: 100px;
 padding-bottom: 75px;
 margin-bottom: 100px;
+background-color: #F0F0F0;
+border: 1px solid black;
+border-radius: 4px;
 }
 
 #content-centre h1{
@@ -227,7 +235,7 @@ select.quiz_list {
 }
 
 /*Submit and Cancel buttons used on site*/
-.mybutton {
+.mybutton, .mybuttonlink{
         /* position: absolute; */
 	background-color:#e9ab00;
 	-moz-border-radius:28px;
@@ -242,18 +250,22 @@ select.quiz_list {
 	padding:16px 31px;
 	text-decoration:none;
 	text-shadow:0px 1px 0px #808080;
+        text-align: center;  
 }
 
-.mybutton:hover, .mybutton:hover {
+.mybuttonlink{
+    /*Button width and link width required to differ to apepar the same... not sure why?*/
+    width: 117px;
+}
+
+.mybutton:hover, mybuttonlink:hover {
 	background-color:#B0B0B0;
 }
 
 /*Positions buttons in bottom right and left corners of div*/
 .mySubmit{
-    right:0;
-    bottom:0;
+    float: left;
 }
-
 .myReturn{
     float: right;
 }
@@ -271,6 +283,7 @@ select.quiz_list {
 .myDisabled:hover{
     background-color: #404040;
 }
+
 
 #buttonborder1, #buttonborder2, #buttonborder3, #buttonborder4, #buttonborder5, #buttonborder6 {
     border: 1px solid black;
@@ -366,30 +379,68 @@ padding:10px;
     padding-top: 25px;
     padding-bottom: 75px;
     margin-bottom: 100px;  
+    
 }
 #content-table-data{
     width:79%;
-    padding-top: 25px;
-    padding-bottom: 25px;
+    padding-top: 50px;
+    padding-bottom: 50px;
     padding-left: 10px;
-    margin-bottom: 25px; 
+    margin-bottom: 50px; 
     border: 1px solid black;
     border-radius: 4px;
     background-color:  #FFFFFF;
     float: left;
 }
 
+
 #displayCharts{
     border: 1px solid black;
     border-radius: 4px;
     width:80%;
-    float: left;
     background-color: #FFFFFF;
 }
+table.userTable{
+    border: 1px solid black;
+    border-collapse: collapse; 
+    width: 500px;
+}
 
-#chart-actions{
+table.userTable th, td {
+    padding: 10px;
+    border: 1px solid black;
+    border-collapse: collapse; 
+}
+
+table.userTable th{
+    color: #FFFFFF;
+    background-color: #404040;
+}
+
+table.userTable td{
+    background-color: #B0B0B0;
+}
+
+select.userList {
+    height:50px;
+    width:500px;
+    border: 2px solid rgb(80,80,80) ;
+    background-color: #404040;
+    color: #FFFFFF;
+    font-size: 18px;
+    padding: 10px;
     
+}
+
+#left-column, #right-column{
+    width: 40%;
+    float: left;
+    padding: 25px;
+    border: 1px solid black;
+    background-color:#F0F0F0;  
+    border-radius: 4px;
+}
+
+#right-column{   
     float: right;  
-    width: 15%;
-    height: 1000px;
 }

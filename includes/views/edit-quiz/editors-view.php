@@ -26,10 +26,29 @@ $templateLogic->startBody();
 <form action='#' method='post'>
     <p>Please enter the CSU Username of the User you would like to <span id='label'>enable/disable</span> permissions for:</p>
     <br />
-    <span id='label'> Username: </span>
-    <input type='text' name='newUser' maxlength="20" />
-    <button class="mybutton myEnabled" type="submit" name="confirmAddUser" value="Enter">Add user</button>
-    <button class="mybutton myDisabled" type="submit" name="confirmRemoveUser" value="Enter">Remove user</button>
+    <table class="userTable">
+        <tr><th>Current active Editors</th></tr>
+        <?php 
+            foreach($quizUsers as $editors){
+                echo "<tr><td>".$editors['user_USERNAME']."</td></tr>";
+            }
+        ?>
+    </table>
+    <br />
+    <br />
+    <br />
+    
+    <select class="userList">
+        <option>--- Click to view current active Editors ---</option>
+        <?php 
+            foreach($quizUsers as $editors){
+                echo "<option>".$editors['user_USERNAME']."</option>";
+            }
+        ?>
+    </select>
+    
+    <br />
+    <br />
     <br />
 </form>
 

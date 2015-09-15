@@ -90,7 +90,9 @@ if($_SERVER['REQUEST_METHOD'] === "POST"){
     
 //If coming from home page, display quiz list for user to select
 }else if(is_null($quizIDGet)){
-
+    
+    
+    //Retrieve the most current versions of quizzes for which the user is an editor
     $uid = $_SESSION["username"];
     //where coloumns
 
@@ -101,36 +103,38 @@ if($_SERVER['REQUEST_METHOD'] === "POST"){
         "shared_SHARED_QUIZ_ID" => "SHARED_QUIZ_ID"
         );
     
-        $quizEditId = $dbLogic->selectWithColumnsGroupBy("QUIZ_NAME, IS_ENABLED, MAX(QUIZ_ID) as QUIZ_ID , MAX(VERSION) as VERSION", "quiz, editor", 
+    $quizEditId = $dbLogic->selectWithColumnsGroupBy("SHARED_QUIZ_ID, MAX(QUIZ_ID) AS QUIZ_ID", "quiz, editor", 
         $whereValuesArray, $whereColumnsArray, 'SHARED_QUIZ_ID', false);
-      
+    
+    
+   /*Run another set of queries using the QUIZ_ID and SHARED_QUIZ_ID retrieved above to obtain the name
+     *of the most current version of the quiz, as well as the most current version. Include QUIZ_ID and
+     *SHARED_QUIZ_ID in returned results so all fields can be accessed from the nameArray array on stats-view.
+     *WARNING** Simply running the single query above and including the additional fields does not result in 
+     *the correct QUIZ_NAME being linked with the correct QUIZ_ID due to the MAX requirement. Second query is required.
+     */
+    $nameArray = array();
+    foreach($quizEditId as $columnResult){
+        
+        $wherevalues2 = array(
+            "user_USERNAME" => "$uid"
+        );
+        
+        $wherevalues3 = array(
+            "shared_SHARED_QUIZ_ID" => "SHARED_QUIZ_ID",
+            "SHARED_QUIZ_ID" => $columnResult['SHARED_QUIZ_ID'],
+            "QUIZ_ID" => $columnResult['QUIZ_ID']
+        );
+        
+        $quizNameArray = $dbLogic->selectWithColumnsGroupBy("QUIZ_NAME, SHARED_QUIZ_ID, QUIZ_ID, MAX(VERSION) AS VERSION",
+                'quiz, editor', $wherevalues2, $wherevalues3, 'SHARED_QUIZ_ID', false);
+        
+        //Merge the array as $quizNameArray will be overwritten each iteration of foreach loop
+        //Store the values inside nameArray which will be unaffected by foreach loop as it merges the values onto itself
+            
+        $nameArray = array_merge($nameArray, $quizNameArray);          
+               
+    }
+    
     include('edit-quiz-list-view.php');
-    
-    
-} else {
-    //html
-include("edit-quiz-view.php");
-    
 }
-
-//Once user selects a quiz, the form is posted back to this file and info is gathered
-/*
-else{ //Load recent data from create-quiz.php creation
-
-//Get all values regarding quiz from database, and populate form data with current values
-    
-    $column = "*";
-    
-    $dataArray = array(
-        "QUIZ_ID" => $_SESSION['CURRENT_CREATE_QUIZ_ID']
-    );
-    
-    $quizInfo = $dbLogic->select('*', 'quiz', $dataArray, true);
-    
-//html
-include("edit-quiz-view.php");
-
-$_SESSION['SET_QUIZ_ID'] = "";
-}
-*/
-//Now perform validation on user input - Insert new entry using old Version no. and Shared Quiz ID. 

@@ -253,17 +253,17 @@ class DB {
         return $this->runQueryReturnResults($sql, $singleRow, $whereValuesArray, $whereValuesArray2);
     }
     
-     //This is how the query needs to look for quiz-list.php to retrieve quizzes to be able to 'take quiz'
+//This is how the query needs to look for quiz-list.php to retrieve quizzes to be able to 'take quiz'
     //Also added the prepareWhereValuesSQLOr function, see bottom of page Line 522?
     //This query will likely change again as we implement 'taking the most recent version' of a quiz.
-     public function selectDistinctWithColumnsOrAnd($columns, $tables, array $whereValuesArray,
-            array $whereValuesArray2, $singleRow=True) {
+     public function selectDistinctWithColumnsOrAndGroupBy($columns, $tables, array $whereValuesArray,
+            array $whereValuesArray2, $group, $singleRow=True) {
         assert(is_string($columns));
         assert(is_string($tables));
         assert(is_bool($singleRow));
         $where = self::prepareWhereValuesSQLOr($whereValuesArray); //the values
         $where = self::prepareWhereValuesSQL($whereValuesArray2, $where); //the values
-        $sql = "SELECT DISTINCT $columns FROM $tables WHERE $where;";
+        $sql = "SELECT DISTINCT $columns FROM $tables WHERE $where GROUP BY $group;";
         return $this->runQueryReturnResults($sql, $singleRow, $whereValuesArray, $whereValuesArray2);
     }
      

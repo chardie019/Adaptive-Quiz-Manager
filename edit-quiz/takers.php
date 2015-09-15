@@ -4,9 +4,9 @@
 // include php files here 
 //kick the user back if they haven't selected quiz
 require_once("../includes/config.php");
-$quizIDGet = quizLogic::getQuizIdFromUrlElseReturnToEditQuiz();
-// end of php file inclusion
 
+// end of php file inclusion
+$quizIDGet = quizLogic::getQuizIdFromUrlElseReturnToEditQuiz();
 $confirmAddMessage = " ";
 $confirmRemoveMessage = " ";
 $addDate = date('Y-m-d H:i:s');
@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         "QUIZ_ID" => $quizIDGet
     );
     
-    $quizDetails = $dbLogic -> select('*', 'QUIZ', $dataArray, true);
+    $quizDetails = $dbLogic -> select('SHARED_QUIZ_ID, IS_PUBLIC', 'quiz', $dataArray, true);
     //Is there another place we can pull the IS_PUBLIC value from?
     
         
@@ -34,15 +34,15 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
                     $array = array(
                         "user_USERNAME" => $confirmUsername,
-                        "quiz_QUIZ_ID" => $quizDetails['SHARED_QUIZ_ID']
+                        "shared_SHARED_QUIZ_ID" => $quizDetails['SHARED_QUIZ_ID']
                     );
 
-                    $userResults = $dbLogic->select("*", "taker", $array, true);
-
+                    $userResults = $dbLogic->select("user_USERNAME, shared_SHARED_QUIZ_ID", "taker", $array, true);
+                    
                     if(empty($userResults)){
                         $insertArray = array(
                             "user_USERNAME" => $confirmUsername,
-                            "quiz_QUIZ_ID" => $quizDetails['SHARED_QUIZ_ID'],
+                            "shared_SHARED_QUIZ_ID" => $quizDetails['SHARED_QUIZ_ID'],
                             "ADDED_AT" => $addDate,
                             "ADDED_BY" => $_SESSION["username"]
                         );           
@@ -76,15 +76,15 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
                     $array = array(
                         "user_USERNAME" => $confirmUsername,
-                        "quiz_QUIZ_ID" => $quizDetails['SHARED_QUIZ_ID']
+                        "shared_SHARED_QUIZ_ID" => $quizDetails['SHARED_QUIZ_ID']
                     );
 
-                    $userResults = $dbLogic->select("*", "taker", $array, true);
-
+                    $userResults = $dbLogic->select("user_USERNAME, shared_SHARED_QUIZ_ID", "taker", $array, true);
+                    
                     if(!empty($userResults)){
                         $removeArray = array(
                             "user_USERNAME" => $confirmUsername,
-                            "quiz_QUIZ_ID" => $quizIDGet,
+                            "shared_SHARED_QUIZ_ID" => $quizDetails['SHARED_QUIZ_ID'],
                         );           
                         $removeUserResults = ($dbLogic->delete("taker", $removeArray));     
                         $confirmRemoveMessage = 'User '.$confirmUsername.' has been successfully removed from the list of approved takers.';
@@ -110,5 +110,19 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     }
 }
 
+
+    $dataArray = array(
+        "QUIZ_ID" => $quizIDGet,       
+    );
+    
+    $whereColumn = array(
+        "shared_SHARED_QUIZ_ID" => "SHARED_QUIZ_ID"
+    );
+    
+    $quizUsers = $dbLogic ->selectWithColumnsOrder('user_USERNAME', 'quiz, taker', $dataArray, $whereColumn, "user_USERNAME", false);
+    
+
 //html
 include("takers-view.php");
+
+

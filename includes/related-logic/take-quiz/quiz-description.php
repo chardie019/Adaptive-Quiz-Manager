@@ -30,7 +30,8 @@ require_once("includes/config.php");
   $quizID = filter_input(INPUT_POST,'quizid', FILTER_SANITIZE_STRING);  
   
     $quizAttempts = false;
-    $attemptsReached = false;   
+    $attemptsReached = false; 
+    $isEnabled = true;
     $dbLogic = new DB();
     
     //Get all quiz information
@@ -40,7 +41,7 @@ require_once("includes/config.php");
     
     $columns = "*";
 
-    ($quizData = $dbLogic->select($columns, "quiz", $data, true));
+    $quizData = $dbLogic->select($columns, "quiz", $data, true);
     extract($quizData);
     
     
@@ -71,13 +72,17 @@ require_once("includes/config.php");
             $attemptsReached = true;          
         }
     }
-
+    
+    if($quizData['IS_ENABLED'] == '0'){
+        $isEnabled = false;
+    }
+    
     //Set new QUIZ_ID for the session as the id of selected quiz awaiting confirmation
     $_SESSION['QUIZ_CURRENT_QUIZ_ID'] = $quizData['QUIZ_ID'];
 
     //Set null value to appropriate terminology for the view file.
     if($quizData['DESCRIPTION'] == null){
-        $quiz_description = "None";
+        $quiz_description = "No description provided";
     }
     else{
         $quiz_description = $quizData['DESCRIPTION'];
