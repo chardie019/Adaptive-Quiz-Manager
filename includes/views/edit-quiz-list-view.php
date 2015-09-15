@@ -20,7 +20,7 @@ $templateLogic->startBody();
                     <?php
                     foreach ($nameArray as $answerRow) {
                     echo "<option value = ".($answerRow["QUIZ_ID"])."> ".$answerRow["QUIZ_NAME"]."</option>";
-                    };?>
+                    }?>
                     </select>
                     <!-- pad  the space between submit button and dropdown box -->
                     <br />

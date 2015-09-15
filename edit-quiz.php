@@ -135,6 +135,8 @@ if($_SERVER['REQUEST_METHOD'] === "POST"){
         $nameArray = array_merge($nameArray, $quizNameArray);          
                
     }
-    
     include('edit-quiz-list-view.php');
-}
+}else{
+    include('edit-quiz-view.php');
+}   
+    
