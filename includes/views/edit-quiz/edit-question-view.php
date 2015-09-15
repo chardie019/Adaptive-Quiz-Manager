@@ -4,25 +4,27 @@ $templateLogic = new templateLogic;
 $templateLogic->setTitle('Edit Questions');
 $templateLogic->setSubMenuType("edit-quiz", "question");
 $templateLogic->addCSS("jstree/themes/default/style.min.css", true);
-$templateLogic->addCSS("edit-quiz.css");
-$templateLogic->addCustomHeaders('
-<style>
-    .tree-area{
+$templateLogic->addCSS("edit-question/edit-question-tree-list.css");
+$templateLogic->addCustomHeadersStart(); ?>
+<style type="text/css">
+    .tree-area-container {
         width: 80%;
         height: 30em;
-    }
+}
     .edit-question-sidebar {
         float: right;
         width: 15%;
         padding-left: 2em;
     }
-div.message {
-    padding-bottom: 1em;
-}
-.feedback-span {
-    color: blue;
-}
-    </style>');
+    div.message {
+        padding-bottom: 1em;
+    }
+    .feedback-span {
+        color: blue;
+    }
+</style>
+<?php
+$templateLogic->addCustomHeadersEnd();
 $templateLogic->startBody();
 ?>
 <form  method="post" action="<?php echo htmlentities($_SERVER['PHP_SELF']) . '?quiz=' . $quizIDGet; ?>">
@@ -41,7 +43,7 @@ $templateLogic->startBody();
     </div>
     <?php } //end of display question ?>
  
-<div class="tree-area">
+<div class="tree-area-container">
     <?php if (count($quizData) > 0) { // if there are questions ?>
     
     	<div id="myjstree" class="demo">
@@ -69,13 +71,10 @@ $templateLogic->startBody();
         <input class="mybutton" type="submit" name="addQuestion" value="Add Question" />
         <br />
         <br />
-        <input class="mybutton" type="submit" name="removeQuestion" value="Remove Question" />
-        <br />
-        <br />
         <input class="mybutton" type="submit" name="addAnswer" value="Add Answer" />
         <br />
         <br />
-        <input class="mybutton" type="submit" name="removeAnswer" value="Remove Answer" />
+        <input class="mybutton" type="submit" name="remove" value="Remove" />
         <br />
         <br />
         <input class="mybutton" type="reset" value="Clear" />
@@ -86,7 +85,6 @@ $templateLogic->startBody();
 <?php
 $templateLogic->endBody();
 $templateLogic->addJavascriptBottom("jstree/jstree.min.js", true);
-$templateLogic->addJavascriptBottom("run-jstree.js");
 $templateLogic->addCustomBottom(quizHelper::printRunJstreeCssCode());
 
 //html

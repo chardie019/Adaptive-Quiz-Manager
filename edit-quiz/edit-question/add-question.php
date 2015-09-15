@@ -45,7 +45,7 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING) === "PO
         if ($error == 0) {//all good
             quizLogic::insertInitalQuestionAnswer($quizIDGet, $questionTitle, $questionContent, $targetFileName, $questionAlt, $answerContent, $feedbackContent, $isCorrect);
             //show soe the new question added
-            header('Location: '. CONFIG_ROOT_URL . '/edit-quiz/edit-question.php?quiz='.quizLogic::returnSharedQuizID($quizIDGet)."&feedback=initial-question");
+            header('Location: '. CONFIG_ROOT_URL . '/edit-quiz/edit-question.php?quiz='.quizLogic::returnSharedQuizID($quizIDGet)."&feedback=question-added");
             exit();
         }
     }

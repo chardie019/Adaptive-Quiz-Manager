@@ -3,25 +3,16 @@
 $templateLogic = new templateLogic;
 $templateLogic->setTitle('Add Question');
 $templateLogic->setSubMenuType("edit-quiz", "question");
-$templateLogic->addCSS("edit-quiz.css");
+$templateLogic->addCSS("edit-question/edit-question-tree-list.css");
+$templateLogic->addCSS("edit-question/edit-question-forms.css");
 $templateLogic->addCSS("jstree/themes/default/style.min.css", true);
 $templateLogic->addCustomHeadersStart(); ?>
 <style type="text/css">
-    .tree-area-container {
-        width: 40%;
-        height: 25em;
-        float:left;
-    }
-    .tree-area{
-        width: 100%;
-        height: 90%;
-    }
-    .add-question {
-        float:left;
-        padding-left: 1em;
-    }
+.tree-area-container {
+    height: 29em;
+}
 </style>
-<?php $templateLogic->addCustomHeadersEnd();
+<?php
 $templateLogic->startBody();
 ?>
 <form action='#' method='post' enctype="multipart/form-data" >
@@ -31,11 +22,11 @@ $templateLogic->startBody();
 
             <div id="myjstree" class="demo">
 
-                <?php quizHelper::build_tree($quizData, quizLogic::returnParentId($dbLogic, $prevAnswerId, "answer")); ?>
+                <?php quizHelper::build_tree($quizData, quizLogic::returnParentId($dbLogic, $prevAnswerId, "answer"), "none"); ?>
             </div>
         </div>
     </div>
-    <div class="add-question">
+    <div class="edit-right-side">
         <h3>Please add the Details for the new question.</h3>
         <p class="label">Please enter the Question:</p>
         <input type='text' id='question-title' name='question-title' size='30' value="<?php echo $questionTitle ?>" />
@@ -57,8 +48,10 @@ $templateLogic->startBody();
         <br />
         <?php echo "<span class=\"inputError\">".$questionAltError."</span>"?>       
     </div>
-    <p><a class="mybutton myReturn" href="<?php echo (CONFIG_ROOT_URL . '/edit-quiz/edit-question.php?quiz=' . $quizIDGet) ?>">Back</a></p>
-    <button class="mybutton mySubmit" type="submit" name="confirmQuiz" value="Enter">Create</button>
+    <p class="submit-buttons-container">
+        <a class="mybutton myReturn" href="<?php echo (CONFIG_ROOT_URL . '/edit-quiz/edit-question.php?quiz=' . $quizIDGet) ?>">Back</a>
+        <button class="mybutton mySubmit" type="submit" name="confirmQuiz" value="Enter">Create</button>
+    </p>
 </form>
 <?php
 $templateLogic->endBody();

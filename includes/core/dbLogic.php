@@ -448,18 +448,18 @@ class DB {
      * Updates columns. runs query like: UPDATE quiz SET SHARED_QUIZ_ID =  '16' WHERE QUIZ_ID = 16 AND $colum = $otherColumn;
      * 
      * @param string $tables The tables to be selected by the SQL query. in the form of "xx, yyy, zzz etc"
-     * @param array $setColumnsArray The SET matching columns to be updated by the SQL query. in the form of $column => $value    
+     * @param array $setValuesArray The SET matching columns to be updated by the SQL query. in the form of $column => $value    
      * @param array $whereValuesArray  The input for the where clause. form $column => $value
      * @param array $whereColumnsArray The where matching tables to be selected by the SQL query. in the form of $column => $otherColumn  
      * @return void
      */
-    public function updateSetWhereColumns($tables, array $setColumnsArray,  array $whereValuesArray, array $whereColumnsArray) {
+    public function updateSetWhereColumns($tables, array $setValuesArray,  array $whereValuesArray, array $whereColumnsArray) {
         assert(is_string($tables));
-        $setColumns = self:: prepareSetValuesSQL($setColumnsArray); //the columns
+        $setColumns = self:: prepareSetValuesSQL($setValuesArray); //the columns
         $where = self::prepareWhereValuesSQL($whereValuesArray); //the values
         $where = self::prepareWhereColumnsSQL($whereColumnsArray, $where); //the columns
         $sql = "UPDATE $tables SET $setColumns WHERE $where;";
-        $this->runQuery($sql, $whereValuesArray, $setColumnsArray);
+        $this->runQuery($sql, $whereValuesArray, $setValuesArray);
     }
     /**
      * Updates columns. runs query like: UPDATE quiz SET SHARED_QUIZ_ID =  SHARED_QUIZ_ID+1 WHERE QUIZ_ID = 16 AND $colum = $otherColumn;
@@ -471,9 +471,9 @@ class DB {
      * @param array $whereValuesArray  The input for the where clause. form $column => $value
      * @return void
      */
-    public function updateSetButSetNotEscaped($tables, array $setColumnsArray, array $whereValuesArray) {
+    public function updateSetButSetNotEscaped($tables, array $setValuesArray, array $whereValuesArray) {
         assert(is_string($tables));
-        $setColumns = self::prepareSetValuesSQLNoBinding($setColumnsArray); //the columns
+        $setColumns = self::prepareSetValuesSQLNoBinding($setValuesArray); //the columns
         $where = self::prepareWhereValuesSQL($whereValuesArray); //the values
         $sql = "UPDATE $tables SET $setColumns WHERE $where;";
         $this->runQuery($sql, $whereValuesArray);
@@ -482,16 +482,16 @@ class DB {
      * Updates columns. runs query like: UPDATE quiz SET SHARED_QUIZ_ID =  '16' WHERE QUIZ_ID = 16;
      * 
      * @param string $tables The tables to be selected by the SQL query. in the form of "xx, yyy, zzz etc"
-     * @param array $setColumnsArray The SET matching tables to be updated by the SQL query. in the form of $column => $value    
+     * @param array $setValuesArray The SET matching tables to be updated by the SQL query. in the form of $column => $value    
      * @param array $whereValuesArray  The input for the where clause. form $column => $value  
      * @return void
      */
-    public function updateSetWhere($tables, array $setColumnsArray,  array $whereValuesArray) {
+    public function updateSetWhere($tables, array $setValuesArray,  array $whereValuesArray) {
         assert(is_string($tables));
-        $setColumns = self:: prepareSetValuesSQL($setColumnsArray); //the columns
+        $setColumns = self:: prepareSetValuesSQL($setValuesArray); //the columns
         $where = self::prepareWhereValuesSQL($whereValuesArray); //the values
         $sql = "UPDATE $tables SET $setColumns WHERE $where;";
-        $this->runQuery($sql, $whereValuesArray, $setColumnsArray);
+        $this->runQuery($sql, $whereValuesArray, $setValuesArray);
     }
     /**
      * Does the actual PDO query and returns the results

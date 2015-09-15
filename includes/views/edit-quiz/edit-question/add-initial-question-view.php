@@ -3,7 +3,7 @@
 $templateLogic = new templateLogic;
 $templateLogic->setTitle('Add Inital Question');
 $templateLogic->setSubMenuType("edit-quiz", "question");
-$templateLogic->startBody();
+$templateLogic->addCSS("edit-question/edit-question-forms.css");
 $templateLogic->addCustomHeadersStart(); 
 ?>
 <style>
@@ -20,6 +20,7 @@ $templateLogic->addCustomHeadersStart();
 </style>
 <?php
 $templateLogic->addCustomHeadersEnd();
+$templateLogic->startBody();
 ?>
 <p>This area allows you to add a new first question to a quiz. <br />
     To do this, an answer must also be created, so the original first question (if any) can be where that answer leads to.</p>
@@ -71,9 +72,10 @@ $templateLogic->addCustomHeadersEnd();
         <br />
         <?php echo "<span class=\"inputError\">".$isCorrectError."</span>"?> 
     </div>
-    <div style="clear:both"></div>
-    <p><a class="mybutton myReturn" href="<?php echo (CONFIG_ROOT_URL . '/edit-quiz/edit-question.php?quiz=' . $quizIDGet) ?>">Back</a></p>
-    <button class="mybutton mySubmit" type="submit" name="confirmQuiz" value="Enter">Create</button>
+    <p class="submit-buttons-container">
+        <a class="mybutton myReturn" href="<?php echo (CONFIG_ROOT_URL . '/edit-quiz/edit-question.php?quiz=' . $quizIDGet) ?>">Back</a>
+        <button class="mybutton mySubmit" type="submit" name="confirmQuiz" value="Enter">Create</button>
+    </p>
 </form>
     
 

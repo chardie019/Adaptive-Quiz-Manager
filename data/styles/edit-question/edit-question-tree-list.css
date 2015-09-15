@@ -7,14 +7,13 @@ and open the template in the editor.
     Created on : 10/09/2015, 3:14:05 PM
     Author     : Silverham
 */
-
-.tree-area{
-    background-color: #E2E2E2;
-    /* set on each page 
-    width: 80%;
-    height: 30em; */
-    float: left;
-    overflow-y: scroll;
+.tree-area-container {
+        /* set on each page 
+        width: 80%;
+        height: 30em; */
+        background-color: #E2E2E2;
+        overflow-y: scroll;
+        float:left;
 }
 
 .answer {

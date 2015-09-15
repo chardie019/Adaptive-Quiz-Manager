@@ -10,8 +10,8 @@ class quizHelper
     /**
      * Returns the web image path
      * 
-     * @param string $targetFileName The image filename
      * @param string $quizId the quiz the image belongs to
+     * @param string $targetFileName The image filename
      * @return string The real file path and $targetFileName(in the same string, if provided eg C:\images\1.png
      */
     public static function returnWebImageFilePath ($quizId, $targetFileName = NULL){
@@ -25,8 +25,8 @@ class quizHelper
     /**
      * Return the local image path
      * 
-     * @param string $targetFileName The image filename
      * @param string $quizId the quiz the image belongs to
+     * @param string $targetFileName The image filename
      * @return string The real file path and $targetFileName(in the same string, if provided eg C:\images\1.png
      */
     public static function returnRealImageFilePath ($quizId, $targetFileName = NULL){
@@ -135,57 +135,84 @@ class quizHelper
      * 
      * @param array $arrs The Array to print and sort through
      * @param string $parent_id The prent ID to print from (optional, prints from root) [is also recurive]
-     * @param integer $listNum where to open the jstree from (mostly just a internal variable, leave be)
+     * @param type $printType decide which parts are printed - "NULL(default), "questions" & "none"
+     * @param integer $listNum where to open the jstree from (mostly just a internal variable, leave be), default is zero
      * @return void
      */
-    public static function build_tree($arrs, $parent_id="", $listNum = 0 /*open first only*/) {
+    public static function build_tree($arrs, $parent_id="", $printType = NULL, $listNum = 0) {
+        
+        
+        switch($printType){
+            case "questions":
+                $printQuestions = true;
+                $printAnswers = false;
+                break;
+            case "none":
+                $printQuestions = false;
+                $printAnswers = false;
+                break;
+            case NULL:
+            default:
+                $printQuestions = true;
+                $printAnswers = true;
+                break;                
+        }
         foreach ($arrs as $arr) {
             if ($arr['PARENT_ID'] == $parent_id) {
                 if($listNum <= 2){ //open first 2
                     $addClass = " jstree-open";
                 }else {$addClass = "";}
                 $listNum++;
-                if ($arr['TYPE'] == "question"){
-                   $addClass = " jstree-open"; //questions are always expanded
-                   $typeItem = "question";
-                   $typeList= "question-list". $addClass;
-                   $jsTreeType = "question";
-                   $letter = "Q";
-                   $item = $letter . ":  " . $arr['question_QUESTION_ID']." - ".$arr['QUESTION'];
-                   $id = $letter . $arr['question_QUESTION_ID'];
-                   $value = $arr['question_QUESTION_ID'];
+                if ($arr['TYPE'] == "question") {
+                    $addClass = " jstree-open"; //questions are always expanded
+                    $typeItem = "question";
+                    $typeList= "question-list". $addClass;
+                    $jsTreeType = "question";
+                    $letter = "Q";
+                    $item = $letter . ":  " . $arr['question_QUESTION_ID']." - ".$arr['QUESTION'];
+                    $id = $letter . $arr['question_QUESTION_ID'];
+                    $value = $arr['question_QUESTION_ID'];
                } else {
-                   $typeItem = "answer";
-                   $typeList = "answer-list". $addClass;
-                   $jsTreeType = "answer";
-                   $letter = "A";
-                   $item = $letter . ":  " . $arr['answer_ANSWER_ID']." - ".$arr['ANSWER'];
-                   $id = $letter . $arr['answer_ANSWER_ID'];
-                   $value = $arr['answer_ANSWER_ID'];
+                    $typeItem = "answer";
+                    $typeList = "answer-list". $addClass;
+                    $jsTreeType = "answer";
+                    $letter = "A";
+                    $item = $letter . ":  " . $arr['answer_ANSWER_ID']." - ".$arr['ANSWER'];
+                    $id = $letter . $arr['answer_ANSWER_ID'];
+                    $value = $arr['answer_ANSWER_ID'];
                }
                //to do, loop the tree
                if ($arr['LOOP_CHILD_ID'] != NULL){
-                   $typeItem += " loop";
-                   foreach ($arrs as $arrLoopChild) {
-                       if ($arrLoopChild['CONNECTION_ID'] == $arr['LOOP_CHILD_ID']) {
-                           if ($arrLoopChild['TYPE'] == "question"){
-                               $letterLoopChild = "Q";
-                           } else {
-                               $letterLoopChild = "A";
-                           }
-                       }
-                   }
-                   $item = $item . " (loop to " . $letterLoopChild . $arr['LOOP_CHILD_ID'].")";
+                   $loopQuestionId = self::getLoopQuestionId($arr, $arrs);
+                   $item = $item . " (loop to Q" . $loopQuestionId.")";
                    $jsTreeType = "loop";
                }
                 echo "<ul>" . PHP_EOL;
-                echo "\t <li class=\"" . $typeList . '" data-jstree=\'{"type":"'.$jsTreeType.'"}\'>'
-                        . '<input type="radio" name="'.$typeItem.'" id="'.$id.'" value="'.$value.'" />'
-                        . PHP_EOL . '<label class="' . $typeItem . '" for="'.$id.'">'. $item . '</label>';
-                self::build_tree($arrs, $arr['CONNECTION_ID'], $listNum);
+                echo "\t <li class=\"" . $typeList . '" data-jstree=\'{"type":"'.$jsTreeType.'"}\'>' . PHP_EOL;
+                if (($typeItem  == "answer" && $printAnswers == true) || ($typeItem  == "question" && $printQuestions == true)){
+                    //print the radio box depending on input
+                    echo '<input type="radio" name="'.$typeItem.'" id="'.$id.'" value="'.$value.'" />' . PHP_EOL;
+                }
+                echo  '<label class="' . $typeItem . '" for="'.$id.'">'. $item . '</label>';
+                self::build_tree($arrs, $arr['CONNECTION_ID'], $printType, $listNum);
                 echo "</li>".PHP_EOL."</ul>";
             }
         }
+    }
+    /**
+     * Gets teh ID of teh gets to which the arryrow is linked to
+     * 
+     * @param array $singleArrayRow a an aossicative array from "build_tree"
+     * @param arry $array the array to search where the loop matchs 
+     * @return string the ID of the question.
+     */
+    private static function getLoopQuestionId ($singleArrayRow, $array) {
+        foreach ($array as $arrLoopChild) {
+            if ($arrLoopChild['CONNECTION_ID'] == $singleArrayRow['LOOP_CHILD_ID']) {
+                $questionId = $arrLoopChild['question_QUESTION_ID'];
+            }
+        }
+        return $questionId;
     }
     public static function printRunJstreeCssCode(){ ob_start(); ?>
         <script type="text/javascript">

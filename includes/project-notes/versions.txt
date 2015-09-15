@@ -1,3 +1,13 @@
+###Version 5.6 - 11/09/2015 - Inspect & add/remove Q & A
+= Joshua
+- Inspect & add/remove Q & A all work
+- changed quiz answers to properly support looping. - SQL is now v6
+NOTES:
+--- link screen missing warning page
+--- tree list needs to be refacted to return instead of echoing
+--- tree-list heading should outside box not in - needs fixing
+- take quiz doesn't support looping yet
+
 ###Version 5.5.6.1 - 11/09/2015 - Inspect Question/Answer Works
 = Joshua
 - Inspect Question/Answer now works

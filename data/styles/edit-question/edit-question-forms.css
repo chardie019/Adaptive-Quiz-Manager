@@ -1,0 +1,46 @@
+    .edit-right-side {
+        /* take up the rest of the width */
+        overflow:hidden;
+        padding-left: 1em;
+    }
+    .label {
+        font-weight: bold;
+    }
+    .inside-form {
+        padding-bottom: 1em;
+    }
+    textarea {
+        width: 90%;
+    }
+    input[type=text] {
+        width: 90%
+    }
+    .upload-inspect {
+        width:50%;
+        float: left;
+    }
+    .current-image-inspect {
+        overflow:hidden; 
+        padding-left: 0.5em;
+        height: 11em;
+        padding-right: 3em;
+    }
+    .current-image-inspect img {
+        max-width:100%;
+        max-height:100%;
+        float: right;
+    }
+    .submit-buttons-container {
+        clear: both;
+        padding-top: 1em;
+    }
+    .is-correct {
+        width:60%;
+        float:left;
+    }
+    .jump-to-question {
+        overflow: hidden; /*take the rest of the space */
+    }
+    .jump-to-question button {
+        float:right;
+    }

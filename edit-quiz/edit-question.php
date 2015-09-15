@@ -10,44 +10,56 @@ $quizIDGet = quizLogic::getQuizIdFromUrlElseReturnToEditQuiz();
 $selectionError = "";
 
 if ($_SERVER['REQUEST_METHOD'] === "POST") { //pastt the appropiate page
-    $addQuestionButtonPost = filter_input(INPUT_POST, "addQuestion");
     $answerPost = filter_input (INPUT_POST, "answer");
-    $removeQuestionButtonPost = filter_input (INPUT_POST, "removeQuestion");
     $questionPost = filter_input (INPUT_POST, "question");
-    $addAnswerButtonPost = filter_input (INPUT_POST, "addAnswer");
-    $removeAnswerButtonPost = filter_input (INPUT_POST, "removeAnswer");
     $inspectButtonPost = filter_input (INPUT_POST, "inspect");
-    
+    $addQuestionButtonPost = filter_input(INPUT_POST, "addQuestion");
+    $addAnswerButtonPost = filter_input (INPUT_POST, "addAnswer");
+    $removeButtonPost = filter_input (INPUT_POST, "remove");
+
     $quizUrl = "?quiz=$quizIDGet";
-    if (isset($addQuestionButtonPost)){
-        if (isset($answerPost)) {
-            header('Location: ' . CONFIG_ROOT_URL . "/edit-quiz/edit-question/add-question.php$quizUrl&answer=$answerPost");
+    if (isset($inspectButtonPost)) {
+        if (isset($answerPost)){    //inspect a answer
+            header('Location: ' . CONFIG_ROOT_URL . "/edit-quiz/edit-question/inspect.php$quizUrl&answer=$answerPost");
             exit;
+        } else if (isset($questionPost)) { //inspect a question
+            header('Location: ' . CONFIG_ROOT_URL . "/edit-quiz/edit-question/inspect.php$quizUrl&question=$questionPost");
+            exit;
+        } else {
+            $selectionError="Please choose a question or answer before trying to inspect.";
+        }
+    } else if (isset($addQuestionButtonPost)){
+        if (isset($answerPost)) {
+            //check if there is already a question there
+            if (quizLogic::isThereAQuestionAttachedtoThisAnswer($answerPost) == true){  //add a question to an answer
+                header('Location: ' . CONFIG_ROOT_URL . "/edit-quiz/edit-question/add-question.php$quizUrl&answer=$answerPost");
+                exit;
+            } else {    //maybe trying into add an initial question
+                $selectionError="Please choose a answer with no questions beofre trying to add a question (bottom of tree).";
+            }
         } else {
             $displayMessage = "initalQuestion";
         }
-    } else if (isset($removeQuestionButtonPost) && isset($questionPost)) {
-            header('Location: ' . CONFIG_ROOT_URL . "/edit-quiz/edit-question/remove-question.php$quizUrl&question=$questionPost");
-            exit;
-    } else if (isset($addAnswerButtonPost) && isset($questionPost)){
+    } else if (isset($addAnswerButtonPost)){
+        if (isset($questionPost)){  //add an answer to a question
             header('Location: ' . CONFIG_ROOT_URL . "/edit-quiz/edit-question/add-answer.php$quizUrl&question=$questionPost");
             exit;
-    } else if (isset($removeAnswerButtonPost) && isset($answerPost)) {
-            header('Location: ' . CONFIG_ROOT_URL . "/edit-quiz/edit-question/add-answer.php$quizUrl&answer=$answerPost");
+        } else {
+            $selectionError="Please choose a question to add an answer to.";
+        }
+    } else if (isset($removeButtonPost)){
+        if (isset($answerPost)){    //remove an answer
+            header('Location: ' . CONFIG_ROOT_URL . "/edit-quiz/edit-question/remove.php$quizUrl&answer=$answerPost");
             exit;
-    } else if (isset($removeQuestionButtonPost) || isset($addAnswerButtonPost)){
-            $selectionError="Please choose a question to edit before continuing e.g to delete or add answers to.";
-    }else if (isset($addQuestionButtonPost) || isset($removeAnswerButtonPost)){
-            $selectionError="Please choose a answer to edit before continuing e.g to delete or add questions to.";
-    } else if (isset($inspectButtonPost) && isset($answerPost)) {
-            header('Location: ' . CONFIG_ROOT_URL . "/edit-quiz/edit-question/inspect.php$quizUrl&answer=$answerPost");
+        } else if (isset($questionPost)) {  //remove a question
+            header('Location: ' . CONFIG_ROOT_URL . "/edit-quiz/edit-question/remove.php$quizUrl&question=$questionPost");
             exit;
-    } else if (isset($inspectButtonPost) && (isset($questionPost))) {
-            header('Location: ' . CONFIG_ROOT_URL . "/edit-quiz/edit-question/inspect.php$quizUrl&question=$questionPost");
-            exit;
+        } else {
+            $selectionError="Please choose a question or answer before using the remove button.";
+        }
     } else {
         //no button pressed, reload page
-        $selectionError="There was an error with your selection.";
+        $selectionError="There was an error with your selection, please try another option.";
     }
 }
 
@@ -58,16 +70,28 @@ switch ($feedbackMessageURL){
         $message = "Initial Question created.";
         $messageClass = "feedback-span";
         break;
-    case "question":
+    case "question-added":
         $message = "Question added.";
         $messageClass = "feedback-span";
         break;
-    case "question-update":
+    case "initial-question-added":
+        $message = "Answer added.";
+        $messageClass = "feedback-span";
+        break;
+    case "question-updated":
         $message = "Question Updated.";
         $messageClass = "feedback-span";
         break;
-    case "answer-update":
+    case "answer-updated":
         $message = "Answer Updated.";
+        $messageClass = "feedback-span";
+        break;
+    case "answer-removed":
+        $message = "Answer Removed.";
+        $messageClass = "feedback-span";
+        break;
+    case "question-removed":
+        $message = "Question Removed.";
         $messageClass = "feedback-span";
         break;
     default:

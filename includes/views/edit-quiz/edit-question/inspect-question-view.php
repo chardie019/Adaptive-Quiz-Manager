@@ -3,48 +3,17 @@
 $templateLogic = new templateLogic;
 $templateLogic->setTitle('Inspect Question');
 $templateLogic->setSubMenuType("edit-quiz", "question");
-$templateLogic->addCSS("edit-quiz.css");
-$templateLogic->addCSS("jstree/themes/default/style.min.css", true);
+$templateLogic->addCSS("edit-question/edit-question-tree-list.css");
+$templateLogic->addCSS("edit-question/edit-question-forms.css");
 $templateLogic->addCustomHeadersStart(); ?>
 <style type="text/css">
-    .tree-area-container {
-        width: 40%;
-        height:28em;
-        float:left;
-    }
-    .tree-area{
-        width: 100%;
-        height: 90%;
-    }
-    .add-question {
-        /* take up the rest of the width */
-        overflow:hidden;
-        padding-left: 1em;
-    }
-    textarea {
-        width: 90%;
-    }
-    input[type=text] {
-        width: 90%
-    }
-    .upload-inspect {
-        width:50%;
-        float: left;
-    }
-    .current-image-inspect {
-        overflow:hidden; 
-        padding-left: 0.5em;
-        height: 11em;
-        padding-right: 3em;
-    }
-    .current-image-inspect img {
-        max-width:100%;
-        max-height:100%;
-        float: right;
-    }
-    
+.tree-area-container {
+    height: 30em;
+    width:40%;
+}
 </style>
 <?php $templateLogic->addCustomHeadersEnd();
+$templateLogic->addCSS("jstree/themes/default/style.min.css", true);
 $templateLogic->startBody();
 ?>
 <form action='#' method='post' enctype="multipart/form-data" >
@@ -55,11 +24,11 @@ $templateLogic->startBody();
 
                 <div id="myjstree" class="demo">
 
-                    <?php quizHelper::build_tree($quizData, quizLogic::returnParentId($dbLogic, $id, "question")); ?>
+                    <?php quizHelper::build_tree($quizData, quizLogic::returnParentId($dbLogic, $id, "question"), "none"); ?>
                 </div>
             </div>
         </div>
-        <div class="add-question">
+        <div class="edit-right-side">
             <h3>Details for the question.</h3>
             <p class="label">Question:</p>
             <input type='text' id='question-title' name='question-title' size='30' value="<?php echo $questionTitle ?>" />
@@ -97,8 +66,10 @@ $templateLogic->startBody();
             </div>     
         </div>
     </div>
-    <p><a class="mybutton myReturn" href="<?php echo (CONFIG_ROOT_URL . '/edit-quiz/edit-question.php?quiz=' . $quizIDGet) ?>">Back</a></p>
-    <button class="mybutton mySubmit" type="submit" name="question-submit" value="Enter">Update</button>
+    <p class="submit-buttons-container">
+        <a class="mybutton myReturn" href="<?php echo (CONFIG_ROOT_URL . '/edit-quiz/edit-question.php?quiz=' . $quizId) ?>">Back</a>
+        <button class="mybutton mySubmit" type="submit" name="question-submit" value="Enter">Update</button>
+    </p>
 </form>
 <?php
 $templateLogic->endBody();
