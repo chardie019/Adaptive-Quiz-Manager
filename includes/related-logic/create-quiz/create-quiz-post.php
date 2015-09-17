@@ -224,7 +224,7 @@ $quizName = filter_input(INPUT_POST, "quizName");
         }
         //Create array for insert->quiz
         $dataArray = array(
-            "QUIZ_ID" => "",
+			"VERSION" => "0",
             "QUIZ_NAME" => "$quizName",
             "DESCRIPTION" => "$quizDescription",
             "IS_PUBLIC" => "$isPublic",
@@ -250,7 +250,7 @@ $quizName = filter_input(INPUT_POST, "quizName");
         //Insert creator of quiz into the editors table upon successful creation of quiz
         $dataArray2 = array(
             "user_USERNAME" => "$uid",
-            "quiz_QUIZ_ID" => "$current_quiz_id",
+            "shared_SHARED_QUIZ_ID" => "$current_quiz_id",
             "ADDED_AT" => "$creationDatetime",
             "ADDED_BY" => "$uid"
         );
