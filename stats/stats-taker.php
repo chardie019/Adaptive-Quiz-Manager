@@ -19,13 +19,16 @@ $dbLogic = new DB();
         //On subsequent page lloads between previous/current versions of the quiz, the $quizidconfirm will remain the same
         if(isset($_POST['quizid'])){
             $_SESSION['quizid'] = filter_input(INPUT_POST, "quizid");
+            
             //Replace with '1' or '1' for testing until  take quiz is sorted with newest current version
         }
             $quizidconfirm = $_SESSION['quizid'];
             
             $shareColumn = "quiz_QUIZ_ID";
+            
+            $_SESSION['current'] = true;
            
-        if(isset($_POST['previousPersonalVersions'])){
+        if(isset($_POST['previousVersions'])){
             //Get shared quiz id for chosen quiz to prepare results inclusive of older versions
             $whereSharedQuiz = array(
                 "QUIZ_ID"=> $quizidconfirm
@@ -36,6 +39,8 @@ $dbLogic = new DB();
             $quizidconfirm = $sharedID['SHARED_QUIZ_ID'];
              
             $shareColumn = "shared_SHARED_QUIZ_ID";
+            
+            $_SESSION['current'] = false;
         } 
 
         $wherecolumn = array(

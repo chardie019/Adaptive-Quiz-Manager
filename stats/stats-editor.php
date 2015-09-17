@@ -25,7 +25,10 @@ $dbLogic = new DB();
             
             $shareColumn = "quiz_QUIZ_ID";
            
+            $_SESSION['current'] = true;
+            
         if(isset($_POST['previousVersions'])){
+            
             //Get shared quiz id for chosen quiz to prepare results inclusive of older versions
             $whereSharedQuiz = array(
                 "QUIZ_ID"=> $quizidconfirm
@@ -36,6 +39,8 @@ $dbLogic = new DB();
             $quizidconfirm = $sharedID['SHARED_QUIZ_ID'];
              
             $shareColumn = "shared_SHARED_QUIZ_ID";
+            
+            $_SESSION['current'] = false;
         } 
 
         $wherecolumn = array(
