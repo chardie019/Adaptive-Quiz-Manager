@@ -7,7 +7,7 @@ $templateLogic->addCSS("edit-question/edit-question-tree-list.css");
 $templateLogic->addCSS("edit-question/edit-question-forms.css");
 $templateLogic->addCustomHeadersStart(); ?>
 <style type="text/css">
-    .tree-area-container {
+    .tree-area {
         height: 23em;
     }
 </style>
@@ -20,7 +20,7 @@ $templateLogic->startBody();
         <h3>Selected Question's Q's & A's</h3>
         <div class="tree-area">
             <div id="myjstree" class="demo">
-                <?php quizHelper::build_tree($quizData, quizLogic::returnParentId($dbLogic, $questionIDPost, "question"), "none"); ?>
+                <?php echo $returnHtml; ?>
             </div>
         </div>
     </div>

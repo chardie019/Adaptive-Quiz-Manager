@@ -49,7 +49,8 @@ $paths = array(
     dirname(__FILE__) . '/templates/',          //templates directory
     dirname(__FILE__) . '/subMenus/',           //templates directory
     dirname(__FILE__) . '/lib/',                //libraries directory
-    dirname(__FILE__) . '/related-logic/'        //logic directory (related logic to the pages)
+    dirname(__FILE__) . '/related-logic/',        //logic directory (related logic to the pages)
+    dirname(__FILE__) . '/models/'              //related classes
  );
 set_include_path(get_include_path() . PATH_SEPARATOR . implode(PATH_SEPARATOR, $paths));
 
@@ -63,29 +64,33 @@ if(session_id() == '') { //it may of been started eariler eg login file.
 }
 
 //php files needed by all
+include_once("quizLogic.php");
 
 //independant files
-//include all files in the "lib" directory
-try {
-    $files = array();
-    $lib = dirname(__FILE__) . '/lib/';
-        if (is_dir($lib)){
-                $dir = opendir($lib);
-                while(($currentFile = readdir($dir)) !== false){
-                    if ( $currentFile != '.' && $currentFile != '..' && strtolower(substr($currentFile, strrpos($currentFile, '.') + 1)) == 'php' ){
-                        $files[] = $currentFile;
+//include all files in the "lib" & models directory
+$includePhpFilesArray = array('/lib/', '/models/');
+foreach ($includePhpFilesArray as $folder){
+    try {
+        $files = array();
+        $lib = dirname(__FILE__) . $folder;
+            if (is_dir($lib)){
+                    $dir = opendir($lib);
+                    while(($currentFile = readdir($dir)) !== false){
+                        if ( $currentFile != '.' && $currentFile != '..' && strtolower(substr($currentFile, strrpos($currentFile, '.') + 1)) == 'php' ){
+                            $files[] = $currentFile;
+                        }
                     }
-                }
-        closedir($dir);
-        } else {
-            throw new Exception('Error including library in config.');
+            closedir($dir);
+            } else {
+                throw new Exception('Error including library in config.');
+            }
+        foreach ($files as $file) {
+            include_once $file;
         }
-    foreach ($files as $file) {
-        include_once $file;
+        $lib = null;
+    } catch (Exception $e) {
+        echo 'Caught exception: ',  $e->getMessage(), "\n";
     }
-    $lib = null;
-} catch (Exception $e) {
-    echo 'Caught exception: ',  $e->getMessage(), "\n";
 }
 $OtherDirectoriesToInclude = array (
     '/related-logic/',
@@ -113,7 +118,6 @@ $dbLogic = new DB();
 
 //include other config files
 include_once("userBean.php");
-include_once("quizLogic.php");
 
 include_once("userLogic.php");
 //note: when echo-ing html other language, use  echo (htmlentities($string));

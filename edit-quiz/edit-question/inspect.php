@@ -119,7 +119,8 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //pastt the appropiate page
         if (!isset($feedbackContent)){$feedbackContent = "";}
         if (!isset($isCorrect)){$isCorrect = "";}
         $dbLogic = new DB();
-        $quizData = quizHelper::prepare_tree($quizId, $dbLogic);
+        $parentId = quizLogic::returnParentId($dbLogic, $id, "question");
+        $returnHtml = quizHelper::prepareTree($dbLogic, $quizId, $parentId, "questions");
         include('change-link-view.php');
         exit; 
     } else if (isset($linkPageBackButton)){
@@ -133,10 +134,10 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //pastt the appropiate page
 }
 //get request or error
 $result = quizLogic::returnQuestionOrAnswerData($id , $type);
-$quizData = quizHelper::prepare_tree($quizIdGet, $dbLogic);
-
 //html
 if ($type == "answer"){
+    $parentId = quizLogic::returnParentId($dbLogic, $id, "answer");
+    $returnHtml = quizHelper::prepareTree($dbLogic, $quizIdGet, $parentId, "none");
     //initalies strings;
     if (!isset($answerContentError)){$answerContentError = "";}
     if (!isset($feedbackContentError)){$feedbackContentError = "";}
@@ -145,17 +146,16 @@ if ($type == "answer"){
     if (!isset($answerContent)){$answerContent = $result['ANSWER'];}
     if (!isset($feedbackContent)){$feedbackContent = $result['FEEDBACK'];}
     if (!isset($isCorrect)){$isCorrect = (string)$result['IS_CORRECT'];}
-    if (isset($link)){
-        $linkStatus = "Linked to Q". $link;
-    } if (isset($linkFromLinkPage)){
-        $link = $linkFromLinkPage; //pass teh variable from the link page to this page
-        $linkStatus = "Linked to Q". $linkFromLinkPage;
-    } else {
-        $link = "";
-        $linkStatus = "Not Linked";
-    }
+    if(!isset($linkFromLinkPage)){$linkFromLinkPage=(string)$result['LOOP_CHILD_ID'];}
+    if($linkFromLinkPage == ""){$linkFromLinkPage=NULL;}
+    if(!isset($link)){$link= NULL;}
+    $linkArray = linkLogic::prepareLinkHtml($link, $linkFromLinkPage);
+    $linkFromLinkPage = $linkArray['linkHtml'];
+    $linkStatus = $linkArray['linkStatus'];
     include("inspect-answer-view.php");
 } else {
+    $parentId = quizLogic::returnParentId($dbLogic, $id, "question");
+    $returnHtml = quizHelper::prepareTree($dbLogic, $quizId, $parentId, "none");
     //initalies strings;
     if (!isset($questionTitleError)){$questionTitleError = "";}
     if (!isset($questionContentError)){$questionContentError = "";}

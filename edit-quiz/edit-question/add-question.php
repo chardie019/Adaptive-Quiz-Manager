@@ -6,9 +6,7 @@
 require_once("../../includes/config.php");
 $quizIDGet = quizLogic::getQuizIdFromUrlElseReturnToEditQuiz();
 // end of php file inclusion
-
-//some validation
-$quizID = $quizIDGet;
+ $quizId = $quizIDGet;
 
 $prevAnswerId = filter_input(INPUT_GET, "answer");
 
@@ -42,8 +40,9 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING) === "PO
                 $questionAltError = $imageResult['imageAltError'];
             }
         }
+        
         if ($error == 0) {//all good
-            quizLogic::insertInitalQuestionAnswer($quizIDGet, $questionTitle, $questionContent, $targetFileName, $questionAlt, $answerContent, $feedbackContent, $isCorrect);
+            quizLogic::insertQuestion($quizId, $prevAnswerId, $questionTitle, $questionContent, $targetFileName, $questionAlt);
             //show soe the new question added
             header('Location: '. CONFIG_ROOT_URL . '/edit-quiz/edit-question.php?quiz='.quizLogic::returnSharedQuizID($quizIDGet)."&feedback=question-added");
             exit();
@@ -53,7 +52,8 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING) === "PO
 }
 
 $dbLogic = new DB();
-$quizData = quizHelper::prepare_tree($quizIDGet, $dbLogic);
+$parentId = quizLogic::returnParentId($dbLogic, $prevAnswerId, "answer");
+$returnHtml = quizHelper::prepareTree($dbLogic, $quizId, $parentId, "none");
 
 //initalies strings;
 if (!isset($questionTitleError)){$questionTitleError = "";}

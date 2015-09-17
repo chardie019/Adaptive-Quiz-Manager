@@ -8,8 +8,8 @@ $templateLogic->addCSS("edit-question/edit-question-forms.css");
 $templateLogic->addCSS("jstree/themes/default/style.min.css", true);
 $templateLogic->addCustomHeadersStart(); ?>
 <style type="text/css">
-.tree-area-container {
-    height: 29em;
+.tree-area {
+    height: 24em;
 }
 </style>
 <?php
@@ -19,10 +19,8 @@ $templateLogic->startBody();
     <div class="tree-area-container">
         <h3>Selected Answer's Q's & A's</h3>
         <div class="tree-area">
-
             <div id="myjstree" class="demo">
-
-                <?php quizHelper::build_tree($quizData, quizLogic::returnParentId($dbLogic, $prevAnswerId, "answer"), "none"); ?>
+                <?php echo $returnHtml; ?>
             </div>
         </div>
     </div>

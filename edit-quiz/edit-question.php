@@ -31,11 +31,11 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //pastt the appropiate page
     } else if (isset($addQuestionButtonPost)){
         if (isset($answerPost)) {
             //check if there is already a question there
-            if (quizLogic::isThereAQuestionAttachedtoThisAnswer($answerPost) == true){  //add a question to an answer
+            if (quizLogic::isThereAQuestionAttachedtoThisAnswer($answerPost) == false){  //add a question to an answer
                 header('Location: ' . CONFIG_ROOT_URL . "/edit-quiz/edit-question/add-question.php$quizUrl&answer=$answerPost");
                 exit;
             } else {    //maybe trying into add an initial question
-                $selectionError="Please choose a answer with no questions beofre trying to add a question (bottom of tree).";
+                $selectionError="Please choose a answer with no questions(or links) beofre trying to add a question (bottom of tree).";
             }
         } else {
             $displayMessage = "initalQuestion";
@@ -109,7 +109,8 @@ if (!isset($message)){
     $message = ""; //no message if not set
 }
 $dbLogic = new DB();
-$quizData = quizHelper::prepare_tree($quizIDGet, $dbLogic);
+$htmlTree = quizHelper::prepareTree($dbLogic, $quizIDGet);
+
 
 //http://stackoverflow.com/a/15307555\
 

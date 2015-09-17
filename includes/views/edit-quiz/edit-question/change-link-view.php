@@ -9,8 +9,9 @@ $templateLogic->addCustomHeadersStart(); ?>
     .tree-area-container {
         height: 25em;
         float: none;
-        background-color: #E2E2E2;
-        overflow-y: scroll;
+    }
+    .tree-area {
+        height: 100%;
     }
 </style>
 <?php $templateLogic->addCustomHeadersEnd();
@@ -21,7 +22,7 @@ $templateLogic->startBody();
     <div class="tree-area-container">
         <div class="tree-area">
             <div id="myjstree" class="demo">
-                <?php quizHelper::build_tree($quizData, quizLogic::returnParentId($dbLogic, $questionId, "question"), "questions"); ?>
+                <?php echo $returnHtml; ?>
             </div>
         </div>
     </div>

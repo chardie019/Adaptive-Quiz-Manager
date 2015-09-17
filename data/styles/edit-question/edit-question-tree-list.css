@@ -11,9 +11,12 @@ and open the template in the editor.
         /* set on each page 
         width: 80%;
         height: 30em; */
-        background-color: #E2E2E2;
-        overflow-y: scroll;
         float:left;
+}
+.tree-area {
+    background-color: #E2E2E2;
+    overflow-y: scroll;
+    /*height: 90%;*/
 }
 
 .answer {

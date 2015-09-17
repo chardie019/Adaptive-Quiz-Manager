@@ -78,11 +78,14 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //pastt the appropiate page
 }
 
 
-$quizData = quizHelper::prepare_tree($quizIDGet, $dbLogic);
 
 //html
 if ($type == "answer"){
+    $parentId = quizLogic::returnParentId($dbLogic, $id, "answer");
+    $returnHtml = quizHelper::prepareTree($dbLogic, $quizId, $parentId, "none");
     include("remove-answer-view.php");
 } else {
+    $parentId = quizLogic::returnParentId($dbLogic, $id, "question");
+    $returnHtml = quizHelper::prepareTree($dbLogic, $quizId, $parentId, "none");
     include("remove-question-view.php");
 }

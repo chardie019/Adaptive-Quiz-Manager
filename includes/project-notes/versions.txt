@@ -1,3 +1,13 @@
+###Version 5.6.3- 18/09/2015 - Inspect/Add/Remove fixed bugs + models folder
+=Joshua
+Fixed many bus in the the Inspect/add/remove Q & A's
+Added "models" folder to extend form quizLogic in prepertaion for refactoring & inclusion
+TODO add the remove for "in-between- Q & As
+
+###Version 5.6.2- 18/09/2015 - VCreate quiz post fix
+=Connor
+edited the SQL column names to accommodate new SQL db columns structure
+
 ###Version 5.5.6 - 11/09/2015 - View statistics
 = Harry
 - Display table/select list (depends on what team votes for) in Takers/Editors pages of current users

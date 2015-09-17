@@ -11,6 +11,9 @@ $templateLogic->addCustomHeadersStart(); ?>
         width: 80%;
         height: 30em;
 }
+.tree-area {
+    height: 100%;
+}
     .edit-question-sidebar {
         float: right;
         width: 15%;
@@ -44,24 +47,19 @@ $templateLogic->startBody();
     <?php } //end of display question ?>
  
 <div class="tree-area-container">
-    <?php if (count($quizData) > 0) { // if there are questions ?>
-    
-    	<div id="myjstree" class="demo">
-<?php   
-    quizHelper::build_tree($quizData);
-?>
-</div>
-       
+    <?php if ($htmlTree != "") { // if there are questions ?>
+        <div class="tree-area">
+            <div id="myjstree" class="demo">
+                <?php echo $htmlTree; ?>
+            </div>
+        </div>
     <?php } else { //no questions ?>
     <p> There are no questions on this quiz, How about adding some? </p>
     <p> <a class="mybutton myReturn" href="<?php echo (CONFIG_ROOT_URL . '/edit-quiz/edit-question/add-question.php?quiz=' . $quizIDGet) ?>">
             Add Questions
         </a>
-    </p>
-        
+    </p>  
     <?php } ?>
-
-    
 </div>
 <div class="edit-question-sidebar">
     <p>

@@ -107,13 +107,13 @@ class quizHelper
     /**
      * Prints a tree of question answers using ul and li's (and jstree)
      * 
-     * Note: actual printing indone an another private function "build_tree"
+     * Note: actual printing indone an another private function "buildTree"
      * 
-     * @param string $quizId The quiz to print from
      * @param DB $dbLogic reuse tha current connection to the Database
+     * @param string $quizId The quiz to print from
      * @return void
      */
-    public static function prepare_tree($quizId, DB $dbLogic){
+    public static function prepareTree(DB $dbLogic, $quizId, $parentId = "", $printType = NULL){
         //Create array for Outer join
         $where = array(
             "quiz_QUIZ_ID" => "$quizId" 
@@ -128,20 +128,20 @@ class quizHelper
         //Insert quiz into database
         $quizData = ($dbLogic->selectFullOuterJoinOrder("*", "question_answer", $where, "question", $jointable, "answer", $jointable2, "depth", false));
 
-        return array_values($quizData); //aossoiative to simple array of values
+        //aossoiative to simple array of values
+        return self::buildTree(array_values($quizData), $parentId, $printType);
     }
     /**
      * Prints a tree using ul and li's (and jstree)
      * 
      * @param array $arrs The Array to print and sort through
-     * @param string $parent_id The prent ID to print from (optional, prints from root) [is also recurive]
+     * @param string $parentId The prent ID to print from (optional, prints from root) [is also recurive]
      * @param type $printType decide which parts are printed - "NULL(default), "questions" & "none"
      * @param integer $listNum where to open the jstree from (mostly just a internal variable, leave be), default is zero
-     * @return void
+     * @param string $returnHtml internal string to build up html code
+     * @return returns the HTML code
      */
-    public static function build_tree($arrs, $parent_id="", $printType = NULL, $listNum = 0) {
-        
-        
+    public static function buildTree($arrs, $parentId = "", $printType = NULL, $listNum = 0, $returnHtml = "") {
         switch($printType){
             case "questions":
                 $printQuestions = true;
@@ -158,7 +158,7 @@ class quizHelper
                 break;                
         }
         foreach ($arrs as $arr) {
-            if ($arr['PARENT_ID'] == $parent_id) {
+            if ($arr['PARENT_ID'] == $parentId) {
                 if($listNum <= 2){ //open first 2
                     $addClass = " jstree-open";
                 }else {$addClass = "";}
@@ -187,22 +187,24 @@ class quizHelper
                    $item = $item . " (loop to Q" . $loopQuestionId.")";
                    $jsTreeType = "loop";
                }
-                echo "<ul>" . PHP_EOL;
-                echo "\t <li class=\"" . $typeList . '" data-jstree=\'{"type":"'.$jsTreeType.'"}\'>' . PHP_EOL;
+                $returnHtml .= "<ul>" . PHP_EOL;
+                $returnHtml .= "\t <li class=\"" . $typeList . '" data-jstree=\'{"type":"'.$jsTreeType.'"}\'>' . PHP_EOL;
                 if (($typeItem  == "answer" && $printAnswers == true) || ($typeItem  == "question" && $printQuestions == true)){
                     //print the radio box depending on input
-                    echo '<input type="radio" name="'.$typeItem.'" id="'.$id.'" value="'.$value.'" />' . PHP_EOL;
+                    $returnHtml .= '<input type="radio" name="'.$typeItem.'" id="'.$id.'" value="'.$value.'" />' . PHP_EOL;
                 }
-                echo  '<label class="' . $typeItem . '" for="'.$id.'">'. $item . '</label>';
-                self::build_tree($arrs, $arr['CONNECTION_ID'], $printType, $listNum);
-                echo "</li>".PHP_EOL."</ul>";
+                $returnHtml .= '<label class="' . $typeItem . '" for="'.$id.'">'. $item . '</label>';
+                $returnHtml = self::buildTree($arrs, $arr['CONNECTION_ID'], $printType, $listNum, $returnHtml);
+                $returnHtml .= "</li>".  \PHP_EOL ."</ul>";
             }
         }
+        return $returnHtml;
+
     }
     /**
      * Gets teh ID of teh gets to which the arryrow is linked to
      * 
-     * @param array $singleArrayRow a an aossicative array from "build_tree"
+     * @param array $singleArrayRow a an aossicative array from "buildTree"
      * @param arry $array the array to search where the loop matchs 
      * @return string the ID of the question.
      */

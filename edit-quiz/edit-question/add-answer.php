@@ -60,7 +60,8 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING) === "PO
         if (!isset($feedbackContent)){$feedbackContent = "";}
         if (!isset($isCorrect)){$isCorrect = "";}
         $dbLogic = new DB();
-        $quizData = quizHelper::prepare_tree($quizIdGet, $dbLogic);
+        $parentId = quizLogic::returnParentId($dbLogic, $questionId, "question");
+        $returnHtml = quizHelper::prepareTree($dbLogic, $quizId, $parentId, "questions");
         include('change-link-view.php');
         exit; 
     } else if (isset($linkPageBackButton)){
@@ -74,7 +75,8 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING) === "PO
 }
 
 $dbLogic = new DB();
-$quizData = quizHelper::prepare_tree($quizIdGet, $dbLogic);
+$parentId = quizLogic::returnParentId($dbLogic, $questionId, "question");
+$returnHtml =  quizHelper::prepareTree($dbLogic, $quizId, $parentId, "none");
 
 //initalies strings;
 if (!isset($answerContentError)){$answerContentError = "";}
@@ -84,15 +86,12 @@ if (!isset($isCorrectError)){$isCorrectError = "";}
 if (!isset($answerContent)){$answerContent = "";}
 if (!isset($feedbackContent)){$feedbackContent = "";}
 if (!isset($isCorrect)){$isCorrect = "2";}
-if (isset($link)){
-        $linkStatus = "Linked to Q". $link;
-} else if (isset($linkFromLinkPage)){
-    $link = $linkFromLinkPage; //pass teh variable from the link page to this page
-    $linkStatus = "Linked to Q". $linkFromLinkPage;
-} else {
-    $link = "";
-    $linkStatus = "Not Linkedd";
-}
+
+if(!isset($linkFromLinkPage)){$linkFromLinkPage=NULL;}
+if(!isset($link)){$link= NULL;}
+$linkArray = linkLogic::prepareLinkHtml($link, $linkFromLinkPage);
+$linkFromLinkPage = $linkArray['linkHtml'];
+$linkStatus = $linkArray['linkStatus'];
 
 
 //html

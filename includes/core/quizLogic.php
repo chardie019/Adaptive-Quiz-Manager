@@ -19,17 +19,19 @@ class quizLogic
         $dbLogic = new DB();
         //get the connection ID
         $whereValuesArray = array("answer_ANSWER_ID" => $answerId);
-        $result = $dbLogic->select("CONNECTION_ID", "question_answer", $whereValuesArray);
+        $result = $dbLogic->select("CONNECTION_ID, LOOP_CHILD_ID", "question_answer", $whereValuesArray);
         if (count($result) < 1){
             return false; //invalid input
+        } else if (isset($result['LOOP_CHILD_ID'])){
+            return true; //a loop is a question, so bad!
         }
         //is there a question on it or not?
         $whereValuesArray = array("PARENT_ID" => $result['CONNECTION_ID']);
         $result = $dbLogic->select("CONNECTION_ID", "question_answer", $whereValuesArray);
         if (count($result) > 0){
-            return false; //There is a question (BAD!)
+            return true; //There is a question (BAD!)
         } else {
-            return true;
+            return false;
         }
     }
     
@@ -47,7 +49,8 @@ class quizLogic
             $result = $dbLogic->select("CONTENT, QUESTION, IMAGE, IMAGE_ALT", "question", $whereValuesArray);
         } else { //$type == "answer"
             $whereValuesArray = array("ANSWER_ID" => $questionOrAnswerId);
-            $result = $dbLogic->select("ANSWER, FEEDBACK, IS_CORRECT", "answer", $whereValuesArray);
+            $whereColumnsArray = array("ANSWER_ID" => "answer_ANSWER_ID");
+            $result = $dbLogic->selectWithColumns("ANSWER, FEEDBACK, IS_CORRECT, LOOP_CHILD_ID", "answer, question_answer", $whereValuesArray, $whereColumnsArray);
         }
         if (count($result) > 0){
             return $result;
@@ -142,10 +145,10 @@ class quizLogic
             self::removeChildren($dbLogic, $index, $connId, $connId);
             //get the loop conn id and set the loop to it
             $LoopConnId = self::checkQuestionBelongsToQuizReturnId($dbLogic, $quizId, $link);
+            if ($LoopConnId ==false) {$LoopConnId = NULL;}
             $setValuesArray = array("LOOP_CHILD_ID" => $LoopConnId);
             $whereValuesArray = array("CONNECTION_ID" => $connId);
-            $dbLogic->updateSetWhere("question_answer", $setValuesArray, $whereValuesArray);
-            
+            $dbLogic->updateSetWhere("question_answer", $setValuesArray, $whereValuesArray);            
         }
         $whereValuesArray = array("ANSWER_ID" => $answerId);
         //prepare update arrays
@@ -188,7 +191,7 @@ class quizLogic
             $dbLogic->delete("question_answer", $deleteValues);
             if ($type == "question"){
                 $deleteValues = array("QUESTION_ID" => $id);
-                $dbLogic->delete("question_answer", $deleteValues);
+                $dbLogic->delete("question", $deleteValues);
             } else {
                 $deleteValues = array("ANSWER_ID" => $id);
                 $dbLogic->delete("answer", $deleteValues);
@@ -553,13 +556,16 @@ class quizLogic
      * @return string The question_answer's primary key, ConnectionID (for the answer just inserted)
      */
     protected static function insertAnswerIntoQuestionAnswerTable (DB $dbLogic, $answerId, $quizId, $link, $questionConnectionId, $parentId = NULL){
+        $dbLink = self::checkQuestionBelongsToQuizReturnId($dbLogic, $quizId, $link);
+        if ($dbLink == false) {$dbLink = NULL;}
         $insertArray = array(
                 "answer_ANSWER_ID" => $answerId,
                  "TYPE" => "answer",
                 "PARENT_ID" => $questionConnectionId,
                 "quiz_QUIZ_ID" => $quizId,
-                "LOOP_CHILD_ID" => self::checkQuestionBelongsToQuizReturnId($dbLogic, $quizId, $link)
+                "LOOP_CHILD_ID" => $dbLink
         );
+        var_dump(self::checkQuestionBelongsToQuizReturnId($dbLogic, $quizId, $link));
         if (is_null($parentId)) {    //inserting at the top
             $insertArray["DEPTH"] = "1";  //add to arry - lower than the first question
             return $dbLogic->insert($insertArray, "question_answer");
