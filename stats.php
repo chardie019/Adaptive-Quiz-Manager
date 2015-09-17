@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                 "QUIZ_ID" => $columnEditor['QUIZ_ID']
             );
 
-            $quizNameArray = $dbLogic->selectWithColumnsGroupBy("QUIZ_NAME, SHARED_QUIZ_ID, QUIZ_ID, MAX(VERSION) AS VERSION",
+            $quizNameArray = $dbLogic->selectWithColumnsGroupBy("QUIZ_NAME, DESCRIPTION, SHARED_QUIZ_ID, QUIZ_ID, MAX(VERSION) AS VERSION",
                     'quiz, editor', $whereValues2, $whereColumn2, 'SHARED_QUIZ_ID', false);
 
             //Merge the array because $quizNameArray will be overwritten each iteration of foreach loop
@@ -70,21 +70,21 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
         //If user selects taker, then pass 'Taker' session variable to stats-quiz-list page to forward to stats-taker.php
         $_SESSION['statsType'] = 'taker';
-        //Retrieve the most current versions of quizzes for which the user is an editor
+        //Retrieve the most current versions of quizzes for which the user is a taker or are public
 
+        
         //where coloumns
+        $joinWhere = array(
+            "SHARED_QUIZ_ID" => "shared_SHARED_QUIZ_ID"
+        );
 
         $whereValuesArrayTaker = array(
-            "user_USERNAME" => "$uid",
-            "IS_PUBLIC" => '1'
+            "IS_PUBLIC" => '1',
+            "user_USERNAME" => $uid
             );
-        $whereColumnsArrayTaker = array(
-            "shared_SHARED_QUIZ_ID" => "SHARED_QUIZ_ID"
-            );
-        
 
-        $takerResultId = $dbLogic->selectDistinctWithColumnsOrAndGroupBy("SHARED_QUIZ_ID, MAX(QUIZ_ID) AS QUIZ_ID", "quiz, taker", 
-            $whereValuesArrayTaker, $whereColumnsArrayTaker, 'SHARED_QUIZ_ID', false);
+        $takerResultId = $dbLogic->selectLeftJoinOrGroupBy("SHARED_QUIZ_ID, MAX(QUIZ_ID) AS QUIZ_ID", "quiz", $whereValuesArrayTaker,
+                "taker", $joinWhere, 'SHARED_QUIZ_ID', false);
 
         foreach($takerResultId as $columnTaker){
 
@@ -96,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                 "QUIZ_ID" => $columnTaker['QUIZ_ID']   
             );
 
-            $quizNameArray = $dbLogic->selectWithColumnsGroupBy("QUIZ_NAME, SHARED_QUIZ_ID, QUIZ_ID, MAX(VERSION) AS VERSION",
+            $quizNameArray = $dbLogic->selectWithColumnsGroupBy("QUIZ_NAME, DESCRIPTION, SHARED_QUIZ_ID, QUIZ_ID, MAX(VERSION) AS VERSION",
                     'quiz', $whereValues2, $whereColumn2, 'SHARED_QUIZ_ID', false);
 
             //Merge the array because $quizNameArray will be overwritten each iteration of foreach loop

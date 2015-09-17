@@ -30,12 +30,7 @@ if ($quizCreated == "yes"){
     $createQuizConfirmation = "";
 }
 
-//Set default value used to set the colour of the active enable/disable button in edit-quiz-view
-$_SESSION['enableButton'] = "myEnabled";
-
-if($_SERVER['REQUEST_METHOD'] === "POST"){
-    
-    /* User can only edit quiz information if IS_ENABLED is set to inactive so as not to disrupt users. 
+/* User can only edit quiz information if IS_ENABLED is set to inactive so as not to disrupt users. 
      * Check if IS_ENABLED is already set for validation in editing details, questions, editors, takers.
      */
     $checkEnable = array(
@@ -49,9 +44,15 @@ if($_SERVER['REQUEST_METHOD'] === "POST"){
     }else{
         $_SESSION["IS_QUIZ_ENABLED"] = false;
     }
-        
+
+//Set default value used to set the colour of the active enable/disable button in edit-quiz-view
+$_SESSION['enableButton'] = "myEnabled";
+
+if($_SERVER['REQUEST_METHOD'] === "POST"){
+          
     //If ENABLE button is pushed, update row in database
     if (isset($_POST['confirmEnabled'])) {    
+        
         $quizIDPost = filter_input(INPUT_POST, "quizID");
         
         $setColumnsArray = array(
@@ -126,7 +127,7 @@ if($_SERVER['REQUEST_METHOD'] === "POST"){
             "QUIZ_ID" => $columnResult['QUIZ_ID']
         );
         
-        $quizNameArray = $dbLogic->selectWithColumnsGroupBy("QUIZ_NAME, SHARED_QUIZ_ID, QUIZ_ID, MAX(VERSION) AS VERSION",
+        $quizNameArray = $dbLogic->selectWithColumnsGroupBy("QUIZ_NAME, DESCRIPTION, SHARED_QUIZ_ID, QUIZ_ID, MAX(VERSION) AS VERSION",
                 'quiz, editor', $wherevalues2, $wherevalues3, 'SHARED_QUIZ_ID', false);
         
         //Merge the array as $quizNameArray will be overwritten each iteration of foreach loop

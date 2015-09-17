@@ -48,10 +48,10 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //next question
         include('quiz-description.php');       
         exit();//Loads quiz-description-view into take-quiz, keeps same URL
     }           
-    if ($quizConfirmPosted != "") {
-        $_SESSION["QUIZ_CONFIRMED"] = $quizConfirmIdPosted;
-        header('Location: '. CONFIG_ROOT_URL . '/take-quiz.php?quiz='.quizLogic::returnSharedQuizID($_SESSION["QUIZ_CONFIRMED"]));   
-        exit; //refresh the page an rerun script
+     if ($quizConfirmPosted != "") {
+        $_SESSION["QUIZ_CONFIRMED"] = quizLogic::returnSharedQuizID($quizConfirmIdPosted);
+        header('Location: '. CONFIG_ROOT_URL . '/take-quiz.php?quiz='.$_SESSION["QUIZ_CONFIRMED"]);          
+        exit(); //refresh the page an rerun script
     }
     if ($quizNotConfirmPosted != "") {
         $_SESSION["QUIZ_CONFIRMED"] = ""; //not confirmed anymore

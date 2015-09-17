@@ -8,40 +8,50 @@ require_once("includes/config.php");
 $dbLogic = new DB();
 $quizArray = array();
 $uid = $_SESSION["username"];
+
+//Get current date to check for open quizzes
+$dateCheck = date('Y-m-d H:i:s');
+
     //where coloumns
+        
+        $joinWhere = array(
+            "SHARED_QUIZ_ID" => "shared_SHARED_QUIZ_ID"
+        );
 
         $whereValuesArrayTaker = array(
-            "user_USERNAME" => "$uid",
-            "IS_PUBLIC" => '1'
+            "IS_PUBLIC" => '1',
+            "user_USERNAME" => $uid
             );
-        $whereColumnsArrayTaker = array(
-            "shared_SHARED_QUIZ_ID" => "SHARED_QUIZ_ID"
-            );
+
+        $resultID = $dbLogic->selectLeftJoinOrGroupBy("SHARED_QUIZ_ID, MAX(QUIZ_ID) AS QUIZ_ID", "quiz", $whereValuesArrayTaker,
+                "taker", $joinWhere, 'SHARED_QUIZ_ID', false);
+
         
-
-        $resultID = $dbLogic->selectDistinctWithColumnsOrAndGroupBy("SHARED_QUIZ_ID, MAX(QUIZ_ID) AS QUIZ_ID", "quiz, taker", 
-            $whereValuesArrayTaker, $whereColumnsArrayTaker, 'SHARED_QUIZ_ID', false);
-
         foreach($resultID as $columnTaker){
-
-            $whereValues2 = array(
-               "SHARED_QUIZ_ID" => $columnTaker['SHARED_QUIZ_ID'] 
+            
+            $whereValues = array(
+               "SHARED_QUIZ_ID" => $columnTaker['SHARED_QUIZ_ID'],
+                "QUIZ_ID" => $columnTaker['QUIZ_ID'],              
             );
-
-            $whereColumn2 = array(
-                "QUIZ_ID" => $columnTaker['QUIZ_ID']   
+            
+            $whereDateAfter = array(
+                "DATE_OPEN" => $dateCheck,
             );
+            
+            $whereDateBefore = array(               
+                "DATE_CLOSED" => $dateCheck
+            );
+            
 
-            $quizNameArray = $dbLogic->selectWithColumnsGroupBy("QUIZ_NAME, DESCRIPTION, SHARED_QUIZ_ID, QUIZ_ID, MAX(VERSION) AS VERSION",
-                    'quiz', $whereValues2, $whereColumn2, 'SHARED_QUIZ_ID', false);
+            $quizNameArray = $dbLogic->selectWithDateCheckGroupBy("QUIZ_NAME, DESCRIPTION, SHARED_QUIZ_ID, QUIZ_ID, MAX(VERSION) AS VERSION",
+                    'quiz', $whereValues, $whereDateAfter, $whereDateBefore, 'SHARED_QUIZ_ID', false);
 
             //Merge the array because $quizNameArray will be overwritten each iteration of foreach loop
             //Store the values inside nameArray which will be unaffected by foreach loop as it merges the values onto itself
 
-            $quizArray = array_merge($quizArray, $quizNameArray);         
+            $quizArray = array_merge($quizArray, $quizNameArray); 
+            
     }
-    
 //html
     
 include("quiz-list-view.php");
-

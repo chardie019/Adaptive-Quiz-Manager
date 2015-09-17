@@ -23,10 +23,10 @@ $templateLogic->startBody();
                     <a class="mybuttonlink" href="<?php echo (CONFIG_ROOT_URL)."/stats.php"?>">Change<br /> quiz</a>
                     <br />
                     <br />
-                    <button class="mybutton" type="submit" name="selectStatistics" >Current version</button> 
+                    <button class="mybutton <?php if($_SESSION['current'] == true){echo "statsActive";}?>" type="submit" name="selectStatistics" >Current version</button> 
                     <br />
                     <br />
-                    <button class="mybutton" type="submit" name="previousVersions" >Previous<br /> versions</button>   
+                    <button class="mybutton <?php if($_SESSION['current'] == false){echo "statsActive";}?>" type="submit" name="previousVersions" >Previous<br /> versions</button>   
                 </form>
             </div>
         </div>

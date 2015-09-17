@@ -7,36 +7,38 @@ $templateLogic->addCustomHeaders("
 <style>
 .radios .radio{
     display:block;
-    border: 1px solid black;
+    border: 2px solid #404040;
     cursor: pointer;
 }
 .radios input[type=radio]{
     display:none
 }
 .radios input[type=radio]:checked + .radio .quiz-title{
-    background-color:#BBBBBB;
+    background-color: #CC9933;
 }
 .radios input[type=radio]:checked + .radio .quiz-desc{
-    background-color:#D4D4D4;
+    background-color: #e9ab00;
 }
 .quiz-title {
     display:block;
     width:100%;
     height:50%;
-    background-color: #c5e043;
+    background-color: #B0B0B0;
+    padding: 5px;
 }
 .radio-group:hover .quiz-title {
-background-color:#8F9E43;
+background-color:#006699;
 }
 .quiz-desc {
     display:block;
     width:100%;
     height:50%;
-    background-color:#EDFBA7;
-    border-bottom: black 1px solid;
+    background-color:#F0F0F0;
+    
+    padding: 5px;
 }
 .radio-group:hover .quiz-desc{
-background-color: #B3C16A;
+background-color: #0066FF;
 }
 </style>");
 $templateLogic->startBody();
@@ -46,20 +48,22 @@ $templateLogic->startBody();
     <?php if (count($resultID) > 0) { //quizzes available ?>
         <form action="#" method="post">
             <br />
-
-
-            <p id="label">Select Quiz: </p>
-            <br /><br />
-            <div class="radios">
-            <?php foreach ($quizArray as $answerRow) { ?>
-                <div class="radio-group">
-                <?php echo ("<input type=\"radio\" name=\"quizid\" value=\"".$answerRow["QUIZ_ID"]."\" id=\"q".$answerRow["QUIZ_ID"]."\" />") ?>
-                    <?php echo ("<label class=\"radio\" for=\"q".$answerRow["QUIZ_ID"]."\">"); ?>
-                        <span class="quiz-title"><?php echo $answerRow["QUIZ_NAME"]; ?></span>
-                        <span class="quiz-desc">Description: <?php echo $answerRow["DESCRIPTION"]; ?></span>
-                    <?php echo "</label>" ?>
+            <br />
+            <div id='listWrapper'>
+                <h4 class='lightLabel'>Select a quiz to attempt from the list below:</h4>
+                <div id='listScroll'>
+                    <div class="radios">
+                    <?php foreach ($quizArray as $answerRow) { ?>
+                        <div class="radio-group">
+                        <?php echo ("<input type=\"radio\" name=\"quizid\" value=\"".$answerRow["QUIZ_ID"]."\" id=\"q".$answerRow["QUIZ_ID"]."\" />") ?>
+                            <?php echo ("<label class=\"radio\" for=\"q".$answerRow["QUIZ_ID"]."\">"); ?>
+                                <span class="quiz-title"><span id='label'>Quiz Name: </span><?php echo $answerRow["QUIZ_NAME"]; ?></span>
+                                <span class="quiz-desc"><span id='label'>Description: </span><?php echo $answerRow["DESCRIPTION"]; ?></span>
+                            <?php echo "</label>" ?>
+                        </div>
+                    <?php } ?>
+                    </div>
                 </div>
-            <?php } ?>
             </div>
             
             <!-- pad  the space between submit button and dropdown box -->

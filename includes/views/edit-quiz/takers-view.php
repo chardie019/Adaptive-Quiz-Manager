@@ -19,32 +19,38 @@ $templateLogic->startBody();
 <form action='#' method='post'>
     <p>Please enter the CSU Username of the User you would like to <span id='label'>enable/disable</span> permissions for:</p>
     <br />
-    <table class="userTable">
-        <tr><th>Current active Takers</th></tr>
-        <?php 
-            foreach($quizUsers as $takers){
-                echo "<tr><td>".$takers['user_USERNAME']."</td></tr>";
-            }
-        ?>
-    </table>
+    <span id='label'> Username: </span>
+    <input type='text' class='defaultText' name='newUser' maxlength="20"/>
+    <button class="mybutton myEnabled" type="submit" name="confirmAddUser" value="Enter">Add user</button>  
+    <button class="mybutton myDisabled" type="submit" name="confirmRemoveUser" value="Enter">Remove user</button>
     <br />
     <br />
     <br />
-    
-    <select class="userList">
-        <option>--- Click to view current active Takers ---</option>
-        <?php 
-            foreach($quizUsers as $takers){
-                echo "<option>".$takers['user_USERNAME']."</option>";
-            }
-        ?>
-    </select>
-    
+     <div id='tableWrapper'>
+        <div id='tableScroll'>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Current active Takers</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    <?php 
+                        foreach($quizUsers as $takers){
+                            echo "<tr><td>".$takers['user_USERNAME']."</td></tr>";
+                        }
+                    ?>
+                
+                </tbody>
+            </table>
+        </div>
+    </div>
     <br />
     <br />
     <br />
-
 </form>
+
 
 
 <?php

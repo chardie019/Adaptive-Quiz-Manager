@@ -47,11 +47,13 @@ $dbLogic = new DB();
             "RESULT_ID" => "result_RESULT_ID"       
         );
 
-        $graphResults = $dbLogic->selectWithColumns('*', 'result, result_answer', $wherecolumn, $wherecolumn2, false);
+        $notNullColumn = "FINISHED_AT";
+        $graphResults = $dbLogic->selectWithColumnsIsNotNull('*', 'result, result_answer', $wherecolumn, 
+                $wherecolumn2, $notNullColumn, false);
         
         if(empty($graphResults)){
-	    //Replace this with error message, just loads different viewfor now for final error testing
-            include("stats-results-empty-view.php");
+	    
+            include ("stats-results-empty-view.php");
             exit();
         }
         
@@ -113,7 +115,9 @@ $dbLogic = new DB();
                 "result_RESULT_ID" => "RESULT_ID"
             );
 
-            $answerResults = $dbLogic->selectWithColumnsGroupBy('question_QUESTION_ID, answer.answer, COUNT(*) as CHOSEN', "result, result_answer, answer", $whereQuestion, $whereAnswer, "answer.answer", false);
+            $answerResults = $dbLogic->selectWithColumnsIsNotNullGroupBy('question_QUESTION_ID, answer.answer, '
+                    . 'COUNT(*) as CHOSEN', "result, result_answer, answer", $whereQuestion, $whereAnswer, 
+                    $notNullColumn, "answer.answer", false);
             
             foreach($answerResults as $answerNumbers){
   

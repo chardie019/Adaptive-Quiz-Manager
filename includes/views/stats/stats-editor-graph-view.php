@@ -62,12 +62,15 @@ $templateLogic->startBody();
                     <a class="mybuttonlink" href="<?php echo (CONFIG_ROOT_URL)."/stats.php"?>">Change<br /> quiz</a>
                     <br />
                     <br />
-                    <button class="mybutton" type="submit" name="selectStatistics" >Current version</button> 
+                    <button class="mybutton <?php if($_SESSION['current'] == true){echo "statsActive";}?>" type="submit" name="selectStatistics" >Current version</button> 
                     <br />
                     <br />
-                    <button class="mybutton" type="submit" name="previousVersions" >Previous versions</button>  
+                    <button class="mybutton <?php if($_SESSION['current'] == false){echo "statsActive";}?>" type="submit" name="previousVersions" >Previous versions</button>  
                 </form>
+                <br />
+            <br />
             </div>
+            
             <div id="displayCharts">
                 <h2 class=''>Answers selected for each question</h2>
                 <?php

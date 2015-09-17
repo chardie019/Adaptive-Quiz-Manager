@@ -1,3 +1,17 @@
+###Version 5.6.4 - 18/09/2015 - View statistics/Quiz lists update
+=Harry
+- Updated take-quiz, view-stats and edit-quiz quiz lists (scroll bar radio list) *Colours not final
+- Added date check in take quiz list, only gets quizzes where current date is 
+  between open/close or dates after open and close is null.
+- Fixed take quiz bug where OR statement was being cancelled out
+- Stats now only return results if there is a FINISHED_AT time provided (Complete attempts only)
+- Group decided on scrollable table of users for manage editors and takers (IMplemented  = complete)
+- small styling fixes
+- added @param descriptions to newly created dbLogic functions
+- fixed bug in shared quiz not loading question properly
+- fixed coding error where IS_ENABLED check was inside POST loop
+
+
 ###Version 5.6.3- 18/09/2015 - Inspect/Add/Remove fixed bugs + models folder
 =Joshua
 Fixed many bus in the the Inspect/add/remove Q & A's

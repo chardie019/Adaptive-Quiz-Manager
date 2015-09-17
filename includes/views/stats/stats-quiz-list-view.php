@@ -13,15 +13,22 @@ $templateLogic->startBody();
                     }
               ?>" method="post">
         <br />                 
-        <label class="label">Select Quiz: </label>
-                        
-        <select class="quiz_list" name="quizid">
-            <?php
-                foreach ($quizArray as $quizRow) {
-                echo "<option value = ".($quizRow["QUIZ_ID"])."> ".$quizRow["QUIZ_NAME"]."</option>";
-            }
-        ?>
-        </select>
+        <div id='listWrapper'>
+                        <h4 class='lightLabel'>Select a quiz to attempt from the list below:</h4>
+                        <div id='listScroll'>
+                            <div class="radios">
+                            <?php foreach ($quizArray as $answerRow) { ?>
+                                <div class="radio-group">
+                                <?php echo ("<input type=\"radio\" name=\"quizid\" value=\"".$answerRow["QUIZ_ID"]."\" id=\"q".$answerRow["QUIZ_ID"]."\" />") ?>
+                                    <?php echo ("<label class=\"radio\" for=\"q".$answerRow["QUIZ_ID"]."\">"); ?>
+                                        <span class="quiz-title"><span id='label'>Quiz Name: </span><?php echo $answerRow["QUIZ_NAME"]; ?></span>
+                                        <span class="quiz-desc"><span id='label'>Description: </span><?php echo $answerRow["DESCRIPTION"]; ?></span>
+                                    <?php echo "</label>" ?>
+                                </div>
+                            <?php } ?>
+                            </div>
+                        </div>
+                    </div>
                     <!-- pad  the space between submit button and dropdown box -->
         <br />
         <br />

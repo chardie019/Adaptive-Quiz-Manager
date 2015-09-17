@@ -50,7 +50,9 @@ $templateLogic->startBody();
 ?>
         
         <div id="content-charts">
+            
             <div id="content-table-data">  
+
                 <p><span id="label">Number of attempts: </span><?php echo $countAttempts ?> attempts</p>
                 <p><span id="label">Average completion time: </span> <?php echo $averageTime ?></p>
                 <p><span id="label">Shortest completion time: </span> <?php echo $minTime ?></p>
@@ -61,10 +63,10 @@ $templateLogic->startBody();
                     <a class="mybuttonlink" href="<?php echo (CONFIG_ROOT_URL)."/stats.php"?>">Change<br /> quiz</a>
                     <br />
                     <br />
-                    <button class="mybutton" type="submit" name="selectPersonalStatistics" >Current version</button> 
+                    <button class="mybutton <?php if($_SESSION['current'] == true){echo "statsActive";}?>" type="submit" name="selectStatistics" >Current version</button> 
                     <br />
                     <br />
-                    <button class="mybutton" type="submit" name="previousPersonalVersions" >Previous versions</button>  
+                    <button class="mybutton <?php if($_SESSION['current'] == false){echo "statsActive";}?>" type="submit" name="previousVersions" >Previous versions</button>  
                 </form>
             </div>
             

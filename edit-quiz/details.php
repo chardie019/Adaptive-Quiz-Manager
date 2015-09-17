@@ -293,7 +293,7 @@ $creationDatetime = date('Y-m-d H:i:s');
                         "IMAGE_ALT" => $quizImageText
 
                         );
-                    $quizUpdated = "hell yes updated";
+                    $quizUpdated = "Your quiz has been successfully updated.";
                     //Insert quiz into database
                     $current_quiz_id = ($dbLogic->insert($dataArray, "quiz"));
 
