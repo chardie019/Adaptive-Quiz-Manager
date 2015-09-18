@@ -18,20 +18,11 @@ define( 'DB_PASSWORD', "jc66882Dxc9D");
 
 if (CONFIG_DEV_ENV == true){
     assert_options(ASSERT_ACTIVE, 1); //enable asseration
-    assert_options (ASSERT_CALLBACK, 'assertFailed');
+    assert_options (ASSERT_CALLBACK, array('configLogic', 'assertFailed'));
     ini_set("log_errors", 1);
     ini_set("error_log", "not_synced/PHP_errors.log"); //relative to htaccess in the aqm
 } else {
-    assert_options(ASSERT_ACTIVE, 0); //diable assertions & no performance hit
-}
-
-function assertFailed($file, $line, $expr) {
-    print "Assertion failed in $file on line $line: $expr\n";
-}
-
-function loadErrorPage($errorMessage = "", $errorMessageSpecific = "") {
-    include '404.php';
-    exit;
+    assert_options(ASSERT_ACTIVE, 0); //diable assertions sp no performance hit
 }
 
 //define site variables (not styles)

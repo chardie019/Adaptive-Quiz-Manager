@@ -51,7 +51,7 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING) === "PO
                 header('Location: '. CONFIG_ROOT_URL . '/edit-quiz/edit-question.php?quiz='.quizLogic::returnSharedQuizID($quizIdGet)."&feedback=answer-added");
                 exit();
             } else {
-                loadErrorPage("There was Problem adding a answer.");
+                configLogic::loadErrorPage("There was Problem adding a answer.");
             }
         }
     }else if (isset($linkPageButton)){
@@ -70,7 +70,7 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING) === "PO
         //do nothing just load the page
         //post data already gotten using above statements 
     } else {
-        loadErrorPage("Unspecified action");
+        configLogic::loadErrorPage("Unspecified action");
     }
 }
 

@@ -29,7 +29,7 @@ class DB {
                     $errorMessageSpecific = "";
                 }
                 $errorMessage = "There was an error connecting to the database.";
-                loadErrorPage($errorMessage, $errorMessageSpecific);
+                configLogic::loadErrorPage($errorMessage, $errorMessageSpecific);
                 exit;
             }
     }

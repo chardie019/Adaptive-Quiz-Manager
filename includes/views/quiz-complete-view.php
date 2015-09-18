@@ -3,6 +3,22 @@
 $templateLogic = new templateLogic;
 $templateLogic->addCSS(STYLES_LOCATION . "/take-quiz-style.css");
 $templateLogic->setTitle('Quiz Complete');
+$templateLogic->addCustomHeadersStart();
+?>
+<style type="text/css">
+    #content-centre img {
+        float: right;
+    }
+    #content-centre h2 {
+        clear: both;
+        padding-top: 1em;
+    }
+    #results table {
+            width:100%
+    }
+</style>
+<?php
+$templateLogic->addCustomHeadersEnd();
 $templateLogic->startBody();
 ?>
 

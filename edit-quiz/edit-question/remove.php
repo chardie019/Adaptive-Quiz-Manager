@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //pastt the appropiate page
         header('Location: '. CONFIG_ROOT_URL . '/edit-quiz/edit-question.php?quiz='.quizLogic::returnSharedQuizID($quizIDGet)."&feedback=$type-removed");
         exit();
     } else {
-        loadErrorPage("Unspecified action on remove page.");
+        configLogic::loadErrorPage("Unspecified action on remove page.");
     }
 }
 

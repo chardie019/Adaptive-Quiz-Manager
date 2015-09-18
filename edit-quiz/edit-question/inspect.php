@@ -129,7 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //pastt the appropiate page
         //do nothing just load the page
         //post data already gotten using above statements 
     } else {
-        loadErrorPage("Unspecified action");
+        configLogic::loadErrorPage("Unspecified action");
     }
 }
 //get request or error

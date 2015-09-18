@@ -14,10 +14,12 @@ class quizHelper
      * @param string $targetFileName The image filename
      * @return string The real file path and $targetFileName(in the same string, if provided eg C:\images\1.png
      */
-    public static function returnWebImageFilePath ($quizId, $targetFileName = NULL){
+    public static function returnWebImageFilePath ($quizId, $targetFileName = ""){
         $target_dir = STYLES_QUIZ_IMAGES_LOCATION . "/$quizId/";
-        if (is_null($targetFileName)){
+        if ($targetFileName == ""){
             return $target_dir;
+        }else if (is_null($targetFileName)){
+            return NULL; //dont change it
         } else {
             return $target_dir . $targetFileName;
         }

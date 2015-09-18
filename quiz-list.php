@@ -12,6 +12,8 @@ $uid = $_SESSION["username"];
 //Get current date to check for open quizzes
 $dateCheck = date('Y-m-d H:i:s');
 
+//to chnage to SELECT * FROM (SELECT QUIZ_NAME, SHARED_QUIZ_ID, VERSION FROM quiz ORDER BY VERSION desc) as tempTable GROUP BY tempTable.SHARED_QUIZ_ID
+
     //where coloumns
         
         $joinWhere = array(

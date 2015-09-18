@@ -55,7 +55,7 @@ $templateLogic->startBody();
                     <div class="radios">
                     <?php foreach ($quizArray as $answerRow) { ?>
                         <div class="radio-group">
-                        <?php echo ("<input type=\"radio\" name=\"quizid\" value=\"".$answerRow["QUIZ_ID"]."\" id=\"q".$answerRow["QUIZ_ID"]."\" />") ?>
+                        <?php echo ("<input type=\"radio\" name=\"quizid\" value=\"".$answerRow["SHARED_QUIZ_ID"]."\" id=\"q".$answerRow["SHARED_QUIZ_ID"]."\" />") ?>
                             <?php echo ("<label class=\"radio\" for=\"q".$answerRow["QUIZ_ID"]."\">"); ?>
                                 <span class="quiz-title"><span id='label'>Quiz Name: </span><?php echo $answerRow["QUIZ_NAME"]; ?></span>
                                 <span class="quiz-desc"><span id='label'>Description: </span><?php echo $answerRow["DESCRIPTION"]; ?></span>
@@ -68,6 +68,7 @@ $templateLogic->startBody();
             
             <!-- pad  the space between submit button and dropdown box -->
             <br />
+            <span class="inputError"><?php echo $quizSelectionError; ?></span>
             <br />
 
             <p>
