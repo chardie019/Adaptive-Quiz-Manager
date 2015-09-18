@@ -658,7 +658,7 @@ class quizLogic
      * Returns the Real Quiz ID (latest version) for quiz.
      *
      * @param string $sharedQuizId The shared quiz id
-     * @return string Returns real quiz ID
+     * @return string|boolean Returns real quiz ID, flase if not exist
      */
     static public function returnRealQuizID($sharedQuizId) {
         assert(is_string($sharedQuizId));
@@ -668,7 +668,12 @@ class quizLogic
         //SELECT UIZ_ID from quiz where shared_quiz_id = 1;
         $where = array("SHARED_QUIZ_ID" => $sharedQuizId);
         $result = $dbLogic->select("max(QUIZ_ID) as QUIZ_ID", "quiz", $where);
-        return $result['QUIZ_ID'];
+        if (!empty($result)){
+            return $result['QUIZ_ID'];
+        } else {
+            return false;
+        }
+        
     }
     
     /**

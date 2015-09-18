@@ -1,3 +1,7 @@
+###Version 5.6.41 - 19/09/2015 - take-quiz not getting the shared quiz id
+=Joshua
+- minor take-quiz not getting the shared quiz id  -fixed
+
 ###Version 5.6.4.2 - 19/09/2015 - Take-quiz refactoring + quizlist fix
 =Joshua
 - rewrote quiz list code to grab all data in one command

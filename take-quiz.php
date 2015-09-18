@@ -90,8 +90,8 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === "POST") { //next question
         include("quiz-list-view.php");
     } 
     else {
-        //find the quiz
-        $quizId = quizLogic::verifyQuizIdExistsReturnQuizId($quizIdRequested);
+        //find the real quiz id
+        $quizId = quizLogic::returnRealQuizID($quizIdRequested);
         if ($quizId != false){  //success - it exists
             //store the REAL qiz ID to a session
             $_SESSION["QUIZ_CURRENT_QUIZ_ID"] = $quizId;
