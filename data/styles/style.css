@@ -304,27 +304,27 @@ select.quiz_list {
 
 /*Background images not yet created*/
 #buttonborder1{
-    background-image: url("takequiz.png");
+    background-image: url("AQMtakequiz.jpg");
 } 
 
 #buttonborder2{
-       background-image: url("editquiz.png"); 
+       background-image: url("AQMcreatequiz.jpg"); 
 } 
 
 #buttonborder3{
-       background-image: url("createquiz.png");
+       background-image: url("AQMeditquiz.jpg");
 } 
 
 #buttonborder4{
-        background-image: url("statistics.png");
+        background-image: url("AQMstats.jpg");
 }
 
 #buttonborder5{
-        background-image: url("about.png");
+        background-image: url("AQMabout.jpg");
 }
 
 #buttonborder6{
-        background-image: url("help.png");    
+        background-image: url("AQMhelp.jpg");    
 }
 
 a.menu-icons{
@@ -499,7 +499,7 @@ input[type=text].defaultText {
     padding: 5px;
 }
 .radio-group:hover .quiz-title {
-background-color:#006699;
+    background-color:#006699;
 }
 .quiz-desc {
     display:block;
@@ -510,5 +510,5 @@ background-color:#006699;
     padding: 5px;
 }
 .radio-group:hover .quiz-desc{
-background-color: #0066FF;
+    background-color: #0066FF;
 }
