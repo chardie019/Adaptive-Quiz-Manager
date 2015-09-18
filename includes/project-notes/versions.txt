@@ -1,3 +1,7 @@
+###Version 5.6.4.4 - 19/09/2015 - Allow TIME_LIMIT to be null
+=joshua
+Allow TIME_LIMIT to be null or zero for unlimited
+
 ###Version 5.6.4.3 - 19/09/2015 - $_FILES is global error
 =joshua
 $_FILES is global error

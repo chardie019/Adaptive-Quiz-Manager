@@ -112,7 +112,7 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === "POST") { //next question
                 );
 				$quizData = $dbLogic->select("TIME_LIMIT", "quiz", $timeData);
 				
-				if ($quizData["TIME_LIMIT"] != "00:00:00") {
+				if (isset($quizData["TIME_LIMIT"]) && $quizData["TIME_LIMIT"] != "00:00:00") {
 					$_SESSION['TIME_STARTED'] = time();
 					$timeLimit = $quizData["TIME_LIMIT"];
 					$hours = substr($timeLimit, 0, 2);
