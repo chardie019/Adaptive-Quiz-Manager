@@ -3,6 +3,8 @@
 - rewrote quiz list code to grab all data in one command
 - refactored the list code slightly
 - fixed link bug not being cancelled
+- lfixed some bugs in add/inspect etc.
+-NOte remove doesn't work for answers with results (needs clone quiz working)
 
 ###Version 5.6.4.1 - 18/09/2015 - Update take-quiz for looping
 =Joshua
