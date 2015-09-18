@@ -64,8 +64,8 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === "POST") { //next question
 
     //get answer stuff
     $answerData = takeQuizLogic::prepareViewPageGetAnswerData($questionData);
-    if (!empty($answerData) > 0){ //are there answers or is this the end of the quiz?      
-
+    if (!empty($answerData) > 0 && $_SESSION["QUIZ_TIME_LIMIT"] > 0){ //are there answers and time remaining, or is this the end of the quiz?      
+        $_SESSION['TIME_STARTED'] = time();
         include("take-quiz-view.php");
     } else {
     //Moved $_SESSION["RESULT_ID"] = NULL; to quiz-complete.php needed for result display
@@ -73,7 +73,12 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === "POST") { //next question
     }
 
 } else { //GET - start quiz
-
+	
+	//If a previous result is still active, unsets the session variable CHANGE TO SAVE RESULT WHEN POSSIBLE?
+	if (!isset($_SESSION["RESULT_ID"])) {
+		unset($_SESSION["RESULT_ID"]);
+	}
+	
     //if ID is passed- load take quiz, otherwise load quiz-list
     $quizIdRequested = filter_input(INPUT_GET, "quiz");
 
@@ -98,7 +103,25 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === "POST") { //next question
                 $whereValuesArray = array("quiz_QUIZ_ID" => $_SESSION["QUIZ_CURRENT_QUIZ_ID"]);
                 //find the first question
                 $questionData = takeQuizLogic::runQueryGetQuestionDataOnly ($dbLogic, $whereValuesArray, $quizId);
-
+				
+				//Sets the quiz time limit and time started session variables if the quiz is timed
+				$timeData = array(
+                    "QUIZ_ID" => $quizId
+                );
+				$quizData = $dbLogic->select("TIME_LIMIT", "quiz", $timeData);
+				
+				if ($quizData["TIME_LIMIT"] != "00:00:00") {
+					$_SESSION['TIME_STARTED'] = time();
+					$timeLimit = $quizData["TIME_LIMIT"];
+					$hours = substr($timeLimit, 0, 2);
+					$minutes = substr($timeLimit, 3, 2);
+					$timeLimit = (((int) $hours) * 60 * 60) + ((int) $minutes * 60);
+					$_SESSION["QUIZ_TIME_LIMIT"] = $timeLimit;
+				}
+				else {
+					$_SESSION["QUIZ_TIME_LIMIT"] = 86000;
+				}
+				
                 $_SESSION["QUIZ_CURRENT_QUESTION"] = $questionData["QUESTION_ID"];
                 $answerData = takeQuizLogic::prepareViewPageGetAnswerData($questionData);
                 //Sets Feedback value on take-quiz-view.php to empty for the first question.

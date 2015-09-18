@@ -1,9 +1,9 @@
 <?php
 
-
 // include php files here 
 require_once("includes/config.php");
 // end of php file inclusion
+
 //declares needed variable
 global $dbLogic;
 
@@ -51,3 +51,11 @@ $data3 = array(
        );
 
 $dbLogic->insert($data3, "result_answer");
+
+//Calculates time passed if timed
+if ($_SESSION["QUIZ_TIME_LIMIT"] != 6000) {
+	$old = $_SESSION['TIME_STARTED'];
+	$new = time();
+	$elapsed = $new - $old;
+	$_SESSION["QUIZ_TIME_LIMIT"] = $_SESSION["QUIZ_TIME_LIMIT"] - $elapsed;
+}

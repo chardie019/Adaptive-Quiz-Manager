@@ -7,6 +7,17 @@ $templateLogic->startBody();
 ?>
 <div id="content-centre">
 <p> 
+	Time remaining as of loading this page: 
+	<?php
+	if ($_SESSION["QUIZ_TIME_LIMIT"] != 86000) {
+		echo gmdate("H:i:s", $_SESSION["QUIZ_TIME_LIMIT"]);
+	}
+	else {
+		echo "Unlimited";
+	}?>
+	<br />
+	<br />
+	
     <?php echo ("<span class=\"feedbackStyle\">".$answerFeedback."</span>");
 
           echo ("<br />");
