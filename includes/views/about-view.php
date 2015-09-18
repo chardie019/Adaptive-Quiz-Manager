@@ -12,6 +12,7 @@ individual quiz taker's needs and weaknesses.
 This is achieved by allowing the creation of flowchart-like quizzes where a quiz taker's understanding of the topic
 can lead them through different questions or even loop through previous content until they understand it.
 <br />
+<br />
 The quizzes consist of 'question pages' with each containing learning content, a question and its answers which can each
 have its own link to a different question page as well as unique feedback.
 <br />
