@@ -81,7 +81,7 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === "POST") { //next question
 	
     //if ID is passed- load take quiz, otherwise load quiz-list
     $quizIdRequested = filter_input(INPUT_GET, "quiz");
-
+    
     //html
     //if no quiz submitted or empty url changed (trailing slash "/" with nothing on the end)
     if (empty($quizIdRequested) || $quizIdRequested  == ".php") {
@@ -90,8 +90,9 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === "POST") { //next question
         include("quiz-list-view.php");
     } 
     else {
+        $quizRealId = quizLogic::returnRealQuizID($quizIdRequested);
         //find the real quiz id
-        $quizId = quizLogic::returnRealQuizID($quizIdRequested);
+        $quizId = quizLogic::verifyQuizIdExistsReturnQuizId($quizIdRequested);
         if ($quizId != false){  //success - it exists
             //store the REAL qiz ID to a session
             $_SESSION["QUIZ_CURRENT_QUIZ_ID"] = $quizId;
@@ -107,7 +108,7 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === "POST") { //next question
 				
 				//Sets the quiz time limit and time started session variables if the quiz is timed
 				$timeData = array(
-                    "QUIZ_ID" => $quizId
+                    "QUIZ_ID" => $quizRealId
                 );
 				$quizData = $dbLogic->select("TIME_LIMIT", "quiz", $timeData);
 				
