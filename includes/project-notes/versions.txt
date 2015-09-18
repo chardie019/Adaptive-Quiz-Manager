@@ -1,3 +1,9 @@
+###Version 5.6.4.2 - 19/09/2015 - Take-quiz refactoring + quizlist fix
+=Joshua
+- rewrote quiz list code to grab all data in one command
+- refactored the list code slightly
+- fixed link bug not being cancelled
+
 ###Version 5.6.4.1 - 18/09/2015 - Update take-quiz for looping
 =Joshua
 refactored config to have a class

@@ -305,7 +305,42 @@ class DB {
         $sql = "SELECT DISTINCT $columns FROM $tables WHERE $where GROUP BY $groupColumn;";
         return $this->runQueryReturnResults($sql, $singleRow, $whereValuesArray, $whereDateAfter, $whereDateBefore);
     }
-    
+    /**
+     * Runs a select query like: "SELECT $columns FROM ($columns FROM $tables WHERE $where ORDER BY $orderBy desc) as TEMP_TABLE 
+     * LEFT JOIN $leftJoinTable ON $leftJoinWhereColumns GROUP BY $groupColumn;"
+     * 
+     * Used to order the result and then group the first of teh duplicates
+     * 
+     * @param string $columns The columns to be selected in the SQL query. In the form: "xx, yyy, max(zzz) etc"
+     * @param string $innerColumns The columns to be selected in the nested SQL query ($columns must slect from these columns)
+     * @param string $tables The tables to be selected by the SQL query. in the form of "xx, yyy, zzz etc"
+     * @param string $orderBy the column to be backwards ordered by
+     * @param sting $leftJoinTable the table to join on
+     * @param array $leftJoinWhereColumnsArray the array of the columns to align join with (the where)
+     * @param array $whereOrValuesArray  The input for the where clause. form $column => $value
+     * @param array $whereValuesArray  The input for the where clause. form $column => $value
+     * @param array $whereDateAfter The input for the where clause. form $column  => $value. run as $value > database column:value
+     * @param array $whereDateBefore The input for the where clause. form $column  => $value. run as $value < database column:value
+     * @param string $groupColumn The name of the column to group by
+     * @param boolean $singleRow return one row of many? true is the default (single row)
+     * @return array The results, eg result[15]['column'] or result['column']
+     */
+    public function selectOrderDescWithSelectWhereOrWithDateGroupBy($columns, $innerColumns, $tables, $orderBy,
+            $leftJoinTable,array $leftJoinWhereColumnsArray, 
+            array $whereOrValuesArray, array $whereValuesArray, array $whereDateAfter, array $whereDateBefore, $groupColumn, $singleRow=True) {
+        assert(is_string($columns));
+        assert(is_string($tables));
+        assert(is_string($groupColumn));
+        assert(is_bool($singleRow));
+        $where = self::prepareWhereValuesSQLOr($whereOrValuesArray); //the values
+        $where = self::prepareWhereValuesSQL($whereValuesArray, $where);
+        $where = self::prepareWhereValuesSQLLess($whereDateAfter, $where); //the values
+        $where = self::prepareWhereValuesSQLGreaterIsNull($whereDateBefore, $where);
+        $leftJoinWhereColumns = self::prepareWhereColumnsSQL($leftJoinWhereColumnsArray);
+        $sql = "SELECT $columns FROM (SELECT $innerColumns FROM $tables ORDER BY $orderBy desc) as TEMP_TABLE ".
+                "LEFT JOIN $leftJoinTable ON $leftJoinWhereColumns WHERE $where GROUP BY $groupColumn;";
+        return $this->runQueryReturnResults($sql, $singleRow, $whereOrValuesArray, $whereValuesArray, $whereDateAfter, $whereDateBefore);
+    }
     /**
      * Runs a select query like: "SELECT DISTINCT $column FROM $table WHERE $whereValues & $whereColumns OR ($whereValues & $whereColumns)"
      * 
@@ -333,6 +368,7 @@ class DB {
         $sql = "SELECT DISTINCT $columns FROM $tables WHERE $where;";
         return $this->runQueryReturnResults($sql, $singleRow, $whereValuesArray, $whereValuesArray2);
     }
+    
     
     /**
      * Runs a select ALL query like: ""SELECT * FROM $tables;""
@@ -707,9 +743,10 @@ class DB {
     private static function prepareWhereValuesSQLOr(array $whereValuesArray, $where = ""){
         assert(is_string($where));
         foreach ($whereValuesArray as $columnTemp => $valueTemp) {      //$value not used - it's in $data
-            $where .= ($where == "") ? "" : " OR ";
+            $where .= ($where == "") ? "(" : " OR ";
             $where .= "$columnTemp = :" . self::prepareColumnNameForBinding($columnTemp); //replace dot with underscore for table.column
         }
+        $where .= ')';
         return $where;
     }
 

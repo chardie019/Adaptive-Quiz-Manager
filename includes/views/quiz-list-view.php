@@ -45,7 +45,7 @@ $templateLogic->startBody();
 ?>
 
  <div id="content-centre">
-    <?php if (count($resultID) > 0) { //quizzes available ?>
+    <?php if (count($quizArray) > 0) { //quizzes available ?>
         <form action="#" method="post">
             <br />
             <br />
@@ -56,7 +56,7 @@ $templateLogic->startBody();
                     <?php foreach ($quizArray as $answerRow) { ?>
                         <div class="radio-group">
                         <?php echo ("<input type=\"radio\" name=\"quizid\" value=\"".$answerRow["SHARED_QUIZ_ID"]."\" id=\"q".$answerRow["SHARED_QUIZ_ID"]."\" />") ?>
-                            <?php echo ("<label class=\"radio\" for=\"q".$answerRow["QUIZ_ID"]."\">"); ?>
+                            <?php echo ("<label class=\"radio\" for=\"q".$answerRow["SHARED_QUIZ_ID"]."\">"); ?>
                                 <span class="quiz-title"><span id='label'>Quiz Name: </span><?php echo $answerRow["QUIZ_NAME"]; ?></span>
                                 <span class="quiz-desc"><span id='label'>Description: </span><?php echo $answerRow["DESCRIPTION"]; ?></span>
                             <?php echo "</label>" ?>
@@ -80,9 +80,6 @@ $templateLogic->startBody();
 
             <br />
             <br />
-            
-            
-            <?php echo "<input type=\"hidden\" name=\"selectQuizId\" value=". ($answerRow["QUIZ_ID"])." />"?>
 
             <button class="mybutton mySubmit" type="submit" name="selectQuiz" value="Select Quiz">
                 Select Quiz

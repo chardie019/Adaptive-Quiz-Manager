@@ -24,7 +24,8 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === "POST") { //next question
             exit();//Loads quiz-description-view into take-quiz, keeps same URL
         } else {
             $quizSelectionError = "Please select a Quiz to continue.";
-            include("quiz-list.php");
+            $quizArray = takeQuizListLogic::getQuizList($_SESSION["username"]);
+            include("quiz-list-view.php");
             exit;
         }
     }           
@@ -35,7 +36,6 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === "POST") { //next question
     }
     if ($quizNotConfirmPosted != "") {
         $_SESSION["QUIZ_CONFIRMED"] = ""; //not confirmed anymore
-        echo ("notconfirm");
         header('Location: ' . CONFIG_ROOT_URL . '/take-quiz.php');   
         exit; //refresh the page an rerun script (with no quiz this time)
     }
@@ -86,7 +86,8 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === "POST") { //next question
     //if no quiz submitted or empty url changed (trailing slash "/" with nothing on the end)
     if (empty($quizIdRequested) || $quizIdRequested  == ".php") {
         $quizSelectionError = "";
-        include("quiz-list.php");
+        $quizArray = takeQuizListLogic::getQuizList($_SESSION["username"]);
+        include("quiz-list-view.php");
     } 
     else {
         //find the quiz

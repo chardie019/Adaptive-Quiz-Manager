@@ -146,7 +146,8 @@ if ($type == "answer"){
     if (!isset($answerContent)){$answerContent = $result['ANSWER'];}
     if (!isset($feedbackContent)){$feedbackContent = $result['FEEDBACK'];}
     if (!isset($isCorrect)){$isCorrect = (string)$result['IS_CORRECT'];}
-    if(!isset($linkFromLinkPage)){$linkFromLinkPage=(string)$result['LOOP_CHILD_ID'];}
+    
+    if(!isset($linkFromLinkPage) && !isset($linkPageUpdateButton)){$linkFromLinkPage=(string)$result['LOOP_CHILD_ID'];}
     if($linkFromLinkPage == ""){$linkFromLinkPage=NULL;}
     if(!isset($link)){$link= NULL;}
     $linkArray = linkLogic::prepareLinkHtml($link, $linkFromLinkPage);

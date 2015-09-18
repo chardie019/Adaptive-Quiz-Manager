@@ -87,7 +87,7 @@ if (!isset($answerContent)){$answerContent = "";}
 if (!isset($feedbackContent)){$feedbackContent = "";}
 if (!isset($isCorrect)){$isCorrect = "2";}
 
-if(!isset($linkFromLinkPage)){$linkFromLinkPage=NULL;}
+if(!isset($linkFromLinkPage) && !isset($linkPageUpdateButton)){$linkFromLinkPage=NULL;}
 if(!isset($link)){$link= NULL;}
 $linkArray = linkLogic::prepareLinkHtml($link, $linkFromLinkPage);
 $linkFromLinkPage = $linkArray['linkHtml'];

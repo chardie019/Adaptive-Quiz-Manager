@@ -3,6 +3,21 @@
 $templateLogic = new templateLogic;
 $templateLogic->addCSS("take-quiz-style.css");
 $templateLogic->setTitle('Take Quiz');
+$templateLogic->addCustomHeadersStart();
+?>
+<style type="text/css">
+    .image-container{
+        width: 50%;
+        float:right;
+    }
+    .question-details {
+        /* fill teh rest of the left hand screen */
+        overflow:hidden;
+    }
+    
+</style>
+<?php
+$templateLogic->addCustomHeadersEnd();
 $templateLogic->startBody();
 ?>
 <div id="content-centre">
@@ -22,25 +37,34 @@ $templateLogic->startBody();
 
           echo ("<br />");
     ?>
+</p>
     <br />
-    <br />
-    <img alt="<?php echo($questionData["IMAGE_ALT"]) ?>" src="<?php echo($questionData["IMAGE"]) ?>" />
-    
-    Question: <?php echo ($questionData["QUESTION"]); ?>
-    <p>
-     Please choose an answer:
-    </p>
-    <form action="#" method="post"> 
-    <?php 
-    foreach ($answerData as $answerRow) {
-                    //$result = array_values($oneResult); //convert from assocative array to numeric(normal) array
-                    echo ("<label>");
-                        echo ("<input type=\"radio\" name=\"answer\" value=\"" . $answerRow["ANSWER_ID"] . "\" />");
-                        echo ($answerRow["ANSWER"]);
-                    echo ("</label>");
-                    echo ("<br />");
-                }
-    ?>
+    <div class="image-container">
+        <img alt="<?php echo($questionData["IMAGE_ALT"]) ?>" src="<?php echo($questionData["IMAGE"]) ?>" />
+    </div>
+    <div class="question-details">
+        <p>
+            Question: <?php echo ($questionData["QUESTION"]); ?>
+        </p>
+        <p>
+        <?php echo ($questionData["CONTENT"]); ?>
+        <br />
+        <br />
+         Please choose an answer:
+         <br />
+        </p>
+        <form action="#" method="post"> 
+        <?php 
+        foreach ($answerData as $answerRow) {
+                        //$result = array_values($oneResult); //convert from assocative array to numeric(normal) array
+                        echo ("<label>");
+                            echo ("<input type=\"radio\" name=\"answer\" value=\"" . $answerRow["ANSWER_ID"] . "\" />");
+                            echo ($answerRow["ANSWER"]);
+                        echo ("</label>");
+                        echo ("<br />");
+                    }
+        ?>
+    </div>
         <br />
         <button class="mybutton mySubmit" type="submit" value="Submit">Submit</button>
     </form>

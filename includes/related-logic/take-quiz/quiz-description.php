@@ -14,10 +14,6 @@ require_once("includes/config.php");
 //quizData already used so??
 //not sure if there is anything to do here
 
-
-
-//echo($quizData["IMAGE"])
-
 // include php files here 
 require_once("includes/config.php");
 
@@ -33,7 +29,6 @@ require_once("includes/config.php");
   //For view in quiz-description-view.php
   $_SESSION['QUIZ_CURRENT_QUIZ_ID'] = $quizID;
   
-  echo $quizID;
   
     $quizAttempts = false;
     $attemptsReached = false; 

@@ -581,7 +581,6 @@ class quizLogic
                 "quiz_QUIZ_ID" => $quizId,
                 "LOOP_CHILD_ID" => $dbLink
         );
-        var_dump(self::checkQuestionBelongsToQuizReturnId($dbLogic, $quizId, $link));
         if (is_null($parentId)) {    //inserting at the top
             $insertArray["DEPTH"] = "1";  //add to arry - lower than the first question
             return $dbLogic->insert($insertArray, "question_answer");

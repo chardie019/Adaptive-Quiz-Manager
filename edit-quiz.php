@@ -33,16 +33,22 @@ if ($quizCreated == "yes"){
 /* User can only edit quiz information if IS_ENABLED is set to inactive so as not to disrupt users. 
      * Check if IS_ENABLED is already set for validation in editing details, questions, editors, takers.
      */
-    $checkEnable = array(
-        "QUIZ_ID" => $_SESSION['CURRENT_EDIT_QUIZ_ID']
-    );
-        
-    $isEnabled = $dbLogic->select("IS_ENABLED", "QUIZ", $checkEnable, true);
-    if($isEnabled['IS_ENABLED'] == '1'){
-        $_SESSION["IS_QUIZ_ENABLED"] = true;
-        
-    }else{
-        $_SESSION["IS_QUIZ_ENABLED"] = false;
+    if (isset($_SESSION['CURRENT_EDIT_QUIZ_ID'])){
+        $checkEnable = array(
+            "QUIZ_ID" => $_SESSION['CURRENT_EDIT_QUIZ_ID']
+        );
+
+        $isEnabled = $dbLogic->select("IS_ENABLED", "QUIZ", $checkEnable, true);
+        if (!empty($isEnabled)){
+            if($isEnabled['IS_ENABLED'] == '1'){
+                $_SESSION["IS_QUIZ_ENABLED"] = true;
+
+            }else{
+                $_SESSION["IS_QUIZ_ENABLED"] = false;
+            }
+        } else {
+            $_SESSION['CURRENT_EDIT_QUIZ_ID'] = NULL;
+        }
     }
 
 //Set default value used to set the colour of the active enable/disable button in edit-quiz-view
