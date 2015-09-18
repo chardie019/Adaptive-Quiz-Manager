@@ -18,8 +18,8 @@ if (!isset($_SESSION["RESULT_ID"])) {
     //Array to be inserted into DB
     $data1 = array(
         "user_USERNAME" => $_SESSION["username"],
-        "quiz_QUIZ_ID" => $_SESSION["QUIZ_CURRENT_QUIZ_ID"],
-		"shared_SHARED_QUIZ_ID" => $_SESSION["QUIZ_CONFIRMED"],
+        "quiz_QUIZ_ID" => $_SESSION["quiz_QUIZ_ID"],
+        "shared_SHARED_QUIZ_ID" => $_SESSION["QUIZ_CONFIRMED"],
         "STARTED_AT" => $startDate,
     );
     

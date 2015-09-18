@@ -28,6 +28,12 @@ require_once("includes/config.php");
 // $_POST filter first
 
   $quizID = filter_input(INPUT_POST,'quizid', FILTER_SANITIZE_STRING);  
+  // For insert
+  $_SESSION['quiz_QUIZ_ID'] = $quizID;
+  //For view in quiz-description-view.php
+  $_SESSION['QUIZ_CURRENT_QUIZ_ID'] = $quizID;
+  
+  echo $quizID;
   
     $quizAttempts = false;
     $attemptsReached = false; 
@@ -77,9 +83,7 @@ require_once("includes/config.php");
         $isEnabled = false;
     }
     
-    //Set new QUIZ_ID for the session as the id of selected quiz awaiting confirmation
-    $_SESSION['QUIZ_CURRENT_QUIZ_ID'] = $quizData['QUIZ_ID'];
-
+  
     //Set null value to appropriate terminology for the view file.
     if($quizData['DESCRIPTION'] == null){
         $quiz_description = "No description provided";
