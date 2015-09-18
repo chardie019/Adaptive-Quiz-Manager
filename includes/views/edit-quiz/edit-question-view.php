@@ -25,6 +25,9 @@ $templateLogic->addCustomHeadersStart(); ?>
     .feedback-span {
         color: blue;
     }
+    .float-left {
+        float:left;
+    }
 </style>
 <?php
 $templateLogic->addCustomHeadersEnd();
@@ -55,8 +58,8 @@ $templateLogic->startBody();
         </div>
     <?php } else { //no questions ?>
     <p> There are no questions on this quiz, How about adding some? </p>
-    <p> <a class="mybutton myReturn" href="<?php echo (CONFIG_ROOT_URL . '/edit-quiz/edit-question/add-question.php?quiz=' . $quizIDGet) ?>">
-            Add Questions
+    <p> <a class="mybutton float-left" href="<?php echo (CONFIG_ROOT_URL . '/edit-quiz/edit-question/add-initial-question.php?quiz=' . $quizIDGet) ?>">
+            Add Initial Question
         </a>
     </p>  
     <?php } ?>
