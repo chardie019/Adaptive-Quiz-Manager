@@ -104,6 +104,8 @@ class quizHelper
         } else{
             $result['result'] = true;
         }
+        if (isset($result['imageAltError'])){$result['imageAltError'] = "";}
+        if (isset($result['imageUploadError'])){$result['imageUploadError'] = "";}
         return $result; //retrun the array now
     }
     /**

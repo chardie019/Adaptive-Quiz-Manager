@@ -33,8 +33,8 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING) === "PO
         if (is_uploaded_file($_FILES["questionImageUpload"]["tmp_name"])) { //image is optional
             // If image passed all criteria, attempt to upload
             $targetFileName = basename($_FILES["questionImageUpload"]["name"]);
-            $imageResult = $quizHelper::handleImageUploadValidation($_FILES, $targetFileName, $quiz, $questionAlt);
-            if($imageResult['RESULT'] == false){
+            $imageResult = quizHelper::handleImageUploadValidation($_FILES, $targetFileName, $quizId, $questionAlt);
+            if($imageResult['result'] == false){
                 $error = 1;
                 $imageUploadError = $imageResult['imageUploadError'];
                 $questionAltError = $imageResult['imageAltError'];

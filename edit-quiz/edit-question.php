@@ -74,6 +74,10 @@ switch ($feedbackMessageURL){
         $message = "Question added.";
         $messageClass = "feedback-span";
         break;
+    case "answer-added":
+        $message = "Answer added.";
+        $messageClass = "feedback-span";
+        break;
     case "initial-question-added":
         $message = "Answer added.";
         $messageClass = "feedback-span";

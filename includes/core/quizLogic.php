@@ -156,7 +156,7 @@ class quizLogic
         if ($connId == false){
             return false;
         }
-        if (isset($link)){ //if set and NOT NULL, remove children (but not itself)
+        if (!empty($link)){ //if set and NOT NULL, remove children (but not itself)
             $index = self::prepareRecursiveListQuestionAnswer($dbLogic, $quizId);
             self::removeChildren($dbLogic, $index, $connId, $connId);
             //get the loop conn id and set the loop to it
@@ -240,6 +240,7 @@ class quizLogic
                     $deleteValues = array("ANSWER_ID" => $singleParentId['questionOrAnswerId']);
                     $dbLogic->delete("answer", $deleteValues);
                 }
+                ;
             }
        }
    }

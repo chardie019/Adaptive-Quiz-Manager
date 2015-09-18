@@ -60,8 +60,7 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING) === "PO
         if (!isset($feedbackContent)){$feedbackContent = "";}
         if (!isset($isCorrect)){$isCorrect = "";}
         $dbLogic = new DB();
-        $parentId = quizLogic::returnParentId($dbLogic, $questionId, "question");
-        $returnHtml = quizHelper::prepareTree($dbLogic, $quizId, $parentId, "questions");
+        $returnHtml = quizHelper::prepareTree($dbLogic, $quizId);
         include('change-link-view.php');
         exit; 
     } else if (isset($linkPageBackButton)){
