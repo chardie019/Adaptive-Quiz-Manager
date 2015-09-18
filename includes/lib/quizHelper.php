@@ -42,14 +42,14 @@ class quizHelper
     /**
      * Uploads an image for the quiz question
      * 
-     * @param array $_FILES The file post array
+     * @param array $filesUpload The file post array $_FILES
      * @param string $targetFileName The name of the file being uploaded
      * @param string $quizId The id of the quiz assoicated
      * @return array|boolean false on fail. otherwise ['imageUploadError'] is a message and 
      * ['imageAltError'] is the alt error message
      * ['targetDir'] is the upload directory
      */
-    public static function handleImageUploadValidation($_FILES, $targetFileName, $quizId, $questionAlt) {
+    public static function handleImageUploadValidation($filesUpload, $targetFileName, $quizId, $questionAlt) {
         //Validate Image upload
         //Double \\ is needed at the end of path to cancel out the single \ effect leading into "
         //$target_dir = "C:\xampp\htdocs\aqm\data\quiz-images\\"; 
@@ -57,11 +57,13 @@ class quizHelper
         $result['targetDir'] = $target_dir;
         $target_file = $target_dir . $targetFileName;
         $uploadOk = 1;
+        $noError = 1;
+        $noFileExistError = 1;
         $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
 
         // Check if image file is an actual image or fake image
-        if (createPath($target_dir) && is_uploaded_file($_FILES["questionImageUpload"]["tmp_name"])){
-            $check = getimagesize($_FILES["questionImageUpload"]["tmp_name"]);
+        if (createPath($target_dir) && is_uploaded_file($filesUpload["questionImageUpload"]["tmp_name"])){
+            $check = getimagesize($filesUpload["questionImageUpload"]["tmp_name"]);
             if($check !== false) {
                 $uploadOk = 1;
             } else {
@@ -70,9 +72,10 @@ class quizHelper
             // Check if file already exists inside folders
             if (file_exists($target_file)) {
                 $uploadOk = 0;
+                $noFileExistError = 0;
             }
             // Check file size is smaller than 500kb, can change this later
-            if ($_FILES["questionImageUpload"]["size"] > 5000000) { //5MB
+            if ($filesUpload["questionImageUpload"]["size"] > 5000000) { //5MB
                 $uploadOk = 0;
             }
             // Allow certain image file types only *Stop people uploading other file types e.g. pdf
@@ -83,11 +86,11 @@ class quizHelper
             //only check ALT text if there is an image (which is optional)
             if($questionAlt == " " || $questionAlt == "" || $questionAlt == NULL){
                 $result['imageAltError'] = "Error: Please enter alternative text to the question more accessible.";
-                $uploadOk = 0;
+                $noError = 0;
             }
             //still good
             if ($uploadOk == 1){
-                if (move_uploaded_file($_FILES["questionImageUpload"]["tmp_name"], $target_file)) {
+                if (move_uploaded_file($filesUpload["questionImageUpload"]["tmp_name"], $target_file)) {
                     //uploaded
                 } else { //nope it failed
                     $uploadOk  = 0;
@@ -95,17 +98,25 @@ class quizHelper
             }
         }
         // Check if $uploadOk is set to 0 by an upload error. Exit if true.
-        if ($uploadOk == 0) {
-            $result['imageUploadError'] =  "Error: There was an error with your image upload. Please check the following: \n"
-                    . "- File size is 500kb or less "
-                    . "- File must be in .jpg, .png, .jpeg and .gif file types\n"
-                    . "- The name of your file may be taken. Try renaming the file ";
+        if ($uploadOk == 0 || $noError = 0) {
+            if ($uploadOk == 0) {
+                $result['imageUploadError'] =  "Error: There was an error with your image upload. Please check the following: \n"
+                        . "- File size is 500kb or less "
+                        . "- File must be in .jpg, .png, .jpeg and .gif file types\n"
+                        . "- The name of your file may be taken. Try renaming the file ";
+            } else {
+                $result['imageUploadError'] = "There was another unrelated error, please upload again after fixing it.";
+            }
+            if ($noFileExistError == 1){ //wasnt a files exist error, so delete it
+               unlink($target_file); //delete the file 
+            }
             $result['result'] = false;
         } else{
             $result['result'] = true;
         }
-        if (isset($result['imageAltError'])){$result['imageAltError'] = "";}
-        if (isset($result['imageUploadError'])){$result['imageUploadError'] = "";}
+        if (!isset($result['imageUploadError'])){$result['imageUploadError'] = "";}
+        if (!isset($result['imageAltError'])){$result['imageAltError'] = "";}
+        if (!isset($result['imageUploadError'])){$result['imageUploadError'] = "";}
         return $result; //retrun the array now
     }
     /**
