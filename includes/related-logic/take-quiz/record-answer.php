@@ -53,7 +53,7 @@ $data3 = array(
 $dbLogic->insert($data3, "result_answer");
 
 //Calculates time passed if timed
-if ($_SESSION["QUIZ_TIME_LIMIT"] != 6000) {
+if ($_SESSION["QUIZ_TIME_LIMIT"] != 86000) {
 	$old = $_SESSION['TIME_STARTED'];
 	$new = time();
 	$elapsed = $new - $old;
