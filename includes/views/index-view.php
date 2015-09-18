@@ -11,27 +11,27 @@ $templateLogic->startBody();
 
 
             <div id="buttonborder1">
-                <a class="menu-icons" href="<?php echo (CONFIG_ROOT_URL); ?>/take-quiz" >Take Quiz</a>
+                <a class="menu-icons" href="<?php echo (CONFIG_ROOT_URL); ?>/take-quiz.php" >Take Quiz</a>
             </div>
 
             <div id="buttonborder2">
-                <a class="menu-icons" href="<?php echo (CONFIG_ROOT_URL); ?>/create-quiz" >Create Quiz</a>
+                <a class="menu-icons" href="<?php echo (CONFIG_ROOT_URL); ?>/create-quiz.php" >Create Quiz</a>
             </div>
 
             <div id="buttonborder3">
-                <a class="menu-icons" href="<?php echo(CONFIG_ROOT_URL) ?>/edit-quiz">Edit Quiz</a>
+                <a class="menu-icons" href="<?php echo(CONFIG_ROOT_URL) ?>/edit-quiz.php">Edit Quiz</a>
             </div>
 
             <div id="buttonborder4">
-                <a class="menu-icons" href="<?php echo(CONFIG_ROOT_URL) ?>/stats">Statistics</a>
+                <a class="menu-icons" href="<?php echo(CONFIG_ROOT_URL) ?>/stats.php">Statistics</a>
             </div>
 
             <div id="buttonborder5">
-                <a class="menu-icons" href="<?php echo(CONFIG_ROOT_URL) ?>/about">About AQM</a>
+                <a class="menu-icons" href="<?php echo(CONFIG_ROOT_URL) ?>/about.php">About AQM</a>
             </div>
 
             <div id="buttonborder6">
-                <a class="menu-icons" href="<?php echo(CONFIG_ROOT_URL) ?>/help">Help</a>
+                <a class="menu-icons" href="<?php echo(CONFIG_ROOT_URL) ?>/help.php">Help</a>
             </div>
 
 <?php
