@@ -19,6 +19,7 @@ if (!isset($_SESSION["RESULT_ID"])) {
     $data1 = array(
         "user_USERNAME" => $_SESSION["username"],
         "quiz_QUIZ_ID" => $_SESSION["QUIZ_CURRENT_QUIZ_ID"],
+		"shared_SHARED_QUIZ_ID" => $_SESSION["QUIZ_CONFIRMED"],
         "STARTED_AT" => $startDate,
     );
     
