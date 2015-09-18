@@ -37,7 +37,7 @@ $insertFinish = $dbLogic->updateSetWhere("RESULT", $updateSet, $updateWhere);
         "result_answer.ANSWER" => "ANSWER_ID"
     );
     
-    $quizResults = $dbLogic->selectWithColumns("QUESTION, answer.ANSWER, STARTED_AT, "
+    $quizResults = $dbLogic->selectDistinct("QUESTION, answer.ANSWER, STARTED_AT, "
             . "ANSWERED_AT", "result_answer, question, answer, result", $data, 
             $whereColumn, false); 
 

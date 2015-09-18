@@ -47,6 +47,7 @@ class DB {
     public function selectAndWhereIsNull($columns, $tables, array $whereValuesArray, array $whereNullArray, $singleRow=True) {
         assert(is_string($columns));
         assert(is_bool($singleRow));
+        $tables = strtolower($tables); //lowercase tables
         $where = self::prepareWhereValuesSQL($whereValuesArray); //the values
         $where = self::prepareWhereIsNullColumnsSQL($whereNullArray, $where);
         $sql = "SELECT $columns FROM $tables WHERE $where;";
@@ -65,6 +66,7 @@ class DB {
     public function select($columns, $tables, array $whereValuesArray, $singleRow=True) {
         assert(is_string($columns));
         assert(is_bool($singleRow));
+        $tables = strtolower($tables); //lowercase tables
         $where = self::prepareWhereValuesSQL($whereValuesArray); //the values
         $sql = "SELECT $columns FROM $tables WHERE $where;";
         return $this->runQueryReturnResults($sql, $singleRow, $whereValuesArray);
@@ -85,6 +87,7 @@ class DB {
         assert(is_string($tables));
         assert(is_string($sortColumn));
         assert(is_bool($singleRow));
+        $tables = strtolower($tables); //lowercase tables
         $where = self::prepareWhereValuesSQL($whereValuesArray); //the values
         $sql = "SELECT $columns FROM $tables WHERE $where ORDER BY $sortColumn;";
         return $this->runQueryReturnResults($sql, $singleRow, $whereValuesArray);
@@ -104,6 +107,7 @@ class DB {
         assert(is_string($columns));
         assert(is_string($tables));
         assert(is_bool($singleRow));
+        $tables = strtolower($tables); //lowercase tables
         $where = self::prepareWhereValuesSQL($whereValuesArray); //the values
         $where = self::prepareWhereColumnsSQL($whereColumnsArray, $where); //the columns
         $sql = "SELECT $columns FROM $tables WHERE $where;";
@@ -127,6 +131,7 @@ class DB {
         assert(is_string($tables));
         assert(is_string($groupColumn));
         assert(is_bool($singleRow));
+        $tables = strtolower($tables); //lowercase tables
         $where = self::prepareWhereValuesSQL($whereValuesArray); //the values
         $where = self::prepareWhereColumnsSQL($whereColumnsArray, $where); //the columns
         $sql = "SELECT $columns FROM $tables WHERE $where GROUP BY $groupColumn;";
@@ -150,6 +155,7 @@ class DB {
         assert(is_string($tables));
         assert(is_string($sortColumn));
         assert(is_bool($singleRow));
+        $tables = strtolower($tables); //lowercase tables
         $where = self::prepareWhereValuesSQL($whereValuesArray); //the values
         $where = self::prepareWhereColumnsSQL($whereColumnsArray, $where); //the columns
         $sql = "SELECT $columns FROM $tables WHERE $where ORDER BY $sortColumn;";
@@ -175,6 +181,7 @@ class DB {
         assert(is_string($tables));
         assert(is_string($sortColumn));
         assert(is_bool($singleRow));
+        $tables = strtolower($tables); //lowercase tables
         $where = self::prepareWhereValuesSQL($whereValuesArray); //the values
         $where = self::prepareWhereColumnsSQL($whereColumnsArray, $where); //the columns
         $where .= " OR (";
@@ -203,6 +210,7 @@ class DB {
         assert(is_string($columns));
         assert(is_string($tables));
         assert(is_bool($singleRow));
+        $tables = strtolower($tables); //lowercase tables
         $where = self::prepareWhereValuesSQL($whereValuesArray); //the values
         $where = self::prepareWhereColumnsSQL($whereColumnsArray, $where); //the columns
         $where .= " OR (";
@@ -230,6 +238,7 @@ class DB {
         assert(is_string($tables));
         assert(is_string($notNullColumn));       
         assert(is_bool($singleRow));
+        $tables = strtolower($tables); //lowercase tables
         $where = self::prepareWhereValuesSQL($whereValuesArray); //the values
         $where = self::prepareWhereColumnsSQL($whereColumnsArray, $where); //the columns
         $sql = "SELECT $columns FROM $tables WHERE $where AND $notNullColumn;";
@@ -255,6 +264,7 @@ class DB {
         assert(is_string($notNullColumn));
         assert(is_string($groupColumn));
         assert(is_bool($singleRow));
+        $tables = strtolower($tables); //lowercase tables
         $where = self::prepareWhereValuesSQL($whereValuesArray); //the values
         $where = self::prepareWhereColumnsSQL($whereColumnsArray, $where); //the columns
         $sql = "SELECT $columns FROM $tables WHERE $where AND $notNullColumn GROUP BY $groupColumn;";
@@ -276,6 +286,7 @@ class DB {
         assert(is_string($tables));
         assert(is_string($groupColumn));
         assert(is_bool($singleRow));
+        $tables = strtolower($tables); //lowercase tables
         $where = self::prepareWhereValuesSQL($whereValuesArray); //the values
         $sql = "SELECT $columns FROM $tables WHERE $where GROUP BY $groupColumn;";
         return $this->runQueryReturnResults($sql, $singleRow, $whereValuesArray);
@@ -299,6 +310,7 @@ class DB {
         assert(is_string($tables));
         assert(is_string($groupColumn));
         assert(is_bool($singleRow));
+        $tables = strtolower($tables); //lowercase tables
         $where = self::prepareWhereValuesSQL($whereValuesArray); //the values
         $where = self::prepareWhereValuesSQLLess($whereDateAfter, $where); //the values
         $where = self::prepareWhereValuesSQLGreaterIsNull($whereDateBefore, $where);
@@ -332,6 +344,7 @@ class DB {
         assert(is_string($tables));
         assert(is_string($groupColumn));
         assert(is_bool($singleRow));
+        $tables = strtolower($tables); //lowercase tables
         $where = self::prepareWhereValuesSQLOr($whereOrValuesArray); //the values
         $where = self::prepareWhereValuesSQL($whereValuesArray, $where);
         $where = self::prepareWhereValuesSQLLess($whereDateAfter, $where); //the values
@@ -359,6 +372,7 @@ class DB {
         assert(is_string($columns));
         assert(is_string($tables));
         assert(is_bool($singleRow));
+        $tables = strtolower($tables); //lowercase tables
         $where = self::prepareWhereValuesSQL($whereValuesArray); //the values
         $where = self::prepareWhereColumnsSQL($whereColumnsArray, $where); //the columns
         $where .= " OR (";
@@ -378,6 +392,7 @@ class DB {
      */
     public function selectAll($tables) {
         assert(is_string($tables));
+        $tables = strtolower($tables); //lowercase tables
         $sql = "SELECT * FROM $tables;";
         return $this->runQueryReturnResults($sql);
     }
@@ -393,6 +408,7 @@ class DB {
     public function selectAllOrder($tables, $sortColumn) {
         assert(is_string($tables));
         assert(is_string($sortColumn));
+        $tables = strtolower($tables); //lowercase tables
         $sql = "SELECT * FROM $tables ORDER BY $sortColumn;";
         return $this->runQueryReturnResults($sql, false);
     }
@@ -405,6 +421,7 @@ class DB {
      */
     public function insert(array $insertArray, $tables) {
         assert(is_string($tables));
+        $tables = strtolower($tables); //lowercase tables
         $columns = self::prepareInsertColumns($insertArray);
         $values = self::prepareInsertValues($insertArray);
         $sql = "insert into $tables ($columns) values ($values);";
@@ -427,6 +444,7 @@ class DB {
         assert(is_string($insertTables));
         assert(is_string($insertColumns));
         assert(is_string($selectTables));
+        $tables = strtolower($tables); //lowercase tables
         $where = self::prepareWhereValuesSQL($whereValuesArray); //the values
         $selectColumns = self::prepareInsertValues($insertValuesArray, $selectColumns);
         $sql = "INSERT INTO $insertTables ($insertColumns) ".
@@ -444,6 +462,7 @@ class DB {
      */
     public function delete($tables, $deleteValues) {
         /* @var $where string */
+        $tables = strtolower($tables); //lowercase tables
         $where = self::prepareWhereValuesSQL($deleteValues); //the values        
         $sql = "delete from $tables where $where;";
         $this->runQuery($sql, $deleteValues);
@@ -464,6 +483,7 @@ class DB {
         assert(is_string($columns));
         assert(is_string($tables));
         assert(is_bool($singleRow));
+        $tables = strtolower($tables); //lowercase tables
         $where = self::prepareWhereValuesSQL($whereValuesArray); //the values
         $where = self::prepareWhereColumnsSQL($whereColumnsArray, $where); //the columns
         $sql = "SELECT DISTINCT $columns FROM $tables WHERE $where;";
@@ -486,6 +506,7 @@ class DB {
         assert(is_string($tables));
         assert(is_string($sortColumn));
         assert(is_bool($singleRow));
+        $tables = strtolower($tables); //lowercase tables
         $where = self::prepareWhereValuesSQL($whereValuesArray); //the values
         $where = self::prepareWhereColumnsSQL($whereColumnsArray, $where); //the columns
         $stmt = self::$connection->prepare("SELECT DISTINCT $columns FROM $tables WHERE " . $where . "ORDER BY $sortColumn;") or die('Problem preparing query');
@@ -513,6 +534,7 @@ class DB {
         assert(is_string($joinTable));
         assert(is_string($joinTable2));
         assert(is_bool($singleRow));
+        $tables = strtolower($tables); //lowercase tables
         $where = self::prepareWhereValuesSQL($whereData);
         $joinWhere = self::prepareWhereColumnsSQL($tableArray);
         $joinWhere2 = self::prepareWhereColumnsSQL($tableArray2);
@@ -544,6 +566,7 @@ class DB {
         assert(is_string($joinTable2));
         assert(is_string($sortColumn));
         assert(is_bool($singleRow));
+        $tables = strtolower($tables); //lowercase tables
         $where = self::prepareWhereValuesSQL($whereData);
         $joinWhere = self::prepareWhereColumnsSQL($tableArray);
         $joinWhere2 = self::prepareWhereColumnsSQL($tableArray2);
@@ -572,6 +595,7 @@ class DB {
         assert(is_string($joinTable));
         assert(is_string($groupColumn));
         assert(is_bool($singleRow));
+        $tables = strtolower($tables); //lowercase tables
         $where = self::prepareWhereValuesSQLOr($whereData);
         $joinWhere = self::prepareWhereColumnsSQL($tableArray);
         $sql = "SELECT $columns FROM $tables " . 
@@ -590,6 +614,7 @@ class DB {
      */
     public function updateSetWhereColumns($tables, array $setValuesArray,  array $whereValuesArray, array $whereColumnsArray) {
         assert(is_string($tables));
+        $tables = strtolower($tables); //lowercase tables
         $setColumns = self:: prepareSetValuesSQL($setValuesArray); //the columns
         $where = self::prepareWhereValuesSQL($whereValuesArray); //the values
         $where = self::prepareWhereColumnsSQL($whereColumnsArray, $where); //the columns
@@ -609,6 +634,7 @@ class DB {
      */
     public function updateSetButSetNotEscaped($tables, array $setValuesArray, array $whereValuesArray) {
         assert(is_string($tables));
+        $tables = strtolower($tables); //lowercase tables
         $setColumns = self::prepareSetValuesSQLNoBinding($setValuesArray); //the columns
         $where = self::prepareWhereValuesSQL($whereValuesArray); //the values
         $sql = "UPDATE $tables SET $setColumns WHERE $where;";
@@ -625,6 +651,7 @@ class DB {
      */
     public function updateSetWhere($tables, array $setValuesArray,  array $whereValuesArray) {
         assert(is_string($tables));
+        $tables = strtolower($tables); //lowercase tables
         $setColumns = self:: prepareSetValuesSQL($setValuesArray); //the columns
         $where = self::prepareWhereValuesSQL($whereValuesArray); //the values
         $sql = "UPDATE $tables SET $setColumns WHERE $where;";
