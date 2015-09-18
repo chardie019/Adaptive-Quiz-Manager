@@ -5,6 +5,7 @@ $templateLogic->addCSS(STYLES_LOCATION . "/take-quiz-style.css");
 $templateLogic->setTitle($quizData['QUIZ_NAME']);
 $templateLogic->setHeading("Take Quiz Confirmation");
 $templateLogic->startBody();
+
 ?>
 
  <div id="content-centre">
@@ -32,6 +33,7 @@ $templateLogic->startBody();
 <!-- Quiz confirmed, user and form are sent to /take-quiz/QUIZ_CURRENT_QUIZ_ID, which is question 1 of quiz-->
 
     <?php 
+    echo $isEnabled;
     if($attemptsReached == false && $isEnabled == true){
         echo "<form action=\"#\" method=\"post\">";
         echo "<input type=\"hidden\" name=\"confirmQuizId\" value=\"" . $_SESSION['QUIZ_CURRENT_QUIZ_ID'] . "\" />"; 

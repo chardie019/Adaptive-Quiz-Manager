@@ -76,6 +76,7 @@ require_once("includes/config.php");
     
     if($quizData['IS_ENABLED'] == '0'){
         $isEnabled = false;
+        echo "QUIZ IS DISABLED FALSE";
     }
     
   

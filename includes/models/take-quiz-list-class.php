@@ -34,8 +34,8 @@ class takeQuizListLogic extends takeQuizLogic {
             "DATE_CLOSED" => $dateCheck
         );
         return $dbLogic->selectOrderDescWithSelectWhereOrWithDateGroupBy(
-            "SHARED_QUIZ_ID, QUIZ_NAME, DESCRIPTION", 
-            "SHARED_QUIZ_ID, QUIZ_NAME, DESCRIPTION, IS_PUBLIC, DATE_CLOSED, DATE_OPEN, IS_ENABLED",
+            "SHARED_QUIZ_ID, QUIZ_ID, QUIZ_NAME, DESCRIPTION", 
+            "SHARED_QUIZ_ID, QUIZ_ID, QUIZ_NAME, DESCRIPTION, IS_PUBLIC, DATE_CLOSED, DATE_OPEN, IS_ENABLED",
             "quiz", "VERSION",
             "taker", $joinWhere, $whereValuesOr, $whereValues, $whereDateAfter, $whereDateBefore, 'SHARED_QUIZ_ID',
             false
