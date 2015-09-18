@@ -277,7 +277,6 @@ $creationDatetime = date('Y-m-d H:i:s');
 
 
                     $dataArray = array(
-                        "QUIZ_ID" => "",
                         "SHARED_QUIZ_ID" => $quizInfo['SHARED_QUIZ_ID'],
                         "VERSION" => $quizInfo['VERSION'] +=1,
                         "QUIZ_NAME" => $quizName,
@@ -290,7 +289,8 @@ $creationDatetime = date('Y-m-d H:i:s');
                         "DATE_CLOSED" => $dateClose,
                         "INTERNAL_DESCRIPTION" => "",
                         "IMAGE" => $quizImageUpload,
-                        "IMAGE_ALT" => $quizImageText
+                        "IMAGE_ALT" => $quizImageText,
+						"IS_ENABLED" => 0
 
                         );
                     $quizUpdated = "Your quiz has been successfully updated.";
