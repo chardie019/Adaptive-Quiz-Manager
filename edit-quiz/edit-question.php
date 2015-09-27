@@ -6,7 +6,9 @@
 require_once("../includes/config.php");
 // end of php file inclusion
 
+//real quiz id
 $quizIDGet = quizLogic::getQuizIdFromUrlElseReturnToEditQuiz();
+$quizUrl = "?quiz=".quizLogic::returnSharedQuizID($quizIDGet);
 $selectionError = "";
 
 if ($_SERVER['REQUEST_METHOD'] === "POST") { //pastt the appropiate page
@@ -17,7 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //pastt the appropiate page
     $addAnswerButtonPost = filter_input (INPUT_POST, "addAnswer");
     $removeButtonPost = filter_input (INPUT_POST, "remove");
 
-    $quizUrl = "?quiz=$quizIDGet";
     if (isset($inspectButtonPost)) {
         if (isset($answerPost)){    //inspect a answer
             header('Location: ' . CONFIG_ROOT_URL . "/edit-quiz/edit-question/inspect.php$quizUrl&answer=$answerPost");

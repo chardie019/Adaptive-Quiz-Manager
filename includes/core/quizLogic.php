@@ -78,7 +78,7 @@ class quizLogic
     /**
      * Removes a image from a question and it's file
      * 
-     * @param string $quizId  The quiz associated 
+     * @param string $sharedQuizId  The quiz associated -The real quiz ID
      * @param string $questionId The question ID associated
      * @return void
      */
@@ -95,7 +95,7 @@ class quizLogic
         $setColumnsArray = array("IMAGE" => NULL);
         $dbLogic->updateSetWhere("question", $setColumnsArray, $whereValuesArray);
         //delete current image file
-        unlink(quizHelper::returnRealImageFilePath($quizIDGet, $result['IMAGE']));
+        unlink(quizHelper::returnRealImageFilePath($quizId, $result['IMAGE']));
     }
     /**
      * Updates a question in the database
@@ -153,19 +153,21 @@ class quizLogic
         $dbLogic = new DB();
          //check the question is on the same quiz
         $connId = self::checkAnswerBelongsToQuizReturnId($dbLogic, $quizId, $answerId);
+        
         if ($connId == false){
             return false;
         }
         if (!empty($link)){ //if set and NOT NULL, remove children (but not itself)
             $index = self::prepareRecursiveListQuestionAnswer($dbLogic, $quizId);
             self::removeChildren($dbLogic, $index, $connId, $connId);
-            //get the loop conn id and set the loop to it
-            $LoopConnId = self::checkQuestionBelongsToQuizReturnId($dbLogic, $quizId, $link);
-            if ($LoopConnId ==false) {$LoopConnId = NULL;}
-            $setValuesArray = array("LOOP_CHILD_ID" => $LoopConnId);
-            $whereValuesArray = array("CONNECTION_ID" => $connId);
-            $dbLogic->updateSetWhere("question_answer", $setValuesArray, $whereValuesArray);            
         }
+        //get the loop conn id and set the loop to it Or NULL
+        $LoopConnId = self::checkQuestionBelongsToQuizReturnId($dbLogic, $quizId, $link);
+        if ($LoopConnId ==false) {$LoopConnId = NULL;}
+        $setValuesArray = array("LOOP_CHILD_ID" => $LoopConnId);
+        $whereValuesArray = array("CONNECTION_ID" => $connId);
+        $dbLogic->updateSetWhere("question_answer", $setValuesArray, $whereValuesArray); 
+            
         $whereValuesArray = array("ANSWER_ID" => $answerId);
         //prepare update arrays
         $setColumnsArray = array(
@@ -605,7 +607,7 @@ class quizLogic
      * @return string The Real Quiz ID
      */
     public static function getQuizIdFromUrlElseReturnToEditQuiz() {
-        $quizIDGet = quizLogic::returnRealQuizID(filter_input(INPUT_GET, "quiz"));
+        $quizIDGet = (string)quizLogic::returnRealQuizID(filter_input(INPUT_GET, "quiz"));
         if(is_null($quizIDGet)){
             //back to edit quiz
             header('Location: ' . CONFIG_ROOT_URL . '/edit-quiz.php?no-quiz-selected=yes');
@@ -644,7 +646,7 @@ class quizLogic
      * @return string Returns shared quiz ID
      */
     static public function returnSharedQuizID($quizId) {
-        assert(is_string($quizId));
+        assert(is_string($quizId) || is_int($quizId));
         $dbLogic = new DB();
         
         //return the real quiz ID
@@ -675,31 +677,149 @@ class quizLogic
         }
         
     }
+    /**
+     * Sets quiz be consistent (no validation, just changes db value)
+     * 
+     * @param DB $dbLogic Reuse current connection to dataabse
+     * @param type $quizId The real quiz ID to set to be consistent
+     * return void
+     */
+    public static function setQuizToConsistentState(DB $dbLogic, $quizId){
+        assert(!is_null($quizId));
+        $setValuesArray = array("CONSISTENT_STATE" => "1"); //one is consistent (true)
+        $whereValuesArray = array("QUIZ_ID" => $quizId);
+        $dbLogic->updateSetWhere("quiz", $setValuesArray, $whereValuesArray);
+    }
     
     /**
-     * [not implemented yet] Clones all data associated with a quiz. new quiz shares same shared quiz id
+     * Clones all data associated with a quiz if necessary
      *
-     * @param string $oldQuizId The the quiz to be cloned
-     * @return string The new quiz's id
+     * As usual, a new quiz shares same shared quiz id
+     * 
+     * @param string $oldQuizId The the quiz to be cloned (real quiz ID)
+     * @return string The new quiz's id or not needed, the existing quiz id sent to it
      */
-    static public function cloneQuiz($oldQuizId) {
-        die ("cloneQuiz not working yet");
-        assert(is_string($oldQuizId));
+    static public function maybeCloneQuiz($oldQuizId) {
+        /*die ("cloneQuiz not working yet"); */
+        assert(!is_null($oldQuizId));
         $dbLogic = new DB();
-        
+        $whereValuesArray = array("QUIZ_ID" => $oldQuizId);
+        $consistentArray = $dbLogic->select("CONSISTENT_STATE", "quiz", $whereValuesArray);
+        if ($consistentArray['CONSISTENT_STATE'] == 0){ //if already cloned (1 is consistent, zero is NOT consistent
+            return $oldQuizId; // bail, no cloning needed
+        }
+        //else if not cloned yet        
         //get the old quiz's data
         $where = array("QUIZ_ID" => $oldQuizId);
-        $result = $dbLogic->select("QUIZ_ID", "quiz", $where);
+        $quizArray = $dbLogic->select(
+                /* All colums except QUIZ_ID & increase Version */
+                "SHARED_QUIZ_ID, VERSION, QUIZ_NAME, DESCRIPTION, IS_PUBLIC, NO_OF_ATTEMPTS, TIME_LIMIT, IS_SAVABLE, DATE_OPEN, DATE_CLOSED, INTERNAL_DESCRIPTION, IMAGE, IMAGE_ALT, IS_ENABLED", 
+                "quiz", $where);
         //build an array for re-insertion
-        $newQuizData = array();
-        foreach ($result as $column => $value){
-            //TOD date
-            if ($column != "QUIZ_ID"){ //don't include the primary key
-                $newQuizData[$column] = $value;
+        $newQuizArray = array();
+        foreach ($quizArray as $column => $value){
+            if ($column === "VERSION"){
+                $value++; //increase the version
+            } else if ($column === "CONSISTENT_STATE"){
+                $value = 1; //zero is NOT consistent
+            }
+            $newQuizArray[$column] = $value; //apply change to the array
+        }
+        //insert quiz
+        $newQuizID = $dbLogic->insert($newQuizArray, "quiz");
+        //create a list of the columns to be built
+        $questonAnswerColums = array("question_QUESTION_ID", "answer_ANSWER_ID", "PARENT_ID", "LOOP_CHILD_ID", "TYPE", "quiz_QUIZ_ID", "DEPTH"); //no primary key connection_id
+        $questionColums = array("CONTENT", "QUESTION", "IMAGE", "IMAGE_ALT"); //no primary key question id
+        $answerColums = array("ANSWER", "FEEDBACK", "IS_CORRECT"); //no primary key answer_id
+        $questionPrimaryKey = "QUESTION_ID";
+        $questionLinkedPrimaryKey = "question_QUESTION_ID";
+        $answerPrimaryKey = "ANSWER_ID";
+        $answerLinkedPrimaryKey = "answer_ANSWER_ID";
+        //pull out all question and answer
+        $where = array("quiz_QUIZ_ID" => $oldQuizId);
+        $jointable = array($questionPrimaryKey => "question_QUESTION_ID");
+        $jointable2 = array($answerPrimaryKey => "answer_ANSWER_ID");
+        $joinedQuestionAnswerArray = $dbLogic->selectFullOuterJoin(
+                /* All colums - connection needed so we can calculate the new parent ids */
+                "question_QUESTION_ID, answer_ANSWER_ID, CONNECTION_ID, PARENT_ID, LOOP_CHILD_ID, TYPE, quiz_QUIZ_ID, DEPTH, " .
+                "QUESTION_ID, CONTENT, QUESTION, IMAGE, IMAGE_ALT, " . 
+                "ANSWER_ID, ANSWER, FEEDBACK, IS_CORRECT", 
+                "question_answer", $where, "question", $jointable, "answer", $jointable2, false);
+        $newQuestionAnswerArray = array();
+        $newQuestionArray = array();
+        $newAnswerArray = array();
+        
+        $i = 0;
+        foreach ($joinedQuestionAnswerArray as $arrayRow){
+            if (isset($arrayRow[$questionPrimaryKey])) {
+                $addToOtherTable = "question";
+            } else { //isset($value[$answerPrimaryKey])
+                $addToOtherTable = "answer";
+            }
+            foreach ($arrayRow as $column => $value2){
+                //make question_answer records
+                if ($column === "quiz_QUIZ_ID"){ //change the quiz id for question answers
+                    $newQuestionAnswerArray[$i][$column] = $newQuizID;
+                } else if (in_array ($column, $questonAnswerColums)){ //don't include the primary key, clone everything else (question answer data)
+                    $newQuestionAnswerArray[$i][$column] = $value2; 
+                }
+                //questions
+                if ($addToOtherTable == "question" && in_array($column, $questionColums)){
+                    $newQuestionArray[$i][$column] = $value2;
+                // answers 
+                } else if ($addToOtherTable == "answer" && in_array($column, $answerColums)){ 
+                    $newAnswerArray[$i][$column] = $value2;
+                }
+            }
+            $i++;
+        }
+        //insert questions 
+        $questionIdsArray = array();
+        foreach ($newQuestionArray as $value){
+            $questionIdsArray[] = $dbLogic->insert($value, "question"); //insert and build array of auto-increment ids
+        }
+        //insert answers
+        $answerIdsArray = array();
+        foreach ($newAnswerArray as $value){
+            $answerIdsArray[] = $dbLogic->insert($value, "answer"); //insert and build array of auto-increment ids
+        }
+        //fix question & answer Ids (edit $newQuestionAnswerArray)
+        $qi = 0;
+        $ai= 0;
+        foreach ($newQuestionAnswerArray as $key => $arrayRow) {
+            if (isset($arrayRow[$questionLinkedPrimaryKey])){
+                //var_dump($newQuestionAnswerArray[$key][$questionLinkedPrimaryKey]);
+                //var_dump($newQuestionAnswerArray[0]);
+                $newQuestionAnswerArray[$key][$questionLinkedPrimaryKey] = $questionIdsArray[$qi]; //copy over the correct value - its in the same place
+                $qi++;
+            } else {//answerlinkedid
+                $newQuestionAnswerArray[$key][$answerLinkedPrimaryKey] = $answerIdsArray[$ai];
+                $ai++;
             }
         }
-        //re-insert it now, except the primary key
-        $newQuizID = $dbLogic->insert($newQuizData, "quiz");
+        //insert the question_answer data (PS: questiona nd answer ids are already fixed in the array)
+        $newQuestionAnswerIds = array();
+        foreach ($newQuestionAnswerArray as $column => $arrayRow) {
+            $newQuestionAnswerIds[] = $dbLogic->insert($arrayRow, "question_answer");
+        }
+        //fix parent ids (in the database now)
+        //using $joinedQuestionAnswerArray has it has the connection ids
+        $i = 0;
+        foreach ($joinedQuestionAnswerArray as $arrayRow) {
+            //parent id
+            self::updateQuestionAnswerTableColumn($dbLogic, $arrayRow, $i, $joinedQuestionAnswerArray, $newQuestionAnswerIds, "PARENT_ID");
+            //loop child id
+            self::updateQuestionAnswerTableColumn($dbLogic, $arrayRow, $i, $joinedQuestionAnswerArray, $newQuestionAnswerIds, "LOOP_CHILD_ID");
+            $i++;
+        }
+        /*
+        // NOTE: this are is Not used due to keyword not being implemented yet (or ever)
+         * Also not tested all, purely working notes
+        
+        
+        //insertion
+        //quiz
+
         //for each table DIRECTLY relating to quizes, duplicatite it now
         //$tableArray = array('question_answer', 'quiz_keyword');
         $where = array("quiz_QUIZ_ID" => $oldQuizId);
@@ -712,20 +832,40 @@ class quizLogic
         $results = $dbLogic->select("*", 'quiz_keyword', $where, false);
         $results['quiz_QUIZ_ID'] = $newQuizID;
         $dbLogic->insert($results, "quiz_keyword");
-        
-        /*
+
         //find the indirect ones
         question
         answer
         answer_keyword
         question_keyword
         */
-        
-        
-        
-        
-        
         return $newQuizID;
     }
+    /**
+     * Searches an array row and array matrix to and updates the apprioate column in the database
+     * 
+     * @param DB $dbLogic reuse the current connection to teh database
+     * @param array $arrayRow the current array of the foreach loop this fuction is in
+     * @param integer $i the cuurent iteration of the foreach loop this function is inside
+     * @param array $joinedQuestionAnswerArray the array matrix to lookup
+     * @param array $newQuestionAnswerIds the Connection to used in the where cause in update databse
+     * @param type $column the column to loopkup and update
+     */
+    private static function updateQuestionAnswerTableColumn(DB $dbLogic, array $arrayRow, $i, 
+            array $joinedQuestionAnswerArray, array $newQuestionAnswerIds, $column){
+        if (!is_null($arrayRow[$column])){ //do NOT update the NULL value
+                $position = 0;
+                foreach ($joinedQuestionAnswerArray as $conIdArrayRow){
+                    //fix parent id here
+                    if ($conIdArrayRow['CONNECTION_ID'] == $arrayRow[$column]){
+                        //note posistion
+                        $setValuesArray = array($column => $newQuestionAnswerIds[$position]);
+                        $whereValuesArray = array("CONNECTION_ID" => $newQuestionAnswerIds[$i]);
+                        $dbLogic->updateSetWhere("question_answer", $setValuesArray, $whereValuesArray);
+                        break; //break the inside for loop (the outside one keep going) don't waste time looking or something that doesn't exist
+                    }
+                    $position++; 
+                }  
+            }
+    }
 }
-?>

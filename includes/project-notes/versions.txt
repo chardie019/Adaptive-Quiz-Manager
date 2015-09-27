@@ -1,3 +1,11 @@
+###Version 5.6.4.6 - 27/09/2015 - Clone Quiz (not tested)
+=joshua
+make quiz detect changes and clone on(before change)
+edited edit details to update instead instert
+added db column "CONSISTENT_STATE" to track cloning
+added css greyedOut due inconsistent isDisabled styling
+ensured quiz images are stored in their shared quiz locations
+
 ###Version 5.6.4.6 - 19/09/2015 - tables to lowercase + distinct on quiz-description
 =joshua
 tables to lowercase in dbLogic 

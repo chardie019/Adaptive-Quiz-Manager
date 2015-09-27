@@ -244,7 +244,33 @@ class DB {
         $sql = "SELECT $columns FROM $tables WHERE $where AND $notNullColumn;";
         return $this->runQueryReturnResults($sql, $singleRow, $whereValuesArray);
     }
-    
+    /**
+     * Runs a select query like: SELECT * FROM question_answer WHERE CONNECTION_ID NOT IN 
+     * (SELECT PARENT_ID FROM question_answer WHERE PARENT_ID IS NOT NULL) 
+     * AND TYPE = "answer" AND LOOP_CHILD_ID IS NULL
+     * 
+     * @param string  $columns The columns to be selected in the SQL query. In the form: "xx, yyy, max(zzz) etc"
+     * @param string $table The tables to be selected by the SQL query. in the form of "xx, yyy, zzz etc"
+     * @param string $whereColumn The column where it's values are not found in the subquery
+     * @param string $isNotInColumn The name of the column which results are only returned for if the value is not null
+     * @param array $whereValuesArray  The input for the where clause. form $column => $value
+     * @param string $isNotNullColumn the last where col is not NULL at the end of the query
+     * @param boolean $singleRow return one row or many? true is the default (single row)
+     * @return array The results, eg result[15]['column'] or result['column']
+     */  
+    public function selectWithSelectWhereColumnsIsNotinAnotherColumn($columns, $table, $whereColumn, 
+         $isNotInColumn, array $whereValuesArray, $isNullColumn, $singleRow=True) {
+        assert(is_string($columns));
+        assert(is_string($table));
+        assert(is_string($isNotInColumn));       
+        assert(is_bool($singleRow));
+        $where = "$whereColumn NOT IN (SELECT $isNotInColumn FROM $table WHERE $isNotInColumn IS NOT NULL)";
+        $where = self::prepareWhereValuesSQL($whereValuesArray, $where); //the values
+        $where .= " AND $isNullColumn IS NULL";
+        $table = strtolower($table); //lowercase tables
+        $sql = "SELECT $columns FROM $table WHERE $where;";
+        return $this->runQueryReturnResults($sql, $singleRow, $whereValuesArray);
+    }
     /**
      * Runs a select query like: "SELECT $column FROM $table WHERE $whereValues AND $whereColumns AND $notNullColumn IS NOT NULL GROUP BY $sortColumn"
      * 

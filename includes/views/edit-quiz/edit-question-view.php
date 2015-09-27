@@ -33,12 +33,12 @@ $templateLogic->addCustomHeadersStart(); ?>
 $templateLogic->addCustomHeadersEnd();
 $templateLogic->startBody();
 ?>
-<form  method="post" action="<?php echo htmlentities($_SERVER['PHP_SELF']) . '?quiz=' . $quizIDGet; ?>">
+<form  method="post" action="<?php echo htmlentities($_SERVER['PHP_SELF']) . $quizUrl; ?>">
     
     <?php if($displayMessage == "initalQuestion"){ ?>
     <div class="message">
         <span class="inputError">No Answer was selected, did you mean to add the first question? <br />
-        <a class="mybutton" href="<?php echo CONFIG_ROOT_URL . '/edit-quiz/edit-question/add-initial-question.php?quiz=' . $quizIDGet ?>">Add Initial Question</a>
+        <a class="mybutton" href="<?php echo CONFIG_ROOT_URL . '/edit-quiz/edit-question/add-initial-question.php'.$quizUrl ?>">Add Initial Question</a>
         </span>
     </div>
     <?php } //end of display question ?>
@@ -58,7 +58,7 @@ $templateLogic->startBody();
         </div>
     <?php } else { //no questions ?>
     <p> There are no questions on this quiz, How about adding some? </p>
-    <p> <a class="mybutton float-left" href="<?php echo (CONFIG_ROOT_URL . '/edit-quiz/edit-question/add-initial-question.php?quiz=' . $quizIDGet) ?>">
+    <p> <a class="mybutton float-left" href="<?php echo (CONFIG_ROOT_URL . '/edit-quiz/edit-question/add-initial-question.php'.$quizUrl) ?>">
             Add Initial Question
         </a>
     </p>  

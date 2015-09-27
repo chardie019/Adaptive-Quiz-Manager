@@ -5,14 +5,11 @@
 require_once("../../includes/config.php");
 // end of php file inclusion
 
-$quizIdGet = quizLogic::getQuizIdFromUrlElseReturnToEditQuiz();
+$quizId = quizLogic::getQuizIdFromUrlElseReturnToEditQuiz();
 
 
 $answerIdGet = filter_input (INPUT_GET, "answer");
 $questionIdGet = filter_input (INPUT_GET, "question");
-
-//after validation
-$quizId = $quizIdGet;
 
 $type = "";
 if (isset($answerIdGet)){
@@ -66,12 +63,12 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //pastt the appropiate page
         }
         if ($error == 0){
             if ($questionKeepImage == "0"){
-                quizLogic::removeImagefromQuestion($quizIdGet, $id);
+                quizLogic::removeImagefromQuestion($quizId, $id);
             } else {
                 if (is_uploaded_file($_FILES["questionImageUpload"]["tmp_name"])) { //image is optional
                     // If image passed all criteria, attempt to upload
                     $targetFileName = basename($_FILES["questionImageUpload"]["name"]);
-                    $imageResult = quizHelper::handleImageUploadValidation($_FILES, $targetFileName, $quizIdGet, $questionAlt);
+                    $imageResult = quizHelper::handleImageUploadValidation($_FILES, $targetFileName, $quizId, $questionAlt);
                     if($imageResult['result'] == false){
                         $error = 1;
                         $questionImageError = $imageResult['imageUploadError'];
@@ -82,12 +79,12 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //pastt the appropiate page
             if ($error == 0) {//if still all good
                 if (is_uploaded_file($_FILES["questionImageUpload"]["tmp_name"])) {
                     //don't update the image
-                    quizLogic::updateQuestion($quizIdGet, $questionIdGet, $questionTitle, $questionContent, $questionAlt);
+                    quizLogic::updateQuestion($quizId, $questionIdGet, $questionTitle, $questionContent, $questionAlt);
                 } else {
-                    quizLogic::updateQuestion($quizIdGet, $questionIdGet, $questionTitle, $questionContent, $questionAlt, $targetFileName);
+                    quizLogic::updateQuestion($quizId, $questionIdGet, $questionTitle, $questionContent, $questionAlt, $targetFileName);
                 }
                 //show the new question added
-                header('Location: '. CONFIG_ROOT_URL . '/edit-quiz/edit-question.php?quiz='.quizLogic::returnSharedQuizID($quizIdGet)."&feedback=question-updated");
+                header('Location: '. CONFIG_ROOT_URL . '/edit-quiz/edit-question.php?quiz='.quizLogic::returnSharedQuizID($quizId)."&feedback=question-updated");
                 exit();
             }
         }
@@ -108,9 +105,10 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //pastt the appropiate page
             $error = 1;
         }
         if ($error == 0){ //no error
-            quizLogic::updateAnswer($quizIdGet, $id, $answerContent, $feedbackContent, $isCorrect, $link);
+            $quizId = quizLogic::maybeCloneQuiz($quizId);
+            quizLogic::updateAnswer($quizId, $id, $answerContent, $feedbackContent, $isCorrect, $link);
             //show the updated answer
-            header('Location: '. CONFIG_ROOT_URL . '/edit-quiz/edit-question.php?quiz='.quizLogic::returnSharedQuizID($quizIdGet)."&feedback=answer-updated");
+            header('Location: '. CONFIG_ROOT_URL . '/edit-quiz/edit-question.php?quiz='.quizLogic::returnSharedQuizID($quizId)."&feedback=answer-updated");
             exit();
         }
     } else if (isset($linkPageButton)){
@@ -137,7 +135,7 @@ $result = quizLogic::returnQuestionOrAnswerData($id , $type);
 //html
 if ($type == "answer"){
     $parentId = quizLogic::returnParentId($dbLogic, $id, "answer");
-    $returnHtml = quizHelper::prepareTree($dbLogic, $quizIdGet, $parentId, "none");
+    $returnHtml = quizHelper::prepareTree($dbLogic, $quizId, $parentId, "none");
     //initalies strings;
     if (!isset($answerContentError)){$answerContentError = "";}
     if (!isset($feedbackContentError)){$feedbackContentError = "";}
@@ -168,7 +166,7 @@ if ($type == "answer"){
     if (!isset($questionTitle)){$questionTitle = $result['QUESTION'];}
     if (!isset($questionContent)){$questionContent = $result['CONTENT']; }
     if (!isset($questionImage) && $result['IMAGE'] != NULL){ //only set if not null
-            $questionImage = quizHelper::returnWebImageFilePath($quizIdGet, $result['IMAGE']);
+            $questionImage = quizHelper::returnWebImageFilePath($quizId, $result['IMAGE']);
     }  
     if (!isset($questionKeepImage)){$questionKeepImage = "1";}
     if (!isset($questionAlt)){$questionAlt = $result['IMAGE_ALT'];}

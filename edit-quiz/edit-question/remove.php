@@ -4,9 +4,8 @@
 // include php files here 
 //kick the user back if they haven't selected quiz
 require_once("../../includes/config.php");
-$quizIDGet = quizLogic::getQuizIdFromUrlElseReturnToEditQuiz();
+$quizId = quizLogic::getQuizIdFromUrlElseReturnToEditQuiz();
 // end of php file inclusion
-$quizId = $quizIDGet;
 
 $answerIdGet = filter_input (INPUT_GET, "answer");
 $questionIdGet = filter_input (INPUT_GET, "question");
@@ -43,7 +42,7 @@ if ($type == "answer"){
     $questionTitle = $result['QUESTION'];
     $questionContent = $result['CONTENT'];
     if ($result['IMAGE'] != NULL){ //only set if not null
-            $questionImage = quizHelper::returnWebImageFilePath($quizIDGet, $result['IMAGE']);
+            $questionImage = quizHelper::returnWebImageFilePath($quizId, $result['IMAGE']);
     }  
     $questionKeepImage = "1";
     $questionAlt = $result['IMAGE_ALT'];
@@ -68,9 +67,10 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //pastt the appropiate page
     } else if (isset($deleteConfirm)){
         //really delete it
         //past the quiz and 
-        quizLogic::removeAnswerOrQuestion($quizIDGet, $id, $type);
+        $quizId = quizLogic::maybeCloneQuiz($quizId);
+        quizLogic::removeAnswerOrQuestion($quizId, $id, $type);
         //show the removed question or answer
-        header('Location: '. CONFIG_ROOT_URL . '/edit-quiz/edit-question.php?quiz='.quizLogic::returnSharedQuizID($quizIDGet)."&feedback=$type-removed");
+        header('Location: '. CONFIG_ROOT_URL . '/edit-quiz/edit-question.php?quiz='.quizLogic::returnSharedQuizID($quizId)."&feedback=$type-removed");
         exit();
     } else {
         configLogic::loadErrorPage("Unspecified action on remove page.");

@@ -15,7 +15,8 @@ class quizHelper
      * @return string The real file path and $targetFileName(in the same string, if provided eg C:\images\1.png
      */
     public static function returnWebImageFilePath ($quizId, $targetFileName = ""){
-        $target_dir = STYLES_QUIZ_IMAGES_LOCATION . "/$quizId/";
+        $sharedQuizId = quizLogic::returnSharedQuizID($quizId);
+        $target_dir = STYLES_QUIZ_IMAGES_LOCATION . "/$sharedQuizId/";
         if ($targetFileName == ""){
             return $target_dir;
         }else if (is_null($targetFileName)){
@@ -32,7 +33,8 @@ class quizHelper
      * @return string The real file path and $targetFileName(in the same string, if provided eg C:\images\1.png
      */
     public static function returnRealImageFilePath ($quizId, $targetFileName = NULL){
-        $target_dir = STYLES_QUIZ_IMAGES_LOCATION_DIR . "/$quizId/";
+        $sharedQuizId = quizLogic::returnSharedQuizID($quizId);
+        $target_dir = STYLES_QUIZ_IMAGES_LOCATION_DIR . "/$sharedQuizId/";
         if (is_null($targetFileName)){
             return $target_dir;
         } else {

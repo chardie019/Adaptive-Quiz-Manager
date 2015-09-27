@@ -4,9 +4,8 @@
 // include php files here 
 //kick the user back if they haven't selected quiz
 require_once("../../includes/config.php");
-$quizIDGet = quizLogic::getQuizIdFromUrlElseReturnToEditQuiz();
+$quizId = quizLogic::getQuizIdFromUrlElseReturnToEditQuiz();
 // end of php file inclusion
- $quizId = $quizIDGet;
 
 $prevAnswerId = filter_input(INPUT_GET, "answer");
 
@@ -42,9 +41,10 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING) === "PO
         }
         
         if ($error == 0) {//all good
+            $quizId = quizLogic::maybeCloneQuiz($quizId);
             quizLogic::insertQuestion($quizId, $prevAnswerId, $questionTitle, $questionContent, $targetFileName, $questionAlt);
             //show soe the new question added
-            header('Location: '. CONFIG_ROOT_URL . '/edit-quiz/edit-question.php?quiz='.quizLogic::returnSharedQuizID($quizIDGet)."&feedback=question-added");
+            header('Location: '. CONFIG_ROOT_URL . '/edit-quiz/edit-question.php?quiz='.quizLogic::returnSharedQuizID($quizId)."&feedback=question-added");
             exit();
         }
     }

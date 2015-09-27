@@ -16,13 +16,14 @@ $dbLogic = new DB();
  * Store quizid from edit-quiz-list in session variable to be used in edit-quiz-view.php 
  * as it passes as empty after the first time it is posted from edit-quiz-list and cant be accessed.
  */
-if(!empty($_POST["quizid"])){
-    $quizIDPost = filter_input(INPUT_POST, "quizid");
-    $_SESSION['CURRENT_EDIT_QUIZ_ID'] = $quizIDPost;
+
+
+$confirmActive = "";
+$quizIDGet = filter_input(INPUT_GET, "quiz");
+if (!is_null($quizIDGet)){
+    $quizId = quizLogic::returnRealQuizID($quizIDGet);
 }
 
-
-$quizIDGet = filter_input(INPUT_GET, "quiz");
 $quizCreated = filter_input(INPUT_GET, "create");
 if ($quizCreated == "yes"){
     $createQuizConfirmation = "Quiz Successfully created!";
@@ -33,44 +34,56 @@ if ($quizCreated == "yes"){
 /* User can only edit quiz information if IS_ENABLED is set to inactive so as not to disrupt users. 
      * Check if IS_ENABLED is already set for validation in editing details, questions, editors, takers.
      */
-    if (isset($_SESSION['CURRENT_EDIT_QUIZ_ID'])){
-        $checkEnable = array(
-            "QUIZ_ID" => $_SESSION['CURRENT_EDIT_QUIZ_ID']
-        );
+$_SESSION['CURRENT_EDIT_QUIZ_ID'] = $quizId;
+$isEnabledState = editQuizLogic::isQuizEnabled($quizId);
+if (is_null($isEnabledState)){
+    $_SESSION['CURRENT_EDIT_QUIZ_ID'] = NULL; //bomb out
+} else {
+    $_SESSION["IS_QUIZ_ENABLED"] = $isEnabledState; //set the staate (true or false)
+}
 
-        $isEnabled = $dbLogic->select("IS_ENABLED", "QUIZ", $checkEnable, true);
-        if (!empty($isEnabled)){
-            if($isEnabled['IS_ENABLED'] == '1'){
-                $_SESSION["IS_QUIZ_ENABLED"] = true;
-
-            }else{
-                $_SESSION["IS_QUIZ_ENABLED"] = false;
-            }
-        } else {
-            $_SESSION['CURRENT_EDIT_QUIZ_ID'] = NULL;
-        }
-    }
-
-//Set default value used to set the colour of the active enable/disable button in edit-quiz-view
-$_SESSION['enableButton'] = "myEnabled";
 
 if($_SERVER['REQUEST_METHOD'] === "POST"){
-          
+    if(!empty($_POST["quizid"])){
+        $quizIDPost = filter_input(INPUT_POST, "quizid");
+        $_SESSION['CURRENT_EDIT_QUIZ_ID'] = $quizIDPost;
+    } 
+    
+    
     //If ENABLE button is pushed, update row in database
     if (isset($_POST['confirmEnabled'])) {    
-        
-        $quizIDPost = filter_input(INPUT_POST, "quizID");
-        
-        $setColumnsArray = array(
-            "IS_ENABLED" => "1"
-        );
+        //check of the quiz is valid (end points are good)
         $whereValuesArray = array(
-            "QUIZ_ID" => $quizIDPost
+            "TYPE" => "answer",
+            "quiz_QUIZ_ID" => $quizId
         );
-        $dbLogic->updateSetWhere("QUIZ", $setColumnsArray, $whereValuesArray);
-        $confirmActive = "Quiz is now ENABLED, and CAN be attempted by users.";
-        //Set flag variable that is checked before commiting edits in other pages
-        $_SESSION["IS_QUIZ_ENABLED"] = true;
+        $invalidQuestionAnswersArray = $dbLogic->selectWithSelectWhereColumnsIsNotinAnotherColumn(
+                "answer_ANSWER_ID, TYPE", "question_answer", 
+                "CONNECTION_ID", "PARENT_ID", $whereValuesArray, "LOOP_CHILD_ID", false);
+        
+        if (empty($invalidQuestionAnswersArray)) {
+            //TO DO if changes
+            if(isset($_SESSION['CURRENT_EDIT_QUIZ_EDITED'])){ //if the session was set, ergo, was edited, otherwise is NULL
+                $_SESSION['CURRENT_EDIT_QUIZ_EDITED'] = NULL; //edited changes are now commmited
+            }
+            $setColumnsArray = array(
+                "IS_ENABLED" => "1"
+            );
+            $whereValuesArray = array(
+                "QUIZ_ID" => $quizId
+            );
+            $dbLogic->updateSetWhere("QUIZ", $setColumnsArray, $whereValuesArray);
+            $confirmActive = "Quiz is now ENABLED, and CAN be attempted by users.";
+            //Set flag variable that is checked before commiting edits in other pages
+            $_SESSION["IS_QUIZ_ENABLED"] = true;
+            quizLogic::setQuizToConsistentState($dbLogic, $quizId);
+        } else { //the quiz has invalid endings
+            $badAnswerString = "";
+            foreach ($invalidQuestionAnswersArray as $arrayRow){
+                $badAnswerString .= ($badAnswerString == "") ? $arrayRow['answer_ANSWER_ID'] : ", ".$arrayRow['answer_ANSWER_ID'];
+            }
+            $confirmActive = "There was issue with answers: " . $badAnswerString . "<br />They must end on a question, by adding question or looping to end question.<br />Please fix these before enabling the quiz";   
+        }
         
     //If DISABLE button is pressed, update row in database 
     }else if(isset($_POST['confirmDisabled'])){
@@ -87,14 +100,12 @@ if($_SERVER['REQUEST_METHOD'] === "POST"){
         $confirmActive = "Quiz is now DISABLED, and CANNOT be attempted by users.";
         //Set flag variable that is checked before commiting edits in other pages
         $_SESSION["IS_QUIZ_ENABLED"] = false;
+    } else {
+        //Page is being loaded from edit-quiz-list with quizid selected    
+        header('Location: ' . CONFIG_ROOT_URL . '/edit-quiz.php?quiz=' . quizLogic::returnSharedQuizID($quizIDPost));
+        stop();
     }
-        
-    //Page is being loaded from edit-quiz-list with quizid selected    
-      
-    header('Location: ' . CONFIG_ROOT_URL . '/edit-quiz.php?quiz=' . $quizIDGet = quizLogic::returnSharedQuizID($quizIDPost));
-    stop();
-    
-    
+    include('edit-quiz-view.php');
 //If coming from home page, display quiz list for user to select
 }else if(is_null($quizIDGet)){
     
@@ -144,6 +155,7 @@ if($_SERVER['REQUEST_METHOD'] === "POST"){
     }
     include('edit-quiz-list-view.php');
 }else{
+    //get request and the quiz was specified
     include('edit-quiz-view.php');
 }   
     

@@ -12,7 +12,7 @@ class takeQuizLogic extends quizLogic {
         if (empty($questionData["IMAGE"])){
             $questionData["IMAGE"] = "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="; //transparent gif
         } else {
-            $questionData["IMAGE"] = returnQuizImagepath($_SESSION["QUIZ_CURRENT_QUIZ_ID"], $questionData["IMAGE"]);
+            $questionData["IMAGE"] = quizHelper::returnWebImageFilePath($_SESSION["QUIZ_CURRENT_QUIZ_ID"], $questionData["IMAGE"]);
         }
         $dbLogic = new DB();
         $data = array(

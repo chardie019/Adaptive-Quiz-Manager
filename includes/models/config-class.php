@@ -5,6 +5,10 @@ class configLogic {
      */
     public static function assertFailed($file, $line, $expr) {
         print "Assertion failed in $file on line $line: $expr\n";
+        echo "<pre>";
+        debug_print_backtrace();
+        echo "</pre>";
+        
     }
 
     public static function loadErrorPage($errorMessage = "", $errorMessageSpecific = "") {

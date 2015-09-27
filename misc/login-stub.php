@@ -43,7 +43,7 @@ $templateLogic->startBody();
 <br />
 <p>
 <?php
-$buildNumber = 6;
+$buildNumber = 7;
 $con = mysqli_connect(DB_HOST,DB_USERNAME,DB_PASSWORD,DB_DB);
 
 // Check connection

@@ -273,20 +273,19 @@ select.quiz_list {
 .myEnabled{
     background-color: #66CC00;    
 }
-.myEnabled:hover{
-    background-color: #66CC00; 
-}
 
 .myDisabled{
-    background-color: #FF3300;
+    background-color: #e21a23;
 }
-
-.myDisabled:hover, .statsActive:hover {
-    background-color: #404040;
-}
-
 .statsActive{
     background-color: #404040;
+}
+
+.myDisabled:hover, .statsActive:hover , .myEnabled:hover {
+    background-color: #404040;
+}
+.myGreyedOut, .myGreyedOut:hover {
+    background-color: #808080;
 }
 
 #buttonborder1, #buttonborder2, #buttonborder3, #buttonborder4, #buttonborder5, #buttonborder6 {

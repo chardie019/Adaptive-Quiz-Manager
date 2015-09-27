@@ -4,13 +4,12 @@
 // include php files here 
 //kick the user back if they haven't selected quiz
 require_once("../../includes/config.php");
-$quizIdGet = quizLogic::getQuizIdFromUrlElseReturnToEditQuiz();
+$quizId = quizLogic::getQuizIdFromUrlElseReturnToEditQuiz();
 // end of php file inclusion
 
 $questionIdPost = filter_input(INPUT_GET, "question");
 //after validation
 $questionId = $questionIdPost;
-$quizId = $quizIdGet;
 
 if (filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING) === "POST") { //past the appropiate page
     $answerContent =filter_input(INPUT_POST, "answer-content");
@@ -45,10 +44,11 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING) === "PO
         }
         if ($error == 0){
             //all good
-            $result = quizLogic::insertAnswer($quizIdGet, $questionIdPost, $answerContent, $feedbackContent, $isCorrect, $link);
+            $quizId = quizLogic::maybeCloneQuiz($quizId);
+            $result = quizLogic::insertAnswer($quizId, $questionIdPost, $answerContent, $feedbackContent, $isCorrect, $link);
             if ($result == true){
                 //show soe the new question added
-                header('Location: '. CONFIG_ROOT_URL . '/edit-quiz/edit-question.php?quiz='.quizLogic::returnSharedQuizID($quizIdGet)."&feedback=answer-added");
+                header('Location: '. CONFIG_ROOT_URL . '/edit-quiz/edit-question.php?quiz='.quizLogic::returnSharedQuizID($quizId)."&feedback=answer-added");
                 exit();
             } else {
                 configLogic::loadErrorPage("There was Problem adding a answer.");

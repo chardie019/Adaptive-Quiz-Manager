@@ -4,7 +4,7 @@
 // include php files here 
 //kick the user back if they haven't selected quiz
 require_once("../includes/config.php");
-$quizID = quizLogic::getQuizIdFromUrlElseReturnToEditQuiz();
+$quizId = quizLogic::getQuizIdFromUrlElseReturnToEditQuiz();
 // end of php file inclusion
 
 //Set page error messages blank upon initial loading
@@ -37,7 +37,7 @@ $creationDatetime = date('Y-m-d H:i:s');
     $column = "*";
     
     $dataArray = array(
-        "QUIZ_ID" => $quizID
+        "QUIZ_ID" => $quizId
     );
     
     $quizInfo = $dbLogic->select('*', 'quiz', $dataArray, true);
@@ -252,54 +252,52 @@ $creationDatetime = date('Y-m-d H:i:s');
                     $imageUploadError = "Due to another error, please upload the picture again.";
                 }
                 include("details-view.php");
-            } else {// no errors
-        
+            } else {// no errors update the database
+                //determine if cloning is needed, i is teh same if no needed, else, is the new quiz id
+                $current_quiz_id = quizLogic::maybeCloneQuiz($quizId);
+                //Get username for use with Editors table when required
+                $uid = $_SESSION["username"];
+                //Set time limit to 00:00:00 for storing in database if there is NO time limit
+                if($isTime == '0'){
+                    $isTime = '00:00:00';
+                }else{
+                $isTime = '0'.$timeHours.':'.$timeMinutes.':00';
 
-                    //Get username for use with Editors table when required
-                    $uid = $_SESSION["username"];
-                    //Set time limit to 00:00:00 for storing in database if there is NO time limit
-                    if($isTime == '0'){
-                        $isTime = '00:00:00';
-                    }else{
-                    $isTime = '0'.$timeHours.':'.$timeMinutes.':00';
+                }
 
-                    }
+                //Set Number of attempts to 0 for storing in database if there are unlimited attempts
+                if($noAttempts == 'Unlimited'){
+                    $noAttempts = '0';
+                }
 
-                    //Set Number of attempts to 0 for storing in database if there are unlimited attempts
-                    if($noAttempts == 'Unlimited'){
-                        $noAttempts = '0';
-                    }
+                //Create String value for dateStart and dateEnd values
 
-                    //Create String value for dateStart and dateEnd values
-
-                    $dateOpen = $yearStart."-".$monthStart."-".$dayStart." 00:00:00";
-                    $dateClose = $yearEnd."-".$monthEnd."-".$dayEnd." 11:59:00";   
+                $dateOpen = $yearStart."-".$monthStart."-".$dayStart." 00:00:00";
+                $dateClose = $yearEnd."-".$monthEnd."-".$dayEnd." 11:59:00";   
 
 
-                    $dataArray = array(
-                        "SHARED_QUIZ_ID" => $quizInfo['SHARED_QUIZ_ID'],
-                        "VERSION" => $quizInfo['VERSION'] +=1,
-                        "QUIZ_NAME" => $quizName,
-                        "DESCRIPTION" => $quizDescription,
-                        "IS_PUBLIC" => $isPublic,
-                        "NO_OF_ATTEMPTS" => $noAttempts,
-                        "TIME_LIMIT" => $isTime,
-                        "IS_SAVABLE" => $isSave,
-                        "DATE_OPEN" => $dateOpen,
-                        "DATE_CLOSED" => $dateClose,
-                        "INTERNAL_DESCRIPTION" => "",
-                        "IMAGE" => $quizImageUpload,
-                        "IMAGE_ALT" => $quizImageText,
-						"IS_ENABLED" => 0
+                $setValuesArray = array(
+                    "VERSION" => $quizInfo['VERSION'],
+                    "QUIZ_NAME" => $quizName,
+                    "DESCRIPTION" => $quizDescription,
+                    "IS_PUBLIC" => $isPublic,
+                    "NO_OF_ATTEMPTS" => $noAttempts,
+                    "TIME_LIMIT" => $isTime,
+                    "IS_SAVABLE" => $isSave,
+                    "DATE_OPEN" => $dateOpen,
+                    "DATE_CLOSED" => $dateClose,
+                    "INTERNAL_DESCRIPTION" => "",
+                    "IMAGE" => $quizImageUpload,
+                    "IMAGE_ALT" => $quizImageText
+                    );
+                $whereValuesArray = array("QUIZ_ID" => $quizId);
+                $quizUpdated = "Your quiz has been successfully updated.";
+                //Insert quiz into database
+                $dbLogic->updateSetWhere("quiz", $setValuesArray, $whereValuesArray);
 
-                        );
-                    $quizUpdated = "Your quiz has been successfully updated.";
-                    //Insert quiz into database
-                    $current_quiz_id = ($dbLogic->insert($dataArray, "quiz"));
-
-                    $_SESSION['CURRENT_EDIT_QUIZ_ID'] = $current_quiz_id;
-                    header('Location: ' . CONFIG_ROOT_URL . '/edit-quiz/details.php?quiz=' . $current_quiz_id);
-                    exit;
+                $_SESSION['CURRENT_EDIT_QUIZ_ID'] = $current_quiz_id;
+                header('Location: ' . CONFIG_ROOT_URL . '/edit-quiz/details.php?quiz=' . $current_quiz_id);
+                exit;
             }     
         }
 
