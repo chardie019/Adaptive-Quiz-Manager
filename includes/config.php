@@ -108,9 +108,9 @@ include_once("dbLogic.php");
 $dbLogic = new DB();
 
 //include other config files
-include_once("userBean.php");
-
 include_once("userLogic.php");
+
+include_once("userLogin.php");
 //note: when echo-ing html other language, use  echo (htmlentities($string));
 
 ?>

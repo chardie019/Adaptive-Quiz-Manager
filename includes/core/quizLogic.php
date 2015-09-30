@@ -705,6 +705,7 @@ class quizLogic
         $dbLogic = new DB();
         $whereValuesArray = array("QUIZ_ID" => $oldQuizId);
         $consistentArray = $dbLogic->select("CONSISTENT_STATE", "quiz", $whereValuesArray);
+        
         if ($consistentArray['CONSISTENT_STATE'] == 0){ //if already cloned (1 is consistent, zero is NOT consistent
             return $oldQuizId; // bail, no cloning needed
         }
@@ -713,7 +714,7 @@ class quizLogic
         $where = array("QUIZ_ID" => $oldQuizId);
         $quizArray = $dbLogic->select(
                 /* All colums except QUIZ_ID & increase Version */
-                "SHARED_QUIZ_ID, VERSION, QUIZ_NAME, DESCRIPTION, IS_PUBLIC, NO_OF_ATTEMPTS, TIME_LIMIT, IS_SAVABLE, DATE_OPEN, DATE_CLOSED, INTERNAL_DESCRIPTION, IMAGE, IMAGE_ALT, IS_ENABLED", 
+                "SHARED_QUIZ_ID, VERSION, QUIZ_NAME, DESCRIPTION, IS_PUBLIC, NO_OF_ATTEMPTS, TIME_LIMIT, IS_SAVABLE, DATE_OPEN, DATE_CLOSED, INTERNAL_DESCRIPTION, IMAGE, IMAGE_ALT, IS_ENABLED, CONSISTENT_STATE", 
                 "quiz", $where);
         //build an array for re-insertion
         $newQuizArray = array();
@@ -721,7 +722,7 @@ class quizLogic
             if ($column === "VERSION"){
                 $value++; //increase the version
             } else if ($column === "CONSISTENT_STATE"){
-                $value = 1; //zero is NOT consistent
+                $value = 0; //zero is NOT consistent
             }
             $newQuizArray[$column] = $value; //apply change to the array
         }

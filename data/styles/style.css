@@ -39,6 +39,11 @@ color: #404040;
     right: 0;
     margin: 0.5em;
 }
+#header #logo p span {
+    /* line up the labels */
+    width: 4em;
+    display: inline-block;
+}
 #header h2 {
 padding:10px;
 margin: 0;
@@ -46,7 +51,6 @@ margin: 0;
  
 #nav {
     position: relative;
-    width: 100%;
     height: 40px;
     margin: 0px auto;
     font-size: 1.2em;
@@ -64,6 +68,10 @@ margin: 0;
     margin:  0;
     width: 100%;
     padding-left: 0; /*remove strange 40px padding */
+    display: table;
+    table-layout : fixed;
+    border-collapse: collapse;
+    border-style: hidden;
     }
 
 #nav ul li
@@ -73,11 +81,15 @@ margin: 0;
     padding: 0 10px;
     color: #ffffff;
     text-align: center;
+    display: table-cell;
+    border: 2px solid #ffffff;
     }
 
 #nav ul li a {
         color: #ffffff;
         text-decoration: none;
+        width: 100%;
+        display: block;
     }
 #nav .selected {
   background-color: rgb(233, 172, 0);
@@ -108,13 +120,7 @@ background-color:#f1f1f1;
 
 /*Styles for Create-Quiz-View double column*/
 #content-create-quiz{
-    position: relative;
-    width:90%;
-    float:left;  
-    padding: 10px;
-    padding-bottom: 75px;
-    padding-left: 10%;
-    margin-bottom: 100px;
+    padding: 1em;
     background-color: #F0F0F0;
     border: 1px solid black;
     border-radius: 4px;
@@ -171,16 +177,6 @@ background-color:#f1f1f1;
 #heading h1{
     text-align: center;
     padding-top: 70px;
-}
-
-#edit-console{
-    width:80%;
-    float:left;
-    margin-left: 21%;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    margin-bottom: 10px;
-
 }
 
 .nav-button{
@@ -286,61 +282,7 @@ select.quiz_list {
 }
 .myGreyedOut, .myGreyedOut:hover {
     background-color: #808080;
-}
-
-#buttonborder1, #buttonborder2, #buttonborder3, #buttonborder4, #buttonborder5, #buttonborder6 {
-    border: 1px solid black;
-    border-radius: 4px;
-    width:200px;
-    height:150px;
-    text-align: center;
-    display:inline-block;
-    margin-left: 110px;
-    margin-bottom: 50px;
-    position: relative;
-    font-family: courier new;
-}
-
-/*Background images not yet created*/
-#buttonborder1{
-    background-image: url("AQMtakequiz.jpg");
-} 
-
-#buttonborder2{
-       background-image: url("AQMcreatequiz.jpg"); 
-} 
-
-#buttonborder3{
-       background-image: url("AQMeditquiz.jpg");
-} 
-
-#buttonborder4{
-        background-image: url("AQMstats.jpg");
-}
-
-#buttonborder5{
-        background-image: url("AQMabout.jpg");
-}
-
-#buttonborder6{
-        background-image: url("AQMhelp.jpg");    
-}
-
-a.menu-icons{
-    
-    border-top: 1px solid black;
-    position: absolute;   
-    background-color: rgb(233, 172, 0);
-    font-size: 1.2em;
-    font-family: verdana;
-    color: #ffffff;
-    text-decoration: none;
-    text-align: center;
-    padding: 5px 10px;
-    bottom: 0;
-    right: 0;
-    left: 0; 
-    
+    color: #B3B1B1;
 }
 
 .feedbackStyle{

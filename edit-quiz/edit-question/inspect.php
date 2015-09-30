@@ -77,11 +77,12 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //pastt the appropiate page
                 }
             }
             if ($error == 0) {//if still all good
+                $quizId = quizLogic::maybeCloneQuiz($quizId);
                 if (is_uploaded_file($_FILES["questionImageUpload"]["tmp_name"])) {
+                    quizLogic::updateQuestion($quizId, $questionIdGet, $questionTitle, $questionContent, $questionAlt, $targetFileName);
+                } else {
                     //don't update the image
                     quizLogic::updateQuestion($quizId, $questionIdGet, $questionTitle, $questionContent, $questionAlt);
-                } else {
-                    quizLogic::updateQuestion($quizId, $questionIdGet, $questionTitle, $questionContent, $questionAlt, $targetFileName);
                 }
                 //show the new question added
                 header('Location: '. CONFIG_ROOT_URL . '/edit-quiz/edit-question.php?quiz='.quizLogic::returnSharedQuizID($quizId)."&feedback=question-updated");

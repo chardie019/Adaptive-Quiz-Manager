@@ -26,6 +26,10 @@ class templateLogic {
     private $subMenuFile; 
     /** @var string Idenifies who is the index for the submenu */
     private $subMenuIndex; 
+    /** @var string enable or disable the sub menu (no click) */
+    private $SubMenuLinkElement;
+    /** @var string prints a string of greyout class to show disabled status */
+    private $greyedOutClass;
     /** @var string The main body */
     private $body; 
     /** @var string The words in the footer of the page */
@@ -150,10 +154,18 @@ class templateLogic {
      * 
      * @param string $inputType The type to be set
      * @param string $inputIndex sets the submenu, set to the page name (take-quiz, create-quiz, edit-quiz, stats, help)
+     * @param boolean $enableSubMenuLinks truew (default) links are clickable, false are no
      */
-    function setSubMenuType($inputType = NULL, $inputIndex = NULL) {
+    function setSubMenuType($inputType = NULL, $inputIndex = NULL, $enableSubMenuLinks = true) {
         //choose which file to include on the template page
         $this->subMenuIndex = $inputIndex;
+        if ($enableSubMenuLinks === true) {
+            $this->greyedOutClass = "";
+            $this->SubMenuLinkElement = "a"; //a links
+        } else {
+            $this->greyedOutClass = " myGreyedOut"; //space is important to separate classes
+            $this->SubMenuLinkElement = "span"; //span links
+        }
         switch ($inputType) {
             case "take-quiz":
                 $this->addCSS("take-quiz-style.css");

@@ -19,10 +19,16 @@ $dbLogic = new DB();
 
 
 $confirmActive = "";
+$enableSubMenuLinks = true; //default the links work
 $quizIDGet = filter_input(INPUT_GET, "quiz");
 if (!is_null($quizIDGet)){
     $quizId = quizLogic::returnRealQuizID($quizIDGet);
+} else {
+    $quizId = NULL;
 }
+
+quizLogic::maybeCloneQuiz($quizId);
+
 
 $quizCreated = filter_input(INPUT_GET, "create");
 if ($quizCreated == "yes"){
@@ -40,6 +46,7 @@ if (is_null($isEnabledState)){
     $_SESSION['CURRENT_EDIT_QUIZ_ID'] = NULL; //bomb out
 } else {
     $_SESSION["IS_QUIZ_ENABLED"] = $isEnabledState; //set the staate (true or false)
+    $enableSubMenuLinks = $isEnabledState;
 }
 
 
@@ -76,6 +83,7 @@ if($_SERVER['REQUEST_METHOD'] === "POST"){
             $confirmActive = "Quiz is now ENABLED, and CAN be attempted by users.";
             //Set flag variable that is checked before commiting edits in other pages
             $_SESSION["IS_QUIZ_ENABLED"] = true;
+            $enableSubMenuLinks = true;
             quizLogic::setQuizToConsistentState($dbLogic, $quizId);
         } else { //the quiz has invalid endings
             $badAnswerString = "";
@@ -100,6 +108,7 @@ if($_SERVER['REQUEST_METHOD'] === "POST"){
         $confirmActive = "Quiz is now DISABLED, and CANNOT be attempted by users.";
         //Set flag variable that is checked before commiting edits in other pages
         $_SESSION["IS_QUIZ_ENABLED"] = false;
+        $enableSubMenuLinks = false; //no menu links
     } else {
         //Page is being loaded from edit-quiz-list with quizid selected    
         header('Location: ' . CONFIG_ROOT_URL . '/edit-quiz.php?quiz=' . quizLogic::returnSharedQuizID($quizIDPost));

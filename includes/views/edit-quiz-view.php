@@ -2,7 +2,7 @@
 
 $templateLogic = new templateLogic;
 $templateLogic->setTitle('Edit Quiz');
-$templateLogic->setSubMenuType("edit-quiz");
+$templateLogic->setSubMenuType("edit-quiz", NULL, $enableSubMenuLinks);
 $templateLogic->addCustomHeadersStart();
 ?>
 <style type="text/css">
@@ -25,12 +25,9 @@ $templateLogic->addCustomHeadersStart();
 $templateLogic->startBody();
 ?>
      <div id="content-create-quiz">
-        <span><?php echo $createQuizConfirmation; ?></span>
-        <br />
-        <br />
         <p>Welcome to the Edit Quiz Menu, please ensure the quiz is Disabled before choosing an option above to continue.</p>
         <br />
-        <span class="feedback-span"><?php echo $confirmActive ?></span>
+        <span class="feedback-span"><?php echo $confirmActive ?></span><span><?php echo $createQuizConfirmation; ?></span>
         <br />
         
         <form action='<?php echo "?quiz=".  quizLogic::returnSharedQuizID($_SESSION['CURRENT_EDIT_QUIZ_ID']) ?>' id='enable' method='post'>

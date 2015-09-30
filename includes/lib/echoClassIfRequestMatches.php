@@ -41,7 +41,7 @@ function echoClassIfRequestMatches($requestUri, $class, $rootLink = false /* oth
    
     //if on the same url OR url is same one a folder down OR is root folder (the aqm folder)
     if (($currentFileName == $requestUri)  || ($inUrl) || ($isRoot)){
-        echo $class;
+        return $class;
     }
 }
 ?>

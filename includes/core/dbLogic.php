@@ -420,7 +420,7 @@ class DB {
         assert(is_string($tables));
         $tables = strtolower($tables); //lowercase tables
         $sql = "SELECT * FROM $tables;";
-        return $this->runQueryReturnResults($sql);
+        return $this->runQueryReturnResults($sql, false);
     }
     
     /**
