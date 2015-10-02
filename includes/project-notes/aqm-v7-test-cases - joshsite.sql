@@ -1,5 +1,5 @@
 -- DROP ALL TABLES
-use aqm;
+use joshuagr_aqm;
 
 SET FOREIGN_KEY_CHECKS = 0;
 SET GROUP_CONCAT_MAX_LEN=32768;

@@ -1,27 +1,11 @@
--- DROP ALL TABLES
-use aqm;
-
-SET FOREIGN_KEY_CHECKS = 0;
-SET GROUP_CONCAT_MAX_LEN=32768;
-SET @tables = NULL;
-SELECT GROUP_CONCAT('`', table_name, '`') INTO @tables
-  FROM information_schema.tables
-  WHERE table_schema = (SELECT DATABASE());
-SELECT IFNULL(@tables,'dummy') INTO @tables;
-
-SET @tables = CONCAT('DROP TABLE IF EXISTS ', @tables);
-PREPARE stmt FROM @tables;
-EXECUTE stmt;
-DEALLOCATE PREPARE stmt;
-
 -- phpMyAdmin SQL Dump
--- version 3.4.5
+-- version 3.4.9
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Sep 30, 2015 at 04:17 PM
--- Server version: 5.5.16
--- PHP Version: 5.3.8
+-- Generation Time: Oct 02, 2015 at 12:31 PM
+-- Server version: 5.1.73
+-- PHP Version: 5.3.3
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -48,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `answer` (
   `FEEDBACK` varchar(255) DEFAULT NULL,
   `IS_CORRECT` tinyint(2) NOT NULL,
   PRIMARY KEY (`ANSWER_ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=42 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=46 ;
 
 --
 -- Dumping data for table `answer`
@@ -94,7 +78,11 @@ INSERT INTO `answer` (`ANSWER_ID`, `ANSWER`, `FEEDBACK`, `IS_CORRECT`) VALUES
 (37, 'Harvard Referencing.', 'Which of these IS NOT a known referencing style.', 0),
 (38, 'APA Referencing.', 'Which of these IS NOT a known referencing style.', 0),
 (39, 'Chicago Referencing.', 'Which of these IS NOT a known referencing style.', 0),
-(40, 'Wagga Wagga Referencing.', 'Correct. Wagga Wagga Referencing is not a widely accepted referencing style.  yet', 1);
+(40, 'Wagga Wagga Referencing.', 'Correct. Wagga Wagga Referencing is not a widely accepted referencing style.  yet', 1),
+(42, 'Yes', 'Woo a cat person!', 1),
+(43, 'No', 'A dog person maybe?', 0),
+(44, 'Yes it does', 'Excellent answer', 2),
+(45, 'No it doesn''t', 'bad choice', 2);
 
 -- --------------------------------------------------------
 
@@ -140,12 +128,15 @@ INSERT INTO `editor` (`user_USERNAME`, `shared_SHARED_QUIZ_ID`, `ADDED_AT`, `ADD
 ('jgraha50', 1, '2015-09-12 00:00:00', 'testuser'),
 ('jgraha50', 2, '2015-09-19 00:00:00', 'testuser'),
 ('jgraha50', 3, '2015-09-19 00:00:00', 'testuser'),
+('jgraha50', 36, '2015-09-29 23:59:27', 'jgraha50'),
 ('jtulip', 1, '2015-09-12 00:00:00', 'testuser'),
 ('jtulip', 2, '2015-09-19 00:00:00', 'lkentwel'),
 ('jtulip', 3, '2015-09-19 00:00:00', 'testuser'),
 ('lkentwel', 1, '2015-09-12 00:00:00', 'testuser'),
 ('lkentwel', 2, '2015-09-19 00:00:00', 'testuser'),
 ('lkentwel', 3, '2015-09-19 00:00:00', 'testuser'),
+('lkentwel', 34, '2015-09-26 09:18:01', 'lkentwel'),
+('moluck', 35, '2015-09-28 07:02:50', 'moluck'),
 ('testuser', 1, '2015-08-14 00:00:00', 'testuser'),
 ('testuser', 2, '2015-09-19 00:00:00', 'testuser');
 
@@ -175,7 +166,7 @@ CREATE TABLE IF NOT EXISTS `question` (
   `IMAGE` varchar(255) DEFAULT NULL,
   `IMAGE_ALT` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`QUESTION_ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=22 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=25 ;
 
 --
 -- Dumping data for table `question`
@@ -183,8 +174,8 @@ CREATE TABLE IF NOT EXISTS `question` (
 
 INSERT INTO `question` (`QUESTION_ID`, `CONTENT`, `QUESTION`, `IMAGE`, `IMAGE_ALT`) VALUES
 (1, 'SomeContent1', 'The first Question', '1.png', NULL),
-(2, 'SomeContent2', 'The second QuestionU2', 'Nope.png', 'alttt'),
-(3, 'SomeContent3', 'The Third Question', NULL, 't'),
+(2, 'SomeContent2', 'The second QuestionU2', '2.png', 'alttt'),
+(3, 'SomeContent3', 'The Third Question', '3.png', 't'),
 (4, 'SomeContent4', 'The forth Question', '4.png', NULL),
 (5, 'SomeContent5', 'The Fift Question', '5.png', NULL),
 (6, 'SomeContent6', 'The Sixth Question', '6.png', NULL),
@@ -201,7 +192,10 @@ INSERT INTO `question` (`QUESTION_ID`, `CONTENT`, `QUESTION`, `IMAGE`, `IMAGE_AL
 (17, 'Definition, Referencing', 'Which phrase most accurately describes plagiarism?', NULL, NULL),
 (18, 'Morality', 'When is plagiarism acceptable?', NULL, NULL),
 (19, 'Referencing', 'Which of the following is not a recognised referencing style:', NULL, NULL),
-(20, 'END OF QUIZ CONTENT - plagiarism', 'Thankyou for using the plagiarism quiz', NULL, NULL);
+(20, 'END OF QUIZ CONTENT - plagiarism', 'Thankyou for using the plagiarism quiz', NULL, NULL),
+(22, 'Do you prefer cats over dogs?', '1', NULL, ''),
+(23, 'timing is an important part of taking quizzes', 'Does the timer appear?', NULL, ''),
+(24, 'End content', 'The end', NULL, '');
 
 -- --------------------------------------------------------
 
@@ -224,7 +218,7 @@ CREATE TABLE IF NOT EXISTS `question_answer` (
   KEY `CHILD_ID` (`LOOP_CHILD_ID`),
   KEY `question_QUESTION_ID` (`question_QUESTION_ID`,`answer_ANSWER_ID`),
   KEY `answer_ANSWER_ID` (`answer_ANSWER_ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=41 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=48 ;
 
 --
 -- Dumping data for table `question_answer`
@@ -252,7 +246,14 @@ INSERT INTO `question_answer` (`question_QUESTION_ID`, `answer_ANSWER_ID`, `CONN
 (NULL, 12, 19, 12, 38, 'answer', 1, 6),
 (NULL, 13, 20, 13, 38, 'answer', 1, 6),
 (NULL, 14, 21, 13, 38, 'answer', 1, 6),
-(8, NULL, 38, 14, NULL, 'question', 1, 7);
+(8, NULL, 38, 14, NULL, 'question', 1, 7),
+(22, NULL, 41, NULL, NULL, 'question', 34, 1),
+(NULL, 42, 42, 41, NULL, 'answer', 34, 2),
+(NULL, 43, 43, 41, NULL, 'answer', 34, 1),
+(23, NULL, 44, NULL, NULL, 'question', 36, 1),
+(NULL, 44, 45, 44, NULL, 'answer', 36, 2),
+(NULL, 45, 46, 44, 47, 'answer', 36, 1),
+(24, NULL, 47, 45, NULL, 'question', 36, 3);
 
 -- --------------------------------------------------------
 
@@ -293,7 +294,7 @@ CREATE TABLE IF NOT EXISTS `quiz` (
   PRIMARY KEY (`QUIZ_ID`),
   KEY `SHARED_QUIZ_ID` (`SHARED_QUIZ_ID`),
   KEY `IS_PUBLIC` (`IS_PUBLIC`,`NO_OF_ATTEMPTS`,`TIME_LIMIT`,`DATE_OPEN`,`DATE_CLOSED`,`IS_ENABLED`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=34 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=38 ;
 
 --
 -- Dumping data for table `quiz`
@@ -302,7 +303,11 @@ CREATE TABLE IF NOT EXISTS `quiz` (
 INSERT INTO `quiz` (`QUIZ_ID`, `SHARED_QUIZ_ID`, `VERSION`, `QUIZ_NAME`, `DESCRIPTION`, `IS_PUBLIC`, `NO_OF_ATTEMPTS`, `TIME_LIMIT`, `IS_SAVABLE`, `DATE_OPEN`, `DATE_CLOSED`, `INTERNAL_DESCRIPTION`, `IMAGE`, `IMAGE_ALT`, `IS_ENABLED`, `CONSISTENT_STATE`) VALUES
 (1, 1, 1, 'Test Quiz 1', 'This is a Test case Quiz', 1, NULL, '00:00:00', NULL, '2015-01-01 06:41:00', NULL, NULL, NULL, NULL, 1, 1),
 (32, 2, 1, 'Test Quiz 2', 'This is a Test case (No Qs & A''s)', 1, NULL, '00:00:00', NULL, '2015-01-01 06:41:00', NULL, NULL, NULL, NULL, 1, 1),
-(33, 3, 1, 'Plagiarism: Beginner', 'Test case Quiz (no Q & A''s)', 0, NULL, '00:00:00', NULL, '2015-01-01 06:41:00', NULL, NULL, NULL, NULL, 1, 1);
+(33, 3, 1, 'Plagiarism: Beginner', 'Test case Quiz (no Q & A''s)', 0, NULL, '00:00:00', NULL, '2015-01-01 06:41:00', NULL, NULL, NULL, NULL, 1, 1),
+(34, 34, 0, 'Catz V Dogz', 'Determine if Catz or Dogz are superior in the eyes of students.', 1, 1, '00:00:00', 0, '2015-09-26 00:00:00', '2015-10-26 11:59:00', '', 'grumpycat.jpg', 'grumpycat is king', 1, 1),
+(35, 35, 0, 'Test morg', 'Test', 1, 0, '00:00:00', 0, '2015-09-28 00:00:00', NULL, '', '', '', 0, 1),
+(36, 36, 0, 'Timed quiz', 'Test the timing - private', 0, 0, '00:00:00', 0, '2015-09-29 00:00:00', NULL, '', '', '', 0, 1),
+(37, 36, 1, 'Timed quiz', 'Test the timing - private', 0, 0, '00:00:00', 0, '2015-09-30 00:00:00', '2015-09-30 11:59:00', '', NULL, NULL, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -334,7 +339,17 @@ CREATE TABLE IF NOT EXISTS `result` (
   KEY `fk_Result_User1_idx` (`user_USERNAME`),
   KEY `fk_Result_Quiz1_idx` (`quiz_QUIZ_ID`),
   KEY `shared_SHARED_QUIZ_ID` (`shared_SHARED_QUIZ_ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=72 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=79 ;
+
+--
+-- Dumping data for table `result`
+--
+
+INSERT INTO `result` (`RESULT_ID`, `user_USERNAME`, `quiz_QUIZ_ID`, `shared_SHARED_QUIZ_ID`, `STARTED_AT`, `FINISHED_AT`) VALUES
+(75, 'lkentwel', 34, 34, '2015-09-26 09:21:12', '2015-09-26 09:21:12'),
+(76, 'moluck', 34, 34, '2015-09-28 07:01:33', '2015-09-28 07:01:33'),
+(77, 'wbrecken', 34, 34, '2015-09-28 07:06:19', '2015-09-28 07:06:19'),
+(78, 'jgraha50', 36, 36, '2015-09-30 00:04:08', '2015-09-30 00:04:08');
 
 -- --------------------------------------------------------
 
@@ -352,6 +367,16 @@ CREATE TABLE IF NOT EXISTS `result_answer` (
   KEY `fk_result_answer_question1_idx` (`question_QUESTION_ID`),
   KEY `PASS_NO` (`PASS_NO`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `result_answer`
+--
+
+INSERT INTO `result_answer` (`result_RESULT_ID`, `question_QUESTION_ID`, `PASS_NO`, `ANSWER`, `ANSWERED_AT`) VALUES
+(75, 22, 1, '42', '2015-09-26 09:21:12'),
+(76, 22, 1, '42', '2015-09-28 07:01:33'),
+(77, 22, 1, '43', '2015-09-28 07:06:19'),
+(78, 23, 1, '45', '2015-09-30 00:04:08');
 
 -- --------------------------------------------------------
 
@@ -380,6 +405,7 @@ INSERT INTO `taker` (`user_USERNAME`, `shared_SHARED_QUIZ_ID`, `ADDED_AT`, `ADDE
 ('hbaile04', 2, '2015-09-19 00:00:00', 'testuser'),
 ('jgraha50', 1, '2015-09-19 00:00:00', 'testuser'),
 ('jgraha50', 2, '2015-09-19 00:00:00', 'testuser'),
+('jgraha50', 36, '2015-09-30 00:03:35', 'jgraha50'),
 ('jtulip', 1, '2015-09-19 00:00:00', 'testuser'),
 ('jtulip', 2, '2015-09-19 00:00:00', 'testuser'),
 ('lkentwel', 1, '2015-09-19 00:00:00', 'testuser'),
@@ -405,10 +431,13 @@ CREATE TABLE IF NOT EXISTS `user` (
 --
 
 INSERT INTO `user` (`USERNAME`, `ADMIN_TOGGLE`) VALUES
+('atoole06', 0),
 ('hbaile04', 0),
 ('jgraha50', 0),
 ('jtulip', 0),
+('moluck', 0),
 ('testuser', 0),
+('wbrecken', 0),
 ('admin', 1),
 ('chart08', 1),
 ('lkentwel', 1);

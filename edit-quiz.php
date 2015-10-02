@@ -27,9 +27,6 @@ if (!is_null($quizIDGet)){
     $quizId = NULL;
 }
 
-quizLogic::maybeCloneQuiz($quizId);
-
-
 $quizCreated = filter_input(INPUT_GET, "create");
 if ($quizCreated == "yes"){
     $createQuizConfirmation = "Quiz Successfully created!";
