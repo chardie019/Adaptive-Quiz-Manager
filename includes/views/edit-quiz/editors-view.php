@@ -42,7 +42,7 @@ $templateLogic->startBody();
             <table>
                 <thead>
                     <tr>
-                        <th>Current Takers</th>
+                        <th>Current Editors</th>
                     </tr>
                 </thead>
                 
