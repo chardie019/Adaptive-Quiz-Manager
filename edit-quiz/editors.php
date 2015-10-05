@@ -7,7 +7,9 @@ require_once("../includes/config.php");
 
 $quizIDGet = quizLogic::getQuizIdFromUrlElseReturnToEditQuiz();
 $confirmAddMessage = " ";
+$confirmAddError = " ";
 $confirmRemoveMessage = " ";
+$confirmRemoveError = " ";
 $addDate = date('Y-m-d H:i:s');
 $dbLogic = new DB();
 
@@ -48,49 +50,53 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
                 }
                 else{
-                    $confirmAddMessage = 'User is already an Editor for this quiz.';
+                    $confirmAddError = 'User is already an Editor for this quiz.';
                 }
             }
             else{
-                $confirmAddMessage = 'Incorrect Username format. Must contain letters and numbers only.';
+                $confirmAddError = 'Incorrect Username format. Must contain letters and numbers only.';
             }
         }else{
-            $confirmAddMessage = "Quiz is still ENABLED. Return to Edit Quiz and DISABLE in order to update your quiz.";
+            $confirmAddError = "Quiz is still ENABLED. Return to Edit Quiz and DISABLE in order to update your quiz.";
         }
     }
     //IF user wants to REMOVE taker, perform the following
     //Possibly include a javascript 'Are you sure?' dialogue box??
-    else if (isset($_POST['confirmRemoveUser'])) {
+    else if (isset($_POST['removename'])) {
+        $confirmUsername = ($_POST['removename']);
         if($_SESSION['IS_QUIZ_ENABLED'] == false){
-            //Check username is number and letters, then check it doesnt exist before removing from 'editor'
-            if (preg_match("/^([A-Za-z0-9]+)$/", $confirmUsername)) {
+            if($_SESSION['username'] != $confirmUsername){
+                //Check username is number and letters, then check it doesnt exist before removing from 'editor'
+                if (preg_match("/^([A-Za-z0-9]+)$/", $confirmUsername)) {
 
-                $array = array(
-                    "user_USERNAME" => $confirmUsername,
-                    "shared_SHARED_QUIZ_ID" => $quizDetails['SHARED_QUIZ_ID']
-                );
-
-                $userResults = $dbLogic->select("user_USERNAME, shared_SHARED_QUIZ_ID", "editor", $array, true);
-
-                if(!empty($userResults)){
-                    $removeArray = array(
+                    $array = array(
                         "user_USERNAME" => $confirmUsername,
                         "shared_SHARED_QUIZ_ID" => $quizDetails['SHARED_QUIZ_ID']
-                    );           
-                    $removeUserResults = ($dbLogic->delete("editor", $removeArray));     
-                    $confirmRemoveMessage = 'User '.$confirmUsername.' has been successfully removed from the list of approved editors.';
+                    );
 
+                    $userResults = $dbLogic->select("user_USERNAME, shared_SHARED_QUIZ_ID", "editor", $array, true);
+
+                    if(!empty($userResults)){
+                        $removeArray = array(
+                            "user_USERNAME" => $confirmUsername,
+                            "shared_SHARED_QUIZ_ID" => $quizDetails['SHARED_QUIZ_ID']
+                        );           
+                        $removeUserResults = ($dbLogic->delete("editor", $removeArray));     
+                        $confirmRemoveMessage = 'User '.$confirmUsername.' has been successfully removed from the list of approved editors.';
+
+                    }
+                    else{
+                        $confirmRemoveError = 'User is not a registered Editor for this quiz.';
+                    }
                 }
                 else{
-                    $confirmRemoveMessage = 'User is not a registered Editor for this quiz.';
+                    $confirmRemoveError = 'Incorrect Username format. Must contain letters and numbers only.';
                 }
+            }else{
+                $confirmRemoveError = 'You cannot remove yourself as an Editor.';
             }
-            else{
-                $confirmRemoveMessage = 'Incorrect Username format. Must contain letters and numbers only.';
-            }
-        
         }else{
-            $confirmRemoveMessage = "Quiz is still ENABLED. Return to Edit Quiz and DISABLE in order to update your quiz.";
+            $confirmRemoveError = "Quiz is still ENABLED. Return to Edit Quiz and DISABLE in order to update your quiz.";
         }
     }
 }

@@ -13,9 +13,11 @@ require_once("includes/config.php");
 //If form is submitted, run this section of code, otherwise just load the view
 //Get values from submitted form
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
-    
-    include("create-quiz-post.php");
-    
+    if(isset($_POST['confirmQuiz'])){
+        include("create-quiz-post.php");
+    }else{
+        header('Location: '. CONFIG_ROOT_URL );
+    }
     
 } else {    //a Get request
     

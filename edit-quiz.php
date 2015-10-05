@@ -21,6 +21,7 @@ $dbLogic = new DB();
 $confirmActive = "";
 $enableSubMenuLinks = true; //default the links work
 $quizIDGet = filter_input(INPUT_GET, "quiz");
+
 if (!is_null($quizIDGet)){
     $quizId = quizLogic::returnRealQuizID($quizIDGet);
 } else {

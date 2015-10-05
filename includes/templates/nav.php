@@ -9,12 +9,8 @@
                href="<?php echo(CONFIG_ROOT_URL) ?>/take-quiz.php">Take Quiz</a>
         </li>
         <li>
-            <a class="<?php echo echoClassIfRequestMatches("create-quiz", "selected")?>"
-               href="<?php echo(CONFIG_ROOT_URL) ?>/create-quiz.php">Create Quiz</a>
-        </li>
-        <li>
             <a class="<?php echo echoClassIfRequestMatches("edit-quiz", "selected")?>"
-               href="<?php echo(CONFIG_ROOT_URL) ?>/edit-quiz.php">Edit Quiz</a>
+               href="<?php echo(CONFIG_ROOT_URL) ?>/edit-quiz.php">Manage Quiz</a>
         </li>
         <li>
             <a class="<?php echo echoClassIfRequestMatches("stats", "selected")?>"

@@ -230,7 +230,13 @@ $templateLogic->startBody();
         <textarea name="quizImageText" cols="40" rows="5"></textarea>
         <br />
         <br />
+        <br />
         <button class="mybutton mySubmit" type="submit" name="confirmQuiz" value="Enter">Create</button>
+        <button class="mybutton myReturn" type="submit" name="cancelQuiz" value="Cancel">Cancel</button>
+        <br />
+        <br />
+        <br />
+        <br />
     </form>
 
 </div>
