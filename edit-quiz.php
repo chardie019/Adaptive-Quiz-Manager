@@ -68,9 +68,10 @@ if($_SERVER['REQUEST_METHOD'] === "POST"){
     if(!empty($_POST["quizid"])){
         $quizIDPost = filter_input(INPUT_POST, "quizid");
         $_SESSION['CURRENT_EDIT_QUIZ_ID'] = $quizIDPost;
-    } 
-    $quizUrl = quizLogic::returnQuizUrl($quizIDGet);
+    }
     
+    $quizUrl = quizLogic::returnQuizUrl($quizIDPost);
+
     //If ENABLE button is pushed, update row in database
     if (isset($_POST['confirmEnabled'])) {
         //now quiz has to have at least 2 questions & 1 answer
@@ -150,7 +151,7 @@ if($_SERVER['REQUEST_METHOD'] === "POST"){
     //If DISABLE button is pressed, update row in database 
     }else if(isset($_POST['confirmDisabled'])){
         
-        $quizIDPost = filter_input(INPUT_POST, "quizID");
+        $quizIDPost = filter_input(INPUT_POST, "quizid");
 
         $setColumnsArray = array(
             "IS_ENABLED" => "0"
