@@ -1,7 +1,7 @@
 <?php
 
 $templateLogic = new templateLogic;
-$templateLogic->setTitle('Usage Statistics');
+$templateLogic->setTitle('User results');
 
 $templateLogic->addCustomHeadersStart();?>   
        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
@@ -49,41 +49,71 @@ $templateLogic->addCustomHeadersEnd();
 $templateLogic->startBody();
 ?>
         
-        
         <div id="content-charts">
-            <div id="chart-actions">   
-                <form action='stats-user.php' method='post'>    
+            
+                <div id='chart-actions'>
+                <form action='#' method='post'>    
                     <a class="mybuttonlink" href="<?php echo (CONFIG_ROOT_URL)."/stats.php"?>">Change<br /> quiz</a>
                     <br />
                     <br />
-                    <button class="mybutton" type="submit" name="userStatistics" >Select a<br /> User</button> 
+                    <button class="mybutton <?php {echo "statsActive";}?>" type="submit" name="selectStatistics" >Select a<br /> User</button> 
                     <br />
                     <br />
                 </form>
-                <form action='#' method='post'>
-                    <button class="mybutton <?php if($currentResults == true){echo "statsActive";}?>" type="submit" name="selectStatistics" >Current version</button> 
+                <form action='stats-editor.php' method='post'>
+                    <button class="mybutton" type="submit" name="selectStatistics" >Current version</button> 
                     <br />
                     <br />
-                    <button class="mybutton <?php if($currentResults == false){echo "statsActive";}?>" type="submit" name="previousVersions" >Previous versions</button>  
+                    <button class="mybutton" type="submit" name="previousVersions" >Previous versions</button>  
                 </form>
-                <br />
             </div>
-            <div id='content-table-data'> 
-            <p><span id="label">User: </span> <?php echo $pageUser ?></p>
+            <div id="content-table-data">  
+                <p><span id="label">User: </span> <?php echo $pageUser ?></p>
                 <p><span id="label">Number of attempts: </span><?php echo $countAttempts ?> attempts</p>
                 <p><span id="label">Average completion time: </span> <?php echo $averageTime ?></p>
                 <p><span id="label">Shortest completion time: </span> <?php echo $minTime ?></p>
-                <p><span id="label">Longest completion time: </span> <?php echo $maxTime ?></p>       
+                <p><span id="label">Longest completion time: </span> <?php echo $maxTime ?></p>
                 <br />
-                <br />
-                <br />
+       <div id='tableWrapper'>
+        <div id='tableScroll'>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Current Takers</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    <?php 
+                        for($j=0; $j<count($uniqueFinishers); $j++){
+                            echo "<tr>"
+                                    . "<td><form action='#' name='".$uniqueFinishers[$j]."' method='post'>" . 
+        "<input type='hidden' name='getResult' value='".$uniqueFinishers[$j]."'>" . $uniqueFinishers[$j] .
+        "<input type='submit' class='myReturn' name='userCurrent' value='Current Version'>" . 
+           "<input type='submit' class='myReturn' name='userPrevious' value='Previous Version'></form>"
+                                    . "</td>"
+                               . "</tr>";
+                        }
+                    ?>
+                
+                </tbody>
+            </table>
+        </div>
+    </div>
+           
+              
+             
+            
+            
+            
                 <h2 class=''>Answers selected for each question</h2>
                 <?php
                     for($x=0; $x<count($newQuestionArray); $x++){
                         echo "<div id=\"chart_div".$x."\"></div>";                    
                     }
                 ?>
-            </div>
+                </div>
+            
         </div>
         
 <?php

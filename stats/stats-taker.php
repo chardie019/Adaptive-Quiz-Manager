@@ -26,7 +26,7 @@ $dbLogic = new DB();
             
             $shareColumn = "quiz_QUIZ_ID";
             
-            $_SESSION['current'] = true;
+            $currentResults = true;
            
         if(isset($_POST['previousVersions'])){
             //Get shared quiz id for chosen quiz to prepare results inclusive of older versions
@@ -40,7 +40,7 @@ $dbLogic = new DB();
              
             $shareColumn = "shared_SHARED_QUIZ_ID";
             
-            $_SESSION['current'] = false;
+            $currentResults = false;
         } 
 
         $wherecolumn = array(
@@ -52,7 +52,7 @@ $dbLogic = new DB();
             "RESULT_ID" => "result_RESULT_ID"       
         );
 
-        $notNullColumn = "FINISHED_AT";
+        $notNullColumn = "FINISHED_AT";       
         $graphResults = $dbLogic->selectWithColumnsIsNotNull('*', 'result, result_answer', $wherecolumn, 
                 $wherecolumn2, $notNullColumn, false);
         

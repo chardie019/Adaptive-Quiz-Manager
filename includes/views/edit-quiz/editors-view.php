@@ -5,9 +5,12 @@ $templateLogic->setTitle('Manage Editors');
 $templateLogic->setSubMenuType("edit-quiz", "editors");
 $templateLogic->startBody();
 ?>
-<?php echo "<p class=\"inputError\">$confirmAddMessage</p>"; ?>
-<br />
-<?php echo "<p class=\"inputError\">$confirmRemoveMessage</p>"; ?>
+<?php   
+      echo "<p class=\"inputSuccess\">$confirmAddMessage</p>";
+      echo"<p class=\"inputSuccess\">$confirmRemoveMessage</p>";
+      echo "<p class=\"inputError\">$confirmAddError</p>";
+      echo"<p class=\"inputError\">$confirmRemoveError</p>"
+?>
 <br />
 
 <p>Adding an 'Editor' enables a user to perform all edit functions including: <br />
@@ -24,15 +27,14 @@ $templateLogic->startBody();
 </p>
 <br />
 <form action='#' method='post'>
-    <p>Please enter the CSU Username of the User you would like to <span id='label'>enable/disable</span> permissions for:</p>
-    <br />
+    <p>Please enter the CSU Username of the User you would like to <span id='label'>enable</span> permissions for, 
+        or <span id='label'>delete</span> a user from the list below:
+    </p>
     
     <p id='label'> Username: 
     <input type='text' class='defaultText' name='newUser' maxlength="20" />
     <button class="mybutton myEnabled" type="submit" name="confirmAddUser" value="Enter">Add user</button>
-    <button class="mybutton myDisabled" type="submit" name="confirmRemoveUser" value="Enter">Remove user</button>
     </p>
-    <br />
     <br />
     <br />
     <div id='tableWrapper'>
@@ -40,14 +42,19 @@ $templateLogic->startBody();
             <table>
                 <thead>
                     <tr>
-                        <th>Current active Takers</th>
+                        <th>Current Editors</th>
                     </tr>
                 </thead>
                 
                 <tbody>
                     <?php 
                         foreach($quizUsers as $editors){
-                            echo "<tr><td>".$editors['user_USERNAME']."</td></tr>";
+                            echo "<tr>"
+                                    . "<td><form action='#' name='".$editors['user_USERNAME']."' method='post'>" . 
+        "<input type='hidden' name='removename' value='".$editors['user_USERNAME']."'>" . $editors['user_USERNAME'] .
+        "<input type='submit' class='myReturn' name='removeEditor' value='Delete'></form>"
+                                    . "</td>"
+                               . "</tr>";
                         }
                     ?>
                 

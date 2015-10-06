@@ -294,6 +294,7 @@ class DB {
         $where = self::prepareWhereValuesSQL($whereValuesArray); //the values
         $where = self::prepareWhereColumnsSQL($whereColumnsArray, $where); //the columns
         $sql = "SELECT $columns FROM $tables WHERE $where AND $notNullColumn GROUP BY $groupColumn;";
+        
         return $this->runQueryReturnResults($sql, $singleRow, $whereValuesArray);
     }  
     

@@ -255,7 +255,10 @@ $quizName = filter_input(INPUT_POST, "quizName");
             "ADDED_BY" => "$uid"
         );
 
-        $dbLogic->insert($dataArray2, "editor");        
+        $dbLogic->insert($dataArray2, "editor");  
+        
+        //Insert creator of quiz into the takers table upon successful creation of quiz using same array values
+        $dbLogic->insert($dataArray2, "taker"); 
         
         //Set current quiz being created as session variable
         $_SESSION['CURRENT_CREATE_QUIZ_ID'] = $current_quiz_id;
