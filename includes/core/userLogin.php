@@ -29,9 +29,10 @@ if (!empty($_SERVER['uid'])){ //if not logined through the dev envirnment
 //once logged in, check things
 if (!empty($_SESSION["username"])){
     $userLogic = new userLogic($_SESSION["username"]);  
-    $_SESSION["usertype"] = $userLogic->isAdmin();
+    $_SESSION["usertype"] = $userLogic->getUserTypeDisplay();
+} else {
+    $userLogic = new userLogic(); //no one here
 }
-
 
 /*old 
  * 

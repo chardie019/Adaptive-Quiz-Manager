@@ -156,15 +156,15 @@ class templateLogic {
      * @param string $inputIndex sets the submenu, set to the page name (take-quiz, create-quiz, edit-quiz, stats, help)
      * @param boolean $enableSubMenuLinks truew (default) links are clickable, false are no
      */
-    function setSubMenuType($inputType = NULL, $inputIndex = NULL, $enableSubMenuLinks = true) {
+    function setSubMenuType($inputType = NULL, $inputIndex = NULL, $disableSubMenuLinks = false) {
         //choose which file to include on the template page
         $this->subMenuIndex = $inputIndex;
-        if ($enableSubMenuLinks === true) {
-            $this->greyedOutClass = "";
-            $this->SubMenuLinkElement = "a"; //a links
-        } else {
+        if ($disableSubMenuLinks === true) {
             $this->greyedOutClass = " myGreyedOut"; //space is important to separate classes
             $this->SubMenuLinkElement = "span"; //span links
+        } else {
+            $this->greyedOutClass = "";
+            $this->SubMenuLinkElement = "a"; //a links
         }
         switch ($inputType) {
             case "take-quiz":
@@ -331,6 +331,7 @@ class templateLogic {
      * @return void
      */
     function render($whichTemplate = NULL) {
+        global $userLogic; //access the user functions for the heading
         $this->checkPageIsReady();
         ob_start();
         header('Content-Type: text/html; charset=UTF-8'); //all pages are utf-8

@@ -2,14 +2,10 @@
     <div id="logo">
         <img alt="Logo" src="<?php echo(STYLES_LOCATION) ?>/logo.png" />
             <p> 
-            <?php if (isset($_SESSION['username']) 
-                && !empty($_SESSION['username'])
-                && isset($_SESSION['usertype'])
-                && !empty($_SESSION['usertype'])){ //if logged in ?>
-
-                <span>USER: </span><?php echo ($_SESSION["username"]); ?>
+            <?php if ($userLogic->isAUserLoggedIn() === true){ ?>
+                <span>USER: </span><?php echo ($userLogic->getUsername()); ?>
                 <br />
-                <span>TYPE: </span><?php echo ($_SESSION["usertype"]); ?>
+                <span>TYPE: </span><?php echo ($userLogic->getUserTypeDisplay()); ?>
             <?php } else { ?>
                 Not logged in
                 <br />

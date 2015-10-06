@@ -1,7 +1,7 @@
 <?php
 
 $templateLogic = new templateLogic;
-$templateLogic->setTitle('Inspect Question');
+$templateLogic->setTitle('Edit Question');
 $templateLogic->setSubMenuType("edit-quiz", "question");
 $templateLogic->addCSS("edit-question/edit-question-tree-list.css");
 $templateLogic->addCSS("edit-question/edit-question-forms.css");
@@ -67,7 +67,7 @@ $templateLogic->startBody();
         </div>
     </div>
     <p class="submit-buttons-container">
-        <a class="mybutton myReturn" href="<?php echo (CONFIG_ROOT_URL . '/edit-quiz/edit-question.php?quiz=' . $quizId) ?>">Back</a>
+        <a class="mybutton myReturn" href="<?php echo (CONFIG_ROOT_URL . '/edit-quiz/edit-question.php' . $quizUrl) ?>">Back</a>
         <button class="mybutton mySubmit" type="submit" name="question-submit" value="Enter">Update</button>
     </p>
 </form>

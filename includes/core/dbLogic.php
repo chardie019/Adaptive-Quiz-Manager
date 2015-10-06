@@ -254,7 +254,7 @@ class DB {
      * @param string $whereColumn The column where it's values are not found in the subquery
      * @param string $isNotInColumn The name of the column which results are only returned for if the value is not null
      * @param array $whereValuesArray  The input for the where clause. form $column => $value
-     * @param string $isNotNullColumn the last where col is not NULL at the end of the query
+     * @param string $isNullColumn the col which is not NULL at the end of the query
      * @param boolean $singleRow return one row or many? true is the default (single row)
      * @return array The results, eg result[15]['column'] or result['column']
      */  
@@ -685,6 +685,25 @@ class DB {
     }
     
     /**
+     * Updates columns. runs query like: UPDATE quiz SET SHARED_QUIZ_ID =  '16' WHERE QUIZ_ID = 16 and $col > "5";
+     * 
+     * @param string $tables The tables to be selected by the SQL query. in the form of "xx, yyy, zzz etc"
+     * @param array $setValuesArray The SET matching tables to be updated by the SQL query. in the form of $column => $value    
+     * @param array $whereValuesArray  The input for the where clause. form $column => $value  
+     * @param array $greaterWhereValuesArray Additional input for the where clause. form $column => $value (col greater than value)  
+     * @return void
+     */
+    public function updateSetWhereAndGreaterThanButSetNotEscaped($tables, array $setValuesArray, array $whereValuesArray, array $greaterWhereValuesArray) {
+        assert(is_string($tables));
+        $tables = strtolower($tables); //lowercase tables
+        $setColumns = self::prepareSetValuesSQLNoBinding($setValuesArray); //the columns
+        $where = self::prepareWhereValuesSQL($whereValuesArray); //the values
+        $where = self::prepareWhereValuesGreaterThanSQL($greaterWhereValuesArray, $where); //the greater than values
+        $sql = "UPDATE $tables SET $setColumns WHERE $where;";
+        $this->runQuery($sql, $whereValuesArray, $greaterWhereValuesArray);
+    }
+    
+    /**
      * Does the actual PDO query and returns the results
      * 
      * @param string $sql The SQL query
@@ -782,6 +801,22 @@ class DB {
         foreach ($whereValuesArray as $columnTemp => $valueTemp) {      //$value not used - it's in $data
             $where .= ($where == "") ? "" : " AND ";
             $where .= "$columnTemp = :" . self::prepareColumnNameForBinding($columnTemp); //replace dot with underscore for table.column
+        }
+        return $where;
+    }
+    
+    /**
+     * Converts the Where data array to a string in preapation for PDO
+     * 
+     * @param array $whereValuesArray An assoicative array in the form of $column(or table.column) => $value 
+     * @param string $where a string of the existing where sql query, values will be added on. (optional)
+     * @return string Part of the SQL query
+     */
+    private static function prepareWhereValuesGreaterThanSQL(array $whereValuesArray, $where = ""){
+        assert(is_string($where));
+        foreach ($whereValuesArray as $columnTemp => $valueTemp) {      //$value not used - it's in $data
+            $where .= ($where == "") ? "" : " AND ";
+            $where .= "$columnTemp > :" . self::prepareColumnNameForBinding($columnTemp); //replace dot with underscore for table.column
         }
         return $where;
     }

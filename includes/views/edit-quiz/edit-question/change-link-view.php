@@ -13,12 +13,16 @@ $templateLogic->addCustomHeadersStart(); ?>
     .tree-area {
         height: 100%;
     }
+    p.submit-buttons-container {
+        padding-top: 0;
+    }
 </style>
 <?php $templateLogic->addCustomHeadersEnd();
 $templateLogic->addCSS("jstree/themes/default/style.min.css", true);
 $templateLogic->startBody();
 ?>
 <form action='#' method='post' enctype="multipart/form-data" >
+    <span class="inputError"><?php echo $selectionError; ?></span>
     <div class="tree-area-container">
         <div class="tree-area">
             <div id="myjstree" class="demo">
@@ -26,13 +30,15 @@ $templateLogic->startBody();
             </div>
         </div>
     </div>
-    <!-- keep the forms values -->
-    <input type="hidden" name="answer-content" value="<?php echo $answerContent ?>" />
-    <input type="hidden" name="feedback-content" value="<?php echo $feedbackContent ?>" />
-    <input type="hidden" name="is-correct" value="<?php echo $isCorrect ?>" />
+    <p>
+    <input type="radio" name="link-remove" value="update" id="link-remove-no" checked="checked" />
+    <label for="link-remove-no">Update the link</label>
+    <input type="radio" name="link-remove" value="remove" id="link-remove-yes" />
+    <label for="link-remove-yes">Remove The existing link</label>
+    </p>
     <p class="submit-buttons-container">
-        <button class="mybutton myReturn" type="submit" name="link-back" value="Enter">Back</button>
-        <button class="mybutton mySubmit" type="submit" name="link-update" value="Enter">Update Link</button>
+        <a class="mybutton myReturn" href="<?php echo (CONFIG_ROOT_URL . '/edit-quiz/edit-question.php'.$quizUrl) ?>">Back</a>
+        <button class="mybutton mySubmit" type="submit" name="link-update" value="Enter">Change Link</button>
     </p>
 </form>
 <?php

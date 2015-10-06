@@ -1,7 +1,7 @@
 <?php
 
 $templateLogic = new templateLogic;
-$templateLogic->setTitle('Inspect Answer');
+$templateLogic->setTitle('Edit Answer');
 $templateLogic->setSubMenuType("edit-quiz", "question");
 $templateLogic->addCSS("edit-question/edit-question-tree-list.css");
 $templateLogic->addCSS("edit-question/edit-question-forms.css");
@@ -50,14 +50,9 @@ $templateLogic->startBody();
             <br />
             <?php echo "<span class=\"inputError\">".$isCorrectError."</span>"?> 
         </div>
-        <div class="jump-to-question">
-            <p class="label">Link to different branch:</p>
-            <input type="hidden" name="link" value="<?php echo $linkFromLinkPage ?>" />
-            <p>[<?php echo $linkStatus ?>] <button type="submit" name="to-link-page" value="Enter">Change</button></p>
-        </div>
     </div>
     <p class="submit-buttons-container">
-        <a class="mybutton myReturn" href="<?php echo (CONFIG_ROOT_URL . '/edit-quiz/edit-question.php?quiz=' . $quizId) ?>">Back</a>
+        <a class="mybutton myReturn" href="<?php echo (CONFIG_ROOT_URL . '/edit-quiz/edit-question.php' . $quizUrl) ?>">Back</a>
         <button class="mybutton mySubmit" type="submit" name="answer-submit" value="Enter">Update</button>
     </p>
 </form>

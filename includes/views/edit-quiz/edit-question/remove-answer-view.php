@@ -12,7 +12,7 @@ $templateLogic->addCustomHeadersStart(); ?>
         width: 40%;
     }
     .tree-area {
-        height: 28em;
+        height: 25em;
     }
 </style>
 <?php
@@ -40,11 +40,16 @@ $templateLogic->startBody();
             <p class="label">Correctness:</p>
             <p> <?php echo $correctText; ?> </p>
             <br />
+            <p class="label">Removal type:</p>
+            <input id="remove-single-radio" name="delete-type" type="radio" value="single" checked="checked" />
+            <label for="remove-single-radio">Remove Single Answer</label>
+            <input id="remove-branch-radio" name="delete-type" type="radio" value="branch" />
+            <label for="remove-branch-radio">Remove this entire Branch</label>
         </div>
     </div>
     
     <p class="submit-buttons-container">
-        <a class="mybutton myReturn" href="<?php echo (CONFIG_ROOT_URL . '/edit-quiz/edit-question.php?quiz=' . $quizId) ?>">Back</a>
+        <a class="mybutton myReturn" href="<?php echo (CONFIG_ROOT_URL . '/edit-quiz/edit-question.php' . $quizUrl) ?>">Back</a>
         <button class="mybutton mySubmit" type="submit" name="delete-submit" value="Enter">Delete</button>
     </p>
 </form>

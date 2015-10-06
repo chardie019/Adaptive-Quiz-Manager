@@ -186,7 +186,7 @@ class quizHelper
                     $typeList= "question-list". $addClass;
                     $jsTreeType = "question";
                     $letter = "Q";
-                    $item = $letter . ":  " . $arr['question_QUESTION_ID']." - ".$arr['QUESTION'];
+                    $item = $letter . ":  " . $arr['SHORT_QUESTION_ID']." - ".$arr['QUESTION'];
                     $id = $letter . $arr['question_QUESTION_ID'];
                     $value = $arr['question_QUESTION_ID'];
                } else {
@@ -194,7 +194,7 @@ class quizHelper
                     $typeList = "answer-list". $addClass;
                     $jsTreeType = "answer";
                     $letter = "A";
-                    $item = $letter . ":  " . $arr['answer_ANSWER_ID']." - ".$arr['ANSWER'];
+                    $item = $letter . ":  " . $arr['SHORT_ANSWER_ID']." - ".$arr['ANSWER'];
                     $id = $letter . $arr['answer_ANSWER_ID'];
                     $value = $arr['answer_ANSWER_ID'];
                }

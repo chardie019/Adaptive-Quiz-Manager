@@ -7,10 +7,11 @@ $templateLogic->startBody();
 ?>
 <form action='#' method='post' enctype="multipart/form-data" >
     <h3>Are you sure you want to remove the <?php echo $type ?>:</h3>
-        <p><?php echo $content ?></p>
-        <br />
+    <p><?php echo $content ?></p>
+    <br />
+    <h4>This will delete the <?php echo $deleteTypeDisplay ?>.</h4>
     <p class="submit-buttons-container">
-        <a class="mybutton myReturn" href="<?php echo (CONFIG_ROOT_URL . '/edit-quiz/edit-question.php?quiz=' . $quizIDGet) ?>">Back</a>
+        <button class="mybutton myReturn" type="submit" name="delete-return" value="Enter">Back</button>
         <button class="mybutton mySubmit" type="submit" name="delete-confirm" value="Enter">Confirm</button>
     </p>
 </form>

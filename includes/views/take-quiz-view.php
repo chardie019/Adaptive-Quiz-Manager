@@ -33,7 +33,7 @@ $templateLogic->startBody();
 	<br />
 	<br />
 	
-    <?php echo ("<span class=\"feedbackStyle\">".$answerFeedback."</span>");
+    <?php echo ("<span class=\"feedbackStyle\">".nl2br($answerFeedback)."</span>");
 
           echo ("<br />");
     ?>
@@ -47,7 +47,7 @@ $templateLogic->startBody();
             Question: <?php echo ($questionData["QUESTION"]); ?>
         </p>
         <p>
-        <?php echo ($questionData["CONTENT"]); ?>
+        <?php echo (nl2br($questionData["CONTENT"])); ?>
         <br />
         <br />
          Please choose an answer:
@@ -59,7 +59,7 @@ $templateLogic->startBody();
                         //$result = array_values($oneResult); //convert from assocative array to numeric(normal) array
                         echo ("<label>");
                             echo ("<input type=\"radio\" name=\"answer\" value=\"" . $answerRow["ANSWER_ID"] . "\" />");
-                            echo ($answerRow["ANSWER"]);
+                            echo (nl2br($answerRow["ANSWER"]));
                         echo ("</label>");
                         echo ("<br />");
                     }

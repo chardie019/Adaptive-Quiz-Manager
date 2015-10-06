@@ -229,7 +229,7 @@ $templateLogic->startBody();
                 <p class="label">Is there a cover image to upload with your quiz(optional):</p>
                 <input type="file" name="quizImageUpload" accept="image/*">
                 <br />
-                <img src='<?php echo "C:\Users\Admin\Documents\GitHub\Adaptive-Quiz-Manager\Adaptive-Quiz-Manager\data\quiz-images\\" . $quizInfo["IMAGE"]; ?>' alt='<?php echo $quizInfo['IMAGE_ALT']?>'>
+                <img src='<?php echo quizHelper::returnWebImageFilePath($sharedQuizId, $quizInfo["IMAGE"]); ?>' alt='<?php echo $quizInfo['IMAGE_ALT']?>'>
                 <?php echo "<span class=\"inputError\">".$imageUploadError."</span>"?>
                 <br />
                 <p class="label">Please provide alternative text for the image you uploaded:</p>
@@ -237,7 +237,7 @@ $templateLogic->startBody();
                 <br />
                 <button class="mybutton mySubmit" type="submit" name="confirmUpdate" value="Enter">Update</button>
             </form>
-                 <a class='mybutton myReturn' href='<?php echo(CONFIG_ROOT_URL) . "/edit-quiz.php?quiz=".$quizIDPost?>'>Cancel</a>
+                 <a class='mybutton myReturn' href='<?php echo(CONFIG_ROOT_URL) . "/edit-quiz.php".$quizUrl?>'>Cancel</a>
 <?php
 $templateLogic->endBody();
 

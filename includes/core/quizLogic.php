@@ -82,199 +82,7 @@ class quizLogic
      * @param string $questionId The question ID associated
      * @return void
      */
-    public static function removeImagefromQuestion($quizId, $questionId){
-        $dbLogic = new DB();
-        //check the question is on the same quiz
-        $prevConAnswerConId = self::checkQuestionBelongsToQuizReturnId($dbLogic, $quizId, $questionId);
-        if ($prevConAnswerConId == false){
-            return false;
-        }
-        $result = quizLogic::returnQuestionOrAnswerData($questionId , "question"); //get the image filename
-        //remove the image from db
-        $whereValuesArray = array("QUESTION_ID" => $questionId);
-        $setColumnsArray = array("IMAGE" => NULL);
-        $dbLogic->updateSetWhere("question", $setColumnsArray, $whereValuesArray);
-        //delete current image file
-        unlink(quizHelper::returnRealImageFilePath($quizId, $result['IMAGE']));
-    }
-    /**
-     * Updates a question in the database
-     * 
-     * @param string $quizId  The quiz associated 
-     * @param string $questionId The question ID to update
-     * @param string $questionTitle The question's heading
-     * @param string $questionContent The paragraph for the question
-     * @param string $questionAlt The alternate text for those impaired
-     * @param string $targetFileName The filename of the image for the question (optional, keeps old image)
-     * @return boolean false if operation fails, true if success
-     */
-    public static function updateQuestion($quizId, $questionId, $questionTitle, $questionContent, $questionAlt, $targetFileName = NULL){
-        $dbLogic = new DB();
-        //check the question is on the same quiz
-        $prevConAnswerConId = self::checkQuestionBelongsToQuizReturnId($dbLogic, $quizId, $questionId);
-        if ($prevConAnswerConId == false){
-            return false;
-        }
-        $whereValuesArray = array("QUESTION_ID" => $questionId);
-        if (is_null($targetFileName)){
-            $setColumnsArray = array(
-                "QUESTION" => $questionTitle,
-                "CONTENT" => $questionContent,
-                "IMAGE_ALT" => $questionAlt
-            );
-        } else {
-            //delete the existing file
-            $result = $dbLogic->select("IMAGE", "question", $whereValuesArray);
-            unlink(quizHelper::returnRealImageFilePath($quizId, $result['IMAGE']));
-            //prepare update arrays
-            $setColumnsArray = array(
-                "QUESTION" => $questionTitle,
-                "CONTENT" => $questionContent,
-                "IMAGE" => $targetFileName,
-                "IMAGE_ALT" => $questionAlt
-            );
-        }
-        $dbLogic->updateSetWhere("question", $setColumnsArray, $whereValuesArray);
-        //all good, so returnn true
-        return true;
-    }
-    /**
-     * Updates a answer in the database
-     * 
-     * @param string $quizId The quiz associated 
-     * @param string $answerId The answer assiocated
-     * @param string $answerContent The actual answer
-     * @param string $feedbackContent The feedback when choosing that answer
-     * @param string $isCorrect is it correct 0,2, or 2 (0 is incorrect, 1 is correct, 2 is neutral)
-     * @param string $link The question to link the answer to
-     * @return void
-     */
-    public static function updateAnswer($quizId, $answerId, $answerContent, $feedbackContent, $isCorrect, $link = NULL){
-        $dbLogic = new DB();
-         //check the question is on the same quiz
-        $connId = self::checkAnswerBelongsToQuizReturnId($dbLogic, $quizId, $answerId);
-        
-        if ($connId == false){
-            return false;
-        }
-        if (!empty($link)){ //if set and NOT NULL, remove children (but not itself)
-            $index = self::prepareRecursiveListQuestionAnswer($dbLogic, $quizId);
-            self::removeChildren($dbLogic, $index, $connId, $connId);
-        }
-        //get the loop conn id and set the loop to it Or NULL
-        $LoopConnId = self::checkQuestionBelongsToQuizReturnId($dbLogic, $quizId, $link);
-        if ($LoopConnId ==false) {$LoopConnId = NULL;}
-        $setValuesArray = array("LOOP_CHILD_ID" => $LoopConnId);
-        $whereValuesArray = array("CONNECTION_ID" => $connId);
-        $dbLogic->updateSetWhere("question_answer", $setValuesArray, $whereValuesArray); 
-            
-        $whereValuesArray = array("ANSWER_ID" => $answerId);
-        //prepare update arrays
-        $setColumnsArray = array(
-            "ANSWER" => $answerContent,
-            "FEEDBACK" => $feedbackContent,
-            "IS_CORRECT" => $isCorrect
-        );
-        $dbLogic->updateSetWhere("answer", $setColumnsArray, $whereValuesArray);
-    }
-    /**
-     * Remove a Answer in the database
-     * 
-     * @param string $quizId The quiz associated 
-     * @param string $answerId The answer assiocated
-     * @param string $answerContent The actual answer
-     * @param string $feedbackContent The feedback when choosing that answer
-     * @param string $isCorrect is it correct 0,2, or 2 (0 is incorrect, 1 is correct, 2 is neutral)
-     * @param boolean $removeItSelf true - delelete it self, false keep itself (optional, default it will delete itself)
-     * @return void
-     */
-    public static function removeAnswerOrQuestion($quizId, $id, $type, $removeItSelf = true){
-        $dbLogic = new DB();
-        //find the connection id
-        if ($type == "question"){
-            $connId = self::checkQuestionBelongsToQuizReturnId($dbLogic, $quizId, $id);
-            
-        } else {
-            $connId = self::checkAnswerBelongsToQuizReturnId($dbLogic, $quizId, $id);
-        }
-        if ($connId == false){
-            return false;
-        }
-        $index = self::prepareRecursiveListQuestionAnswer($dbLogic, $quizId);;
-        self::removeChildren($dbLogic, $index, $connId);
-        //now delete it self
-        if ($removeItSelf == true){
-            //do delete
-            $deleteValues = array("CONNECTION_ID" => $connId);
-            $dbLogic->delete("question_answer", $deleteValues);
-            if ($type == "question"){
-                $deleteValues = array("QUESTION_ID" => $id);
-                $dbLogic->delete("question", $deleteValues);
-            } else {
-                $deleteValues = array("ANSWER_ID" => $id);
-                $dbLogic->delete("answer", $deleteValues);
-            }
-            
-        }
-
-    }
-    /**
-     * Recursive bottom-up tree traversal - Delete children on question_answer and their tables
-     * 
-     * @param DB $dbLogic reuse current connection to Databse
-     * @param string $index the array to go through
-     * @param string $parentId The node(it's Connection ID field) to be deleted and it's children
-     * return void
-     */
-   protected static function removeChildren(DB $dbLogic, $index, $parentId) {
-       $parentId = $parentId === NULL ? "NULL" : $parentId;
-       if (isset($index[$parentId])) {
-            foreach ($index[$parentId] as $singleParentId) {
-            self::RemoveChildren($dbLogic, $index, $singleParentId['id']);
-            //set any references to LOOP_CHILD_ID to NULL
-            $index = self::removeReferencetoLoopChild($dbLogic, $index, $singleParentId['id']);
-                $deleteValues = array("CONNECTION_ID" => $singleParentId['id']);
-                $dbLogic->delete("question_answer", $deleteValues);
-                if ($singleParentId['type'] === "question"){
-                    $deleteValues = array("QUESTION_ID" => $singleParentId['questionOrAnswerId']);
-                    $dbLogic->delete("question", $deleteValues);
-                } else {
-                    $deleteValues = array("ANSWER_ID" => $singleParentId['questionOrAnswerId']);
-                    $dbLogic->delete("answer", $deleteValues);
-                }
-                ;
-            }
-       }
-   }
-    /**
-     * Recursive bottom-up tree traversal - Delete children on question_answer and their tables
-     * 
-     * @param DB $dbLogic reuse current connection to Databse
-     * @param string $index the array to go through
-     * @param string $id The node to checked if there loop child matching
-     * return array the modified array
-     */
-   private static function removeReferencetoLoopChild(DB $dbLogic, array $index, $id){
-       foreach ($index as $value){
-            /* @var $value2 type */
-            foreach ($value as $value2){
-                if ($value2['loopChildId'] == $id){
-                    $setColumnsArray = array("LOOP_CHILD_ID" => NULL);
-                    $whereValuesArray = array("CONNECTION_ID" => $value2['id']);
-                    $dbLogic->updateSetWhere("question_answer", $setColumnsArray, $whereValuesArray);
-                }
-           }
-        }
-        return $index;
-   }
-    /**
-     * Returns the parent ID of a question or Answer
-     * 
-     * @param DB $dbLogic reuse the current connection the databse
-     * @param string $questionOrAnswerId the If of teh question or answer
-     * @param string $type indicties if teh id is a question or an answer ("question" for question etc)
-     * @return string|boolean return the connection ID, false if operation fails
-     */
+    
     public static function returnParentId(DB $dbLogic, $questionOrAnswerId, $type){
         if ($type == "question"){
             $whereValuesArray = array("question_QUESTION_ID" => $questionOrAnswerId);
@@ -287,56 +95,6 @@ class quizLogic
         } else {
             return false;
         }
-    }
-    /**
-     * Check if the question is on the same quiz, returns false if not
-     * 
-     * @param string $quizId The quiz associated 
-     * @param string $prevQuestionId The question to connect it with
-     * @param string $answerContent The actual answer
-     * @param string $feedbackContent The feedback when choosing that answer
-     * @param string $isCorrect is it correct 0,2, or 2 (0 is incorrect, 1 is correct, 2 is neutral)
-     * @param string $link the the question that the answer will jump to afterwards in a different branch
-     * @return boolean false if operation fails, true if success
-     */
-    public static function insertAnswer($quizId, $prevQuestionId, $answerContent, $feedbackContent, $isCorrect, $link){
-        $dbLogic = new DB();
-        //check the answer is on the same quiz
-        $prevConQuestionConId = self::checkQuestionBelongsToQuizReturnId($dbLogic, $quizId, $prevQuestionId);
-        if ($prevConQuestionConId == false){
-            return false;
-        }
-        //insert answer and get it's answer id
-        $answerId = self::insertAnswerintoAnswerTable($dbLogic, $answerContent, $feedbackContent, $isCorrect);
-        //insert it using the id retrieved eariler
-        self::insertAnswerIntoQuestionAnswerTable($dbLogic, $answerId, $quizId, $link, $prevConQuestionConId);
-        //all good, so returnn true
-        return true;
-    }
-    /**
-     * Inserts a question into the database
-     * 
-     * @param string $quizId  The quiz associated 
-     * @param string $prevAnswerId The answer to connect this with
-     * @param string $questionTitle The question's heading
-     * @param string $questionContent The paragraph for the question
-     * @param string $targetFileName The filename of the image for the question
-     * @param string $questionAlt The alternate text for those impaired
-     * @return boolean false if operation fails, true if success
-     */
-    public static function insertQuestion($quizId, $prevAnswerId, $questionTitle, $questionContent, $targetFileName, $questionAlt){
-        $dbLogic = new DB();
-        //check the question is on the same quiz
-        $prevConAnswerConId = self::checkAnswerBelongsToQuizReturnId($dbLogic, $quizId, $prevAnswerId);
-        if ($prevConAnswerConId == false){
-            return false;
-        }
-        //insert question and get it's Connection id
-        $questionConId = self::insertQuestionIntoQuestionTable($dbLogic, $questionTitle, $questionContent, $targetFileName, $questionAlt);
-        //insert it using the id retrieved eariler
-        self::insertQuestionIntoQuestionAnswerTable($dbLogic, $questionConId, $quizId, $prevConAnswerConId);
-        //all good, so returnn true
-        return true;
     }
         /**
      * Check if the question is on the same quiz, returns the CONNECTION_ID, false otherwise
@@ -382,238 +140,49 @@ class quizLogic
             return $result['CONNECTION_ID'];
         }
     }
-    public static function checkUserCanEditQuiz(){
-        
-    }
-    public static function checkUserCanTakeQuiz(){
-        
-    }
     /**
-     * Inserts a question and answer infront of the first question
+     * Checks if a user can edit a quiz. exits if user can not edit, returns void if so.
      * 
-     * @param string $quizId The Current quiz (real quiz)
-     * @param string $questionTitle The Question Heading
-     * @param string $questionContent The paragraph about the question
-     * @param string $questionImageUploadfile - the file to upload
-     * @param string $questionAlt The ALt text for the image
-     * @param string $answerContent The answer for teh first question
-     * @param string $feedbackContent The feedback for the answer
-     * @param string $isCorrect A number that shows if teh answer corretc, not or neutral
-     * @return void
+     * @param string $sharedQuizId The shared quiz ID
+     * @param string $username The username eg jgraha50
+     * @return boolean void; 
      */
-    public static function insertInitalQuestionAnswer($quizId, $questionTitle, $questionContent, $questionImageUploadfile, $questionAlt, 
-            $answerContent, $feedbackContent, $isCorrect) {
-
-        //TODO recalculate the depth
-        
+    public static function canUserEditQuizElseReturnToEditQuiz ($sharedQuizId, $username) {
         $dbLogic = new DB();
-        
-        //inset the question and rcord the id
-        $questionId = self::insertQuestionIntoQuestionTable($dbLogic, $questionTitle, $questionContent, $questionImageUploadfile, $questionAlt);
-        
-        //insert the answe and record the answer
-        $answerId = self::insertAnswerintoAnswerTable($dbLogic, $answerContent, $feedbackContent, $isCorrect);
-        
-        //get the root node of the quiz in question_answer before mofification
         $whereValuesArray = array(
-            "quiz_QUIZ_ID" => $quizId
+          "shared_SHARED_QUIZ_ID" => $sharedQuizId,
+          "user_USERNAME" => $username
         );
-        $rootQuestionAnswer = $dbLogic->selectAndWhereIsNull("CONNECTION_ID", "question_answer", $whereValuesArray, array("PARENT_ID"));
-        $rootQuestionAnswerConId = $rootQuestionAnswer["CONNECTION_ID"];
-        
-        //insert question to question_answer using above question_ID
-        $questionConnectionId = self::insertQuestionIntoQuestionAnswerTable($dbLogic, $questionId, $quizId);
-        
-        $link = NULL; //no link
-                
-        //insert question to question_answer using above question_ID
-        $answerConnectionId = self::insertAnswerIntoQuestionAnswerTable ($dbLogic, $answerId, $quizId, $link, $questionConnectionId);
-        
-        //attach the root node to the new answer
-        $setColumnsArray = array("PARENT_ID" => $answerConnectionId);
-        $whereValuesArray = array("CONNECTION_ID" => $rootQuestionAnswerConId);//the root)
-        $dbLogic->updateSetWhere("question_answer", $setColumnsArray, $whereValuesArray);
-        
-        $index = self::prepareRecursiveListQuestionAnswer($dbLogic, $quizId);
-        //do updating of depth for the children
-        self::increaseDepthOfChildNodes($dbLogic, $index, $rootQuestionAnswerConId);
-    }
-    /**
-     * Creates a Array from the question_answer table to iterate through with other fuctions
-     * 
-     * @param DB $dbLogic reuse current connection to the databse
-     * @param string $quizId the quiz to generate the list from
-     * @return array The PHP array of similar structyre to the databse
-     * ['id'] = the connection id
-     * ['type'] = the type, question or answer, a string
-     * ['questionOrAnswerId'] the id of the question or answer id
-     */
-    protected static function prepareRecursiveListQuestionAnswer (DB $dbLogic, $quizId) {
-        $whereValuesArray = array("quiz_QUIZ_ID" => $quizId);//the root
-        //do updating of depth for the children
-        $children = $dbLogic->selectOrder("CONNECTION_ID, PARENT_ID, question_QUESTION_ID, answer_ANSWER_ID, LOOP_CHILD_ID", "question_answer",  $whereValuesArray, "DEPTH", false);
-        $index = array();
-        foreach ($children as $child){
-            //if question or answer, put the type into aarray
-            if (!is_null($child["question_QUESTION_ID"])){
-                $type = "question";
-                $questionOrAnswerId = $child["question_QUESTION_ID"];
-            } else {
-                $type = "answer";
-                $questionOrAnswerId = $child["answer_ANSWER_ID"];
-            }
-            $id = $child["CONNECTION_ID"];
-            $parent_id = $child["PARENT_ID"] === NULL ? "NULL" : $child["PARENT_ID"];
-            $index[$parent_id][] = array (
-                'loopChildId' => $child['LOOP_CHILD_ID'],
-                'id' => $id,
-                'type' => $type,
-                'questionOrAnswerId' => $questionOrAnswerId
-            );
-        }
-        return $index;
-    }
-    /*
- * Recursive top-down tree traversal example:
- * Indent and print child nodes
- */
-    protected static function increaseDepthOfChildNodes (DB $dbLogic, $index, $parent_id){
-       //if NULL, set the string to to "NULL", otherwise be yourself
-        $parent_id = $parent_id === NULL ? "NULL" : $parent_id;
-        //if exist
-        if (isset($index[$parent_id])) {
-            foreach ($index[$parent_id] as $row) { //rPll through the ARRAY OF 1 result (needs to be array as some are missed somehow)
-                $setColumnsArray = array("DEPTH" => "DEPTH+1");
-                $whereValuesArray = array("CONNECTION_ID" => $row['id']);
-                //increase the current depth of the row
-                $dbLogic->updateSetButSetNotEscaped("question_answer", $setColumnsArray, $whereValuesArray);
-                //recursive loop
-                self::increaseDepthOfChildNodes($dbLogic, $index, $row['id']);
-            }
+        $result = $dbLogic->select("1", "editor", $whereValuesArray); //1 is retun a manningless column (if query is correct)
+        if (count($result) > 0){
+            return; //all good so return
+        } else {
+            self::jumpBackToEditQuizList("no-edit-permission");
         }
     }
     /**
-     * Inserts a answer into the "question" table
+     * Jumps teh user to the edit quiz list and putsthe reason in the URL
      * 
-     * @param DB $dbLogic The Current connection the databse (reuse it)
-     * @param string $answerContent The answer's text
-     * @param string $feedbackContent The feedback from the answer
-     * @param string $isCorrect The number (string) indictcating if correct, neutral etc
-     * @return string The answer's primary key, ConnectionID
+     * @param string $reason
      */
-    protected static function insertAnswerintoAnswerTable (DB $dbLogic, $answerContent, $feedbackContent, $isCorrect){
-        $insertArray = array(
-            "ANSWER" => $answerContent,
-            "FEEDBACK" => $feedbackContent,
-            "IS_CORRECT" => $isCorrect
-        );
-        return $dbLogic->insert($insertArray, "answer");
+    public static function jumpBackToEditQuizList ($reason) {
+        header('Location: ' . CONFIG_ROOT_URL . '/edit-quiz.php?message='.$reason);
+        exit; 
     }
     /**
-     * Inserts a question into the "question" table
+     * gets the REAL quiz ID by inspecting the db with teh shared quiz ID from teh URL
      * 
-     * @param DB $dbLogic The Current connection the databse (reuse it)
-     * @param string $questionTitle The title of the question
-     * @param string $questionContent The paragraph for the question
-     * @param string $questionImageUploadfile The filename of the image
-     * @param string $questionAlt The ALt text for the question's image
-     * @return string The answer's primary key, ConnectionID
+     * @return string THE REAL Quiz ID
      */
-    protected static function insertQuestionIntoQuestionTable (DB $dbLogic, $questionTitle, $questionContent, $questionImageUploadfile, $questionAlt){
-        $insertArray = array(
-            "QUESTION" => $questionTitle,
-             "CONTENT" => $questionContent,
-             "IMAGE" => $questionImageUploadfile,
-             "IMAGE_ALT" => $questionAlt
-        );
-        return $dbLogic->insert($insertArray, "question");
-    }
-    /**
-     * Inserts a question into the "question_answer" table
-     * 
-     * @param DB $dbLogic The Current connection the databse (reuse it)
-     * @param string $questionId The Question ID form the question table insert
-     * @param string $quizId The quiz to assoicate the question with
-     * @param string $parentId The parent CONNECTION_ID (optional, added to the otherwise)
-     * @param string $answerConId The 
-     * @return string The question_answer's primary key, ConnectionID (for the question just inserted)
-     */
-    protected static function insertQuestionIntoQuestionAnswerTable (DB $dbLogic, $questionId, $quizId, $parentId = NULL){
-        if (is_null($parentId)) {    //inserting at the top
-            $insertArray = array(
-                "question_QUESTION_ID" => $questionId,
-                 "TYPE" => "question",
-                 "quiz_QUIZ_ID" => $quizId,
-                "DEPTH" => '0'
-            );
-            return $dbLogic->insert($insertArray, "question_answer");
-        } else { //inserting somewhere else, use insert Selct to get the depth right
-            $insertArray = array(
-                "question_QUESTION_ID" => $questionId,
-                    "TYPE" => "question",
-                    "quiz_QUIZ_ID" => $quizId,
-                    "PARENT_ID" => $parentId
-                );
-                $whereArray = array(
-                    "CONNECTION_ID" => $parentId
-                );
-            //INSERT INTO question_answer (DEPTH, question_QUESTION_ID, TYPE, quiz_QUIZ_ID, PARENT_ID) SELECT DEPTH+1, '114', 'question', '1', '208' FROM question_answer WHERE CONNECTION_ID = '208'
-            return $dbLogic->insertWithSelectWhere("question_answer", "DEPTH, question_QUESTION_ID, TYPE, quiz_QUIZ_ID, PARENT_ID",
-                    "DEPTH+1", "question_answer",$whereArray, $insertArray); //depth is increased from last
 
-        }
-    }
-    /**
-     * Inserts a answer into the "question_answer" table
-     * 
-     * @param DB $dbLogic The Current connection the databse (reuse it)
-     * @param string $answerId The answer ID form the answer table insert
-     * @param string $quizId The quiz to assoicate the question with
-     * @param string $link the question to link the naswer to in a different branch
-     * @param string $questionConnectionId The connectionId from the previous question [insert] (attach it)
-     * @param string $parentId The question to attach to (optional)
-     * @return string The question_answer's primary key, ConnectionID (for the answer just inserted)
-     */
-    protected static function insertAnswerIntoQuestionAnswerTable (DB $dbLogic, $answerId, $quizId, $link, $questionConnectionId, $parentId = NULL){
-        $dbLink = self::checkQuestionBelongsToQuizReturnId($dbLogic, $quizId, $link);
-        if ($dbLink == false) {$dbLink = NULL;}
-        $insertArray = array(
-                "answer_ANSWER_ID" => $answerId,
-                 "TYPE" => "answer",
-                "PARENT_ID" => $questionConnectionId,
-                "quiz_QUIZ_ID" => $quizId,
-                "LOOP_CHILD_ID" => $dbLink
-        );
-        if (is_null($parentId)) {    //inserting at the top
-            $insertArray["DEPTH"] = "1";  //add to arry - lower than the first question
-            return $dbLogic->insert($insertArray, "question_answer");
-        } else { //inserting somewhere else, use insert Selct to get the depth right
-            $insertArray = array(
-                "answer_ANSWER_ID" => $answerId,
-                 "TYPE" => "answer",
-                "PARENT_ID" => $questionConnectionId,
-                "quiz_QUIZ_ID" => $quizId
-            );
-            $whereArray = array(
-                "CONNECTION_ID" => $parentId
-            );
-            return $dbLogic->insertWithSelectWhere("question_answer", "DEPTH, answer_ANSWER_ID, TYPE, PARENT_ID, quiz_QUIZ_ID",
-                    "DEPTH+1", "question_answer", $whereArray, $insertArray); //depth is increased from last
-        }
-    }
-    /**
-     * Gets the shared quiz ID from the URL and returns the real ID, otherwise, back to edit-quiz.
-     *
-     * @return string The Real Quiz ID
-     */
     public static function getQuizIdFromUrlElseReturnToEditQuiz() {
         $quizIDGet = (string)quizLogic::returnRealQuizID(filter_input(INPUT_GET, "quiz"));
         if(is_null($quizIDGet)){
             //back to edit quiz
-            header('Location: ' . CONFIG_ROOT_URL . '/edit-quiz.php?no-quiz-selected=yes');
-            exit;  
+            self::jumpBackToEditQuizList("no-quiz-selected");  
+        } else {
+            return $quizIDGet;
         }
-        return $quizIDGet;
     }
     
     /**
@@ -655,7 +224,19 @@ class quizLogic
         $result = $dbLogic->select("SHARED_QUIZ_ID", "quiz", $where);
         return $result['SHARED_QUIZ_ID'];
     }
-    
+    /**
+     * Generates the start of prarametrs for URL - aka ?quiz=sharedQuizId
+     * 
+     * No modication/checking at all!
+     * 
+     * @param string $sharedQuizId the shared quiz ID
+     * @return string URL params - "?quiz=sharedQuizId"
+     */
+    public static function returnQuizUrl ($sharedQuizId) {
+        return "?quiz=".quizLogic::returnSharedQuizID($sharedQuizId);
+    }
+
+
     /**
      * Returns the Real Quiz ID (latest version) for quiz.
      *
@@ -697,17 +278,26 @@ class quizLogic
      * As usual, a new quiz shares same shared quiz id
      * 
      * @param string $oldQuizId The the quiz to be cloned (real quiz ID)
-     * @return string The new quiz's id or not needed, the existing quiz id sent to it
+     * @return string|array The new quiz's id or not needed, the existing quiz id sent to it
+     * if $oldQOrAId passed, the return array is ['quizId'] & ['newId'] where the id is the question or answer id
      */
-    static public function maybeCloneQuiz($oldQuizId) {
+    static public function maybeCloneQuiz($oldQuizId, $oldId = NULL, $type = NULL) {
         /*die ("cloneQuiz not working yet"); */
         assert(!is_null($oldQuizId));
+        $returnArray = array();
         $dbLogic = new DB();
         $whereValuesArray = array("QUIZ_ID" => $oldQuizId);
         $consistentArray = $dbLogic->select("CONSISTENT_STATE", "quiz", $whereValuesArray);
         
         if ($consistentArray['CONSISTENT_STATE'] == 0){ //if already cloned (1 is consistent, zero is NOT consistent
-            return $oldQuizId; // bail, no cloning needed
+            // bail, no cloning needed
+            if (isset($type)) {
+                $returnArray['quizId'] = $oldQuizId;
+                $returnArray['newId'] = $oldId;
+                return $returnArray;
+            } else {
+                return $oldQuizId; 
+            }
         }
         //else if not cloned yet        
         //get the old quiz's data
@@ -729,7 +319,7 @@ class quizLogic
         //insert quiz
         $newQuizID = $dbLogic->insert($newQuizArray, "quiz");
         //create a list of the columns to be built
-        $questonAnswerColums = array("question_QUESTION_ID", "answer_ANSWER_ID", "PARENT_ID", "LOOP_CHILD_ID", "TYPE", "quiz_QUIZ_ID", "DEPTH"); //no primary key connection_id
+        $questonAnswerColums = array("question_QUESTION_ID", "answer_ANSWER_ID", "PARENT_ID", "LOOP_CHILD_ID", "TYPE", "quiz_QUIZ_ID", "DEPTH", "SHORT_QUESTION_ID", "SHORT_ANSWER_ID"); //no primary key connection_id
         $questionColums = array("CONTENT", "QUESTION", "IMAGE", "IMAGE_ALT"); //no primary key question id
         $answerColums = array("ANSWER", "FEEDBACK", "IS_CORRECT"); //no primary key answer_id
         $questionPrimaryKey = "QUESTION_ID";
@@ -742,7 +332,7 @@ class quizLogic
         $jointable2 = array($answerPrimaryKey => "answer_ANSWER_ID");
         $joinedQuestionAnswerArray = $dbLogic->selectFullOuterJoin(
                 /* All colums - connection needed so we can calculate the new parent ids */
-                "question_QUESTION_ID, answer_ANSWER_ID, CONNECTION_ID, PARENT_ID, LOOP_CHILD_ID, TYPE, quiz_QUIZ_ID, DEPTH, " .
+                "question_QUESTION_ID, answer_ANSWER_ID, CONNECTION_ID, PARENT_ID, LOOP_CHILD_ID, TYPE, quiz_QUIZ_ID, DEPTH, SHORT_QUESTION_ID, SHORT_ANSWER_ID, " .
                 "QUESTION_ID, CONTENT, QUESTION, IMAGE, IMAGE_ALT, " . 
                 "ANSWER_ID, ANSWER, FEEDBACK, IS_CORRECT", 
                 "question_answer", $where, "question", $jointable, "answer", $jointable2, false);
@@ -751,6 +341,8 @@ class quizLogic
         $newAnswerArray = array();
         
         $i = 0;
+        $buildqi = 0;
+        $buildai = 0;
         foreach ($joinedQuestionAnswerArray as $arrayRow){
             if (isset($arrayRow[$questionPrimaryKey])) {
                 $addToOtherTable = "question";
@@ -766,31 +358,56 @@ class quizLogic
                 }
                 //questions
                 if ($addToOtherTable == "question" && in_array($column, $questionColums)){
-                    $newQuestionArray[$i][$column] = $value2;
+                    $newQuestionArray[$buildqi][$column] = $value2;
+                    //primary key
+                } else if ($addToOtherTable == "question" && $column == "QUESTION_ID") {
+                    if ($value2 == $oldId) {
+                        $oldIdPosition = $buildqi; //reorec postion to compare later to get the new id
+                    }
                 // answers 
                 } else if ($addToOtherTable == "answer" && in_array($column, $answerColums)){ 
-                    $newAnswerArray[$i][$column] = $value2;
+                    $newAnswerArray[$buildai][$column] = $value2;
+                    //primary key
+                } else if ($addToOtherTable == "answer" && $column == "ANSWER_ID") {
+                    if ($value2 == $oldId) {
+                        $oldIdPosition = $buildai; //record postion to compare later to get the new id
+                    }
                 }
             }
             $i++;
+            if ($addToOtherTable == "answer"){
+                $buildai++;
+            } else if ($addToOtherTable == "question") {
+                $buildqi++;
+            }
         }
         //insert questions 
+        $insertqi = 0;
         $questionIdsArray = array();
-        foreach ($newQuestionArray as $value){
-            $questionIdsArray[] = $dbLogic->insert($value, "question"); //insert and build array of auto-increment ids
+        foreach ($newQuestionArray as $valueArray){
+            $insertQId = $dbLogic->insert($valueArray, "question"); //insert and build array of auto-increment ids
+            $questionIdsArray[] = $insertQId;
+            if (isset($type) && $type == "question" && $insertqi == $oldIdPosition) {
+                $returnArray['newId'] = $insertQId;
+            }
+            $insertqi++;
         }
         //insert answers
+        $insertai = 0;
         $answerIdsArray = array();
-        foreach ($newAnswerArray as $value){
-            $answerIdsArray[] = $dbLogic->insert($value, "answer"); //insert and build array of auto-increment ids
+        foreach ($newAnswerArray as $valueArray){
+            $insertAId = $dbLogic->insert($valueArray, "answer"); //insert and build array of auto-increment ids
+            $answerIdsArray[] = $insertAId;
+            if (isset($type) && $type == "answer" && $insertai == $oldIdPosition) { //same position as recorded? store it now
+                $returnArray['newId'] = $insertAId;
+            }
+            $insertai++;
         }
         //fix question & answer Ids (edit $newQuestionAnswerArray)
         $qi = 0;
         $ai= 0;
         foreach ($newQuestionAnswerArray as $key => $arrayRow) {
             if (isset($arrayRow[$questionLinkedPrimaryKey])){
-                //var_dump($newQuestionAnswerArray[$key][$questionLinkedPrimaryKey]);
-                //var_dump($newQuestionAnswerArray[0]);
                 $newQuestionAnswerArray[$key][$questionLinkedPrimaryKey] = $questionIdsArray[$qi]; //copy over the correct value - its in the same place
                 $qi++;
             } else {//answerlinkedid
@@ -840,19 +457,17 @@ class quizLogic
         answer_keyword
         question_keyword
         */
-        return $newQuizID;
+        if (isset($type)) {
+            $returnArray['quizId'] = $newQuizID;
+            return $returnArray;
+        } else {
+            return $newQuizID;
+        }
     }
     /**
-     * Searches an array row and array matrix to and updates the apprioate column in the database
-     * 
-     * @param DB $dbLogic reuse the current connection to teh database
-     * @param array $arrayRow the current array of the foreach loop this fuction is in
-     * @param integer $i the cuurent iteration of the foreach loop this function is inside
-     * @param array $joinedQuestionAnswerArray the array matrix to lookup
-     * @param array $newQuestionAnswerIds the Connection to used in the where cause in update databse
-     * @param type $column the column to loopkup and update
+     * A loop to update the Question Answer table eg update all prent ids etc
      */
-    private static function updateQuestionAnswerTableColumn(DB $dbLogic, array $arrayRow, $i, 
+     protected static function updateQuestionAnswerTableColumn(DB $dbLogic, array $arrayRow, $i, 
             array $joinedQuestionAnswerArray, array $newQuestionAnswerIds, $column){
         if (!is_null($arrayRow[$column])){ //do NOT update the NULL value
                 $position = 0;
@@ -869,4 +484,14 @@ class quizLogic
                 }  
             }
     }
+    /**
+     * Searches an array row and array matrix to and updates the apprioate column in the database
+     * 
+     * @param DB $dbLogic reuse the current connection to teh database
+     * @param array $arrayRow the current array of the foreach loop this fuction is in
+     * @param integer $i the cuurent iteration of the foreach loop this function is inside
+     * @param array $joinedQuestionAnswerArray the array matrix to lookup
+     * @param array $newQuestionAnswerIds the Connection to used in the where cause in update databse
+     * @param type $column the column to loopkup and update
+     */
 }

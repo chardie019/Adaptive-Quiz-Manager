@@ -9,6 +9,8 @@ $templateLogic->startBody();
    <div id="content-centre">
                 <h2>Update quiz information and content</h2>
                 
+                <span class="feedback-span"><?php echo $message; ?>
+                
                 <?php if (count($quizEditId) > 0) { //there are quizes?>
 
                 <form action="#" method="post">

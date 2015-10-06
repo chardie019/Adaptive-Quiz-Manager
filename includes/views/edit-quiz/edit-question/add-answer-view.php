@@ -47,14 +47,10 @@ $templateLogic->startBody();
             <br />
             <?php echo "<span class=\"inputError\">".$isCorrectError."</span>"?> 
         </div>
-        <div class="jump-to-question">
-            <p class="label">Link to different branch:</p>
-            <input type="hidden" name="link" value="<?php echo $linkFromLinkPage ?>" />
-            <p>[<?php echo $linkStatus ?>] <button type="submit" name="to-link-page" value="Enter">Change</button></p>
-        </div>
+        <p>This answer will be added <?php echo $direction; ?> the selected question.</p>
     </div>
     <p class="submit-buttons-container">
-        <a class="mybutton myReturn" href="<?php echo (CONFIG_ROOT_URL . '/edit-quiz/edit-question.php?quiz=' . $quizIdGet) ?>">Back</a>
+        <a class="mybutton myReturn" href="<?php echo (CONFIG_ROOT_URL . '/edit-quiz/edit-question.php'.$quizUrl) ?>">Back</a>
         <button class="mybutton mySubmit" type="submit" name="create-answer" value="Enter">Create</button>
     </p>
 </form>

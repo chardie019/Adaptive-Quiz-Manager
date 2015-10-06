@@ -5,6 +5,10 @@
 //kick the user back if they haven't selected quiz
 require_once("../includes/config.php");
 $quizId = quizLogic::getQuizIdFromUrlElseReturnToEditQuiz();
+$sharedQuizId = quizLogic::returnSharedQuizID($quizId);
+$quizUrl = quizLogic::returnQuizUrl($sharedQuizId);
+$username = $userLogic->getUsername();
+quizLogic::canUserEditQuizElseReturnToEditQuiz($sharedQuizId, $username);
 // end of php file inclusion
 
 //Set page error messages blank upon initial loading

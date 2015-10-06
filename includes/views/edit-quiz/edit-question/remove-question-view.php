@@ -7,7 +7,10 @@ $templateLogic->addCSS("edit-question/edit-question-forms.css");
 $templateLogic->addCustomHeadersStart(); ?>
 <style type="text/css">
 .tree-area {
-    height: 26em;
+    height: 28em;
+}
+.remove-div {
+    clear: left;
 }
 </style>
 <?php $templateLogic->addCustomHeadersEnd();
@@ -45,10 +48,19 @@ $templateLogic->startBody();
                     echo "<p> No Image currently uploaded. </p>";
                 } ?>
             </div>
+            <p class="label remove-div">Removal type:</p>
+                <input id="remove-single-radio" name="delete-type" type="radio" value="single" checked="checked" />
+                <label for="remove-single-radio">Remove Single Question</label>
+                <br />
+                <input id="remove-whole-question-radio" name="delete-type" type="radio" value="whole-question" />
+                <label for="remove-whole-question-radio">Remove Single Question and it's Answers</label>
+                <br />
+                <input id="remove-branch-radio" name="delete-type" type="radio" value="branch" />
+                <label for="remove-branch-radio">Remove this Entire Branch</label>
         </div>
     </div>
     <p class="submit-buttons-container">
-        <a class="mybutton myReturn" href="<?php echo (CONFIG_ROOT_URL . '/edit-quiz/edit-question.php?quiz=' . $quizIDGet) ?>">Back</a>
+        <a class="mybutton myReturn" href="<?php echo (CONFIG_ROOT_URL . '/edit-quiz/edit-question.php' . $quizUrl) ?>">Back</a>
         <button class="mybutton mySubmit" type="submit" name="delete-submit" value="Enter">Delete</button>
     </p>
 </form>

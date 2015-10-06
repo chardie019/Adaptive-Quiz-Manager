@@ -22,7 +22,7 @@
     .current-image-inspect {
         overflow:hidden; 
         padding-left: 0.5em;
-        height: 11em;
+        max-height: 11em;
         padding-right: 3em;
     }
     .current-image-inspect img {

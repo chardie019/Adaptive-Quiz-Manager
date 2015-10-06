@@ -112,5 +112,3 @@ include_once("userLogic.php");
 
 include_once("userLogin.php");
 //note: when echo-ing html other language, use  echo (htmlentities($string));
-
-?>

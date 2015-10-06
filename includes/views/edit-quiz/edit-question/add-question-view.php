@@ -9,7 +9,11 @@ $templateLogic->addCSS("jstree/themes/default/style.min.css", true);
 $templateLogic->addCustomHeadersStart(); ?>
 <style type="text/css">
 .tree-area {
-    height: 24em;
+    height: 26em;
+}
+p.submit-buttons-container {
+    padding-top: 0;
+    margin: 0;
 }
 </style>
 <?php
@@ -44,10 +48,11 @@ $templateLogic->startBody();
         <p class="label">Please enter the Question's Image's tool tip for the sight impaired:</p>
         <input type='text' id='question-alt' name='question-alt' size='30' value="<?php echo $questionAlt ?>" />
         <br />
-        <?php echo "<span class=\"inputError\">".$questionAltError."</span>"?>       
+        <?php echo "<span class=\"inputError\">".$questionAltError."</span>"?>
+        <?php if (isset($direction)) { ?> <p>This answer will be added <?php echo $direction; ?> the selected question.</p> <?php } ?>
     </div>
     <p class="submit-buttons-container">
-        <a class="mybutton myReturn" href="<?php echo (CONFIG_ROOT_URL . '/edit-quiz/edit-question.php?quiz=' . $quizIDGet) ?>">Back</a>
+        <a class="mybutton myReturn" href="<?php echo (CONFIG_ROOT_URL . '/edit-quiz/edit-question.php'.$quizUrl) ?>">Back</a>
         <button class="mybutton mySubmit" type="submit" name="confirmQuiz" value="Enter">Create</button>
     </p>
 </form>

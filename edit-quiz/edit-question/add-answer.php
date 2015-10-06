@@ -5,11 +5,30 @@
 //kick the user back if they haven't selected quiz
 require_once("../../includes/config.php");
 $quizId = quizLogic::getQuizIdFromUrlElseReturnToEditQuiz();
+$sharedQuizId = quizLogic::returnSharedQuizID($quizId);
+$quizUrl = quizLogic::returnQuizUrl($sharedQuizId);
+$username = $userLogic->getUsername();
+quizLogic::canUserEditQuizElseReturnToEditQuiz($sharedQuizId, $username);
+
 // end of php file inclusion
 
-$questionIdPost = filter_input(INPUT_GET, "question");
-//after validation
-$questionId = $questionIdPost;
+$prevAnswerId = filter_input(INPUT_GET, "answer");
+$prevQuestionId = filter_input(INPUT_GET, "question");
+$direction = filter_input(INPUT_GET, "direction"); //above or below
+
+if (isset($prevAnswerId)) {
+    $prevId = $prevAnswerId;
+    $addToType = "answer"; //adding to which type
+}else if (isset($prevQuestionId)) {
+    $addToType = "question";
+    $prevId = $prevQuestionId;
+}
+
+if ($direction == "above") {
+    $operation = "addAbove";
+} else if ($direction == "below") {
+    $operation = "addBelow";
+}
 
 if (filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING) === "POST") { //past the appropiate page
     $answerContent =filter_input(INPUT_POST, "answer-content");
@@ -39,35 +58,17 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING) === "PO
             $isCorrectError = "Error: Please choose whether the answer is correct, incorrect or neutral.";
             $error = 1;
         }
-        if ($link == ""){
-            $link = NULL; //insert NULL into db
-        }
         if ($error == 0){
             //all good
-            $quizId = quizLogic::maybeCloneQuiz($quizId);
-            $result = quizLogic::insertAnswer($quizId, $questionIdPost, $answerContent, $feedbackContent, $isCorrect, $link);
-            if ($result == true){
-                //show soe the new question added
-                header('Location: '. CONFIG_ROOT_URL . '/edit-quiz/edit-question.php?quiz='.quizLogic::returnSharedQuizID($quizId)."&feedback=answer-added");
-                exit();
-            } else {
-                configLogic::loadErrorPage("There was Problem adding a answer.");
-            }
+            $type = "question"; //adding to a question (for clone quiz only)
+            $newQuizArray = quizLogic::maybeCloneQuiz($quizId, $questionIdPost, $type);
+            $quizId = $newQuizArray["quizId"];
+            $questionIdPost = $newQuizArray["newId"];
+            $result = editQuestionLogic::insertAnswer($quizId, $prevId, $answerContent, $feedbackContent, $isCorrect, $direction, $addToType);
+            //show soe the new question added
+            header('Location: '. CONFIG_ROOT_URL . '/edit-quiz/edit-question.php'.$quizUrl."&feedback=answer-added");
+            exit();
         }
-    }else if (isset($linkPageButton)){
-        //reset the data if tampered with
-        if (!isset($answerContent)){$answerContent = "";}
-        if (!isset($feedbackContent)){$feedbackContent = "";}
-        if (!isset($isCorrect)){$isCorrect = "";}
-        $dbLogic = new DB();
-        $returnHtml = quizHelper::prepareTree($dbLogic, $quizId);
-        include('change-link-view.php');
-        exit; 
-    } else if (isset($linkPageBackButton)){
-        $link = NULL; //cancel the link
-    } else if (isset($linkPageUpdateButton)){
-        //do nothing just load the page
-        //post data already gotten using above statements 
     } else {
         configLogic::loadErrorPage("Unspecified action");
     }
@@ -85,13 +86,6 @@ if (!isset($isCorrectError)){$isCorrectError = "";}
 if (!isset($answerContent)){$answerContent = "";}
 if (!isset($feedbackContent)){$feedbackContent = "";}
 if (!isset($isCorrect)){$isCorrect = "2";}
-
-if(!isset($linkFromLinkPage) && !isset($linkPageUpdateButton)){$linkFromLinkPage=NULL;}
-if(!isset($link)){$link= NULL;}
-$linkArray = linkLogic::prepareLinkHtml($link, $linkFromLinkPage);
-$linkFromLinkPage = $linkArray['linkHtml'];
-$linkStatus = $linkArray['linkStatus'];
-
 
 //html
 include("add-answer-view.php");

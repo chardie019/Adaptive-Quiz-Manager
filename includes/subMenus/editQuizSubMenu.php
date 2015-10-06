@@ -13,7 +13,7 @@ if (!is_null($quizIDGet)){
     echo "<$this->SubMenuLinkElement class='nav-button". echoClassIfRequestMatches("details", " selectedSubMenu"). "$this->greyedOutClass' " .
         "href=\"" . CONFIG_ROOT_URL . "/edit-quiz/details.php$quizIDMenu\">Edit Details</$this->SubMenuLinkElement>".PHP_EOL;
     echo "<$this->SubMenuLinkElement class='nav-button". echoClassIfRequestMatches("edit-question", " selectedSubMenu"). "$this->greyedOutClass' " .
-        "href=\"" . CONFIG_ROOT_URL . "/edit-quiz/edit-question.php$quizIDMenu\">Manage Editors</$this->SubMenuLinkElement>".PHP_EOL;
+        "href=\"" . CONFIG_ROOT_URL . "/edit-quiz/edit-question.php$quizIDMenu\">Edit Questions</$this->SubMenuLinkElement>".PHP_EOL;
     echo "<$this->SubMenuLinkElement class='nav-button". echoClassIfRequestMatches("editors", " selectedSubMenu"). "$this->greyedOutClass' " .
         "href=\"" . CONFIG_ROOT_URL . "/edit-quiz/editors.php$quizIDMenu\">Manage Editors</$this->SubMenuLinkElement>".PHP_EOL;
     echo "<$this->SubMenuLinkElement class='nav-button". echoClassIfRequestMatches("takers", " selectedSubMenu"). "$this->greyedOutClass' " .

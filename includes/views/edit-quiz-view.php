@@ -20,6 +20,13 @@ $templateLogic->addCustomHeadersStart();
     .feedback-span {
         color: blue;
     }
+    span.inputError {
+        font-weight: normal;
+    }
+    /* span inside the error span */
+    .inputError span {
+        font-weight: bold;
+    }
 </style>
 <?php
 $templateLogic->startBody();
@@ -28,6 +35,19 @@ $templateLogic->startBody();
         <p>Welcome to the Edit Quiz Menu, please ensure the quiz is Disabled before choosing an option above to continue.</p>
         <br />
         <span class="feedback-span"><?php echo $confirmActive ?></span><span><?php echo $createQuizConfirmation; ?></span>
+        <span class="inputError">
+        <?php if(isset($invalidQuestionAnswersDisplayArray)){
+            echo "<span>There Were some integrity checks that failed:</span><br /><br />";
+            foreach ($invalidQuestionAnswersDisplayArray as $row) {
+                echo $row['problem']; ?>
+                <br />
+                <br />
+                <?php echo $row['fix']; ?>
+                <br /><br />
+                <?php
+            }
+        } ?>
+        </span>
         <br />
         
         <form action='<?php echo "?quiz=".  quizLogic::returnSharedQuizID($_SESSION['CURRENT_EDIT_QUIZ_ID']) ?>' id='enable' method='post'>

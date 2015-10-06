@@ -21,6 +21,7 @@ $dbLogic = new DB();
 $confirmActive = "";
 $enableSubMenuLinks = true; //default the links work
 $quizIDGet = filter_input(INPUT_GET, "quiz");
+
 if (!is_null($quizIDGet)){
     $quizId = quizLogic::returnRealQuizID($quizIDGet);
 } else {
@@ -34,6 +35,22 @@ if ($quizCreated == "yes"){
     $createQuizConfirmation = "";
 }
 
+$reason = filter_input(INPUT_GET, "message");
+if (isset($reason)){
+    switch($reason){
+        case 'no-quiz-selected':
+            $message = "Please select a quiz to contine.";
+            break;
+        case 'no-edit-permission':
+            $message = "You do not have edit permissions on that quiz.";
+            break;
+        default:
+            $message = 'Unknown Error';
+    }
+} else {
+    $message = "";
+}
+
 /* User can only edit quiz information if IS_ENABLED is set to inactive so as not to disrupt users. 
      * Check if IS_ENABLED is already set for validation in editing details, questions, editors, takers.
      */
@@ -42,7 +59,7 @@ $isEnabledState = editQuizLogic::isQuizEnabled($quizId);
 if (is_null($isEnabledState)){
     $_SESSION['CURRENT_EDIT_QUIZ_ID'] = NULL; //bomb out
 } else {
-    $_SESSION["IS_QUIZ_ENABLED"] = $isEnabledState; //set the staate (true or false)
+    $_SESSION["IS_QUIZ_ENABLED"] = $isEnabledState; //set the state (true or false)
     $enableSubMenuLinks = $isEnabledState;
 }
 
@@ -52,20 +69,15 @@ if($_SERVER['REQUEST_METHOD'] === "POST"){
         $quizIDPost = filter_input(INPUT_POST, "quizid");
         $_SESSION['CURRENT_EDIT_QUIZ_ID'] = $quizIDPost;
     } 
-    
+    $quizUrl = quizLogic::returnQuizUrl($quizIDGet);
     
     //If ENABLE button is pushed, update row in database
-    if (isset($_POST['confirmEnabled'])) {    
-        //check of the quiz is valid (end points are good)
-        $whereValuesArray = array(
-            "TYPE" => "answer",
-            "quiz_QUIZ_ID" => $quizId
-        );
-        $invalidQuestionAnswersArray = $dbLogic->selectWithSelectWhereColumnsIsNotinAnotherColumn(
-                "answer_ANSWER_ID, TYPE", "question_answer", 
-                "CONNECTION_ID", "PARENT_ID", $whereValuesArray, "LOOP_CHILD_ID", false);
-        
-        if (empty($invalidQuestionAnswersArray)) {
+    if (isset($_POST['confirmEnabled'])) {
+        //now quiz has to have at least 2 questions & 1 answer
+        //has to have a question ans teh start and at the end of eah of teh branches
+        //has to have no answers adjancent or questions adjancent
+        $problemQuestionAnswersArray = editQuestionLogic::returnProblemQuestionAnswersIntegrityCheck($quizId);
+        if (empty($problemQuestionAnswersArray)) { //an array with no entries
             //TO DO if changes
             if(isset($_SESSION['CURRENT_EDIT_QUIZ_EDITED'])){ //if the session was set, ergo, was edited, otherwise is NULL
                 $_SESSION['CURRENT_EDIT_QUIZ_EDITED'] = NULL; //edited changes are now commmited
@@ -82,12 +94,57 @@ if($_SERVER['REQUEST_METHOD'] === "POST"){
             $_SESSION["IS_QUIZ_ENABLED"] = true;
             $enableSubMenuLinks = true;
             quizLogic::setQuizToConsistentState($dbLogic, $quizId);
-        } else { //the quiz has invalid endings
-            $badAnswerString = "";
-            foreach ($invalidQuestionAnswersArray as $arrayRow){
-                $badAnswerString .= ($badAnswerString == "") ? $arrayRow['answer_ANSWER_ID'] : ", ".$arrayRow['answer_ANSWER_ID'];
+        } else {
+            //errors
+            /* parsing
+             * ['problemCode']          = short problem code "first-not-a-question", "add-more-questions", 
+             *                                               "add-more-answers", "end-is-a-answer", "adjacent-question", "adjacent-answer"
+             * ['shortId']              = the short question or answer id to be displayed
+             * ['questionOrAnswerId']   = the real question or answer id
+             * 
+             * into 
+             * 
+             * ['problem'] = $problemQuestionAnswer['shortId'] + issue
+             * ['fix'] = url + ['questionOrAnswerId']
+             */
+            //format the list into a friendly way
+            $invalidQuestionAnswersDisplayArray = array();
+            $i = 0;
+            foreach ($problemQuestionAnswersArray as $problemQuestionAnswer) {
+                switch($problemQuestionAnswer['problemCode']) {
+                    case "first-not-a-question":
+                        $invalidQuestionAnswersDisplayArray[$i]['problem'] = "A: ".$problemQuestionAnswer['shortId']. " - The first node is not a question";
+                        $invalidQuestionAnswersDisplayArray[$i]['fix'] = 
+                                "To fix please <a href=\"". CONFIG_ROOT_URL . "/edit-quiz/edit-question/add-question.php$quizUrl\"".">add a question at the top</a>";
+                        break;
+                    case "add-more-questions":
+                        $invalidQuestionAnswersDisplayArray[$i]['problem'] = "$numberOfQuestions questions is not enough, more must be added";
+                        $invalidQuestionAnswersDisplayArray[$i]['fix'] = 
+                                "To fix <a href=\"". CONFIG_ROOT_URL . "/edit-quiz/edit-question/add-question.php$quizUrl\"".">click here</a> add a question at the top";
+                        break;
+                    case "add-more-answers":
+                        $invalidQuestionAnswersDisplayArray[$i]['problem'] = "$numberOfQuestions questions is not enough, more must be added";
+                        $invalidQuestionAnswersDisplayArray[$i]['fix'] = 
+                                "To fix <a href=\"". CONFIG_ROOT_URL . "/edit-quiz/edit-question.php$quizUrl\"".">click here</a> add a question at the edit questions screen";
+                        break;
+                    case "end-is-a-answer":
+                        $invalidQuestionAnswersDisplayArray[$i]['problem'] = "A: ".$problemQuestionAnswer['shortId']. " - The end node of branch must be of type question, add one or set answer to jump to question (questions with no answers are end quiz summary screens)";
+                        $invalidQuestionAnswersDisplayArray[$i]['fix'] = 
+                                "To fix <a href=\"". CONFIG_ROOT_URL . "/edit-quiz/edit-question.php$quizUrl\"".">click here</a> to add a question at the edit questions screen";
+                        break;
+                    case "adjacent-question":
+                        $invalidQuestionAnswersDisplayArray[$i]['problem'] = "Q: ".$problemQuestionAnswer['shortId']. " - You cannot have a question linked to another question with no answer inbetween";
+                        $invalidQuestionAnswersDisplayArray[$i]['fix'] = 
+                                "To fix <a href=\"". CONFIG_ROOT_URL . "/edit-quiz/edit-question/add-answer.php$quizUrl&question=".$problemQuestionAnswer['questionOrAnswerId']."\">click here</a> add a answer inbetween (after this question)";
+                        break;
+                    case "adjacent-answer":
+                        $invalidQuestionAnswersDisplayArray[$i]['problem'] = "A: ".$problemQuestionAnswer['shortId']. " - You cannot have an answer linked to another answer with no question inbetween";
+                        $invalidQuestionAnswersDisplayArray[$i]['fix'] = 
+                                "To fix <a href=\"". CONFIG_ROOT_URL . "/edit-quiz/edit-question/add-question.php$quizUrl&answer=".$problemQuestionAnswer['questionOrAnswerId']."\"".">click here</a> add a question inbetween (after this answer)";
+                        break;
+                }
+            $i++;
             }
-            $confirmActive = "There was issue with answers: " . $badAnswerString . "<br />They must end on a question, by adding question or looping to end question.<br />Please fix these before enabling the quiz";   
         }
         
     //If DISABLE button is pressed, update row in database 
@@ -108,7 +165,7 @@ if($_SERVER['REQUEST_METHOD'] === "POST"){
         $enableSubMenuLinks = false; //no menu links
     } else {
         //Page is being loaded from edit-quiz-list with quizid selected    
-        header('Location: ' . CONFIG_ROOT_URL . '/edit-quiz.php?quiz=' . quizLogic::returnSharedQuizID($quizIDPost));
+        header('Location: ' . CONFIG_ROOT_URL . '/edit-quiz.php'.$quizUrl);
         stop();
     }
     include('edit-quiz-view.php');
@@ -161,6 +218,11 @@ if($_SERVER['REQUEST_METHOD'] === "POST"){
     }
     include('edit-quiz-list-view.php');
 }else{
+    $quizId = quizLogic::getQuizIdFromUrlElseReturnToEditQuiz();
+    $sharedQuizId = quizLogic::returnSharedQuizID($quizId);
+    $quizUrl = quizLogic::returnQuizUrl($sharedQuizId);
+    $username = $userLogic->getUsername();
+    quizLogic::canUserEditQuizElseReturnToEditQuiz($sharedQuizId, $username);
     //get request and the quiz was specified
     include('edit-quiz-view.php');
 }   

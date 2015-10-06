@@ -6,6 +6,10 @@ require_once("../../includes/config.php");
 // end of php file inclusion
 
 $quizId = quizLogic::getQuizIdFromUrlElseReturnToEditQuiz();
+$sharedQuizId = quizLogic::returnSharedQuizID($quizId);
+$quizUrl = quizLogic::returnQuizUrl($sharedQuizId);
+$username = $userLogic->getUsername();
+quizLogic::canUserEditQuizElseReturnToEditQuiz($sharedQuizId, $username);
 
 
 $answerIdGet = filter_input (INPUT_GET, "answer");
@@ -14,12 +18,10 @@ $questionIdGet = filter_input (INPUT_GET, "question");
 $type = "";
 if (isset($answerIdGet)){
     $type = "answer";
-    //todo validation
     $id = $answerIdGet;
     $answerId = $id; //temp until build tree is changed
 } else {
     $type = "question";
-    //todo validation
     $id = $questionIdGet;
 }
 
@@ -31,13 +33,6 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //pastt the appropiate page
     $answerContent =filter_input(INPUT_POST, "answer-content");
     $feedbackContent = filter_input(INPUT_POST, "feedback-content");
     $isCorrect = filter_input(INPUT_POST, "is-correct");
-    $link = filter_input(INPUT_POST, "link");
-    
-    $linkFromLinkPage = filter_input(INPUT_POST, "question"); //from the link page
-    $linkPageButton = filter_input (INPUT_POST, "to-link-page");
-    //link page's controls
-    $linkPageUpdateButton = filter_input (INPUT_POST, "link-update");
-    $linkPageBackButton = filter_input (INPUT_POST, "link-back");
     
     if (isset($submitQuestionButton)){
         $questionTitle = filter_input(INPUT_POST, "question-title");
@@ -58,12 +53,10 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //pastt the appropiate page
             $questionKeepImageError = "Error: Please select whether to keep the image or not";
             $error = 1;
         }
-        if ($link == ""){
-            $link = NULL; //insert NULL into db
-        }
+
         if ($error == 0){
             if ($questionKeepImage == "0"){
-                quizLogic::removeImagefromQuestion($quizId, $id);
+                editQuestionLogic::removeImagefromQuestion($quizId, $id);
             } else {
                 if (is_uploaded_file($_FILES["questionImageUpload"]["tmp_name"])) { //image is optional
                     // If image passed all criteria, attempt to upload
@@ -77,12 +70,14 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //pastt the appropiate page
                 }
             }
             if ($error == 0) {//if still all good
-                $quizId = quizLogic::maybeCloneQuiz($quizId);
+                $newQuizArray = quizLogic::maybeCloneQuiz($quizId, $id, $type);
+                $quizId = $newQuizArray["quizId"];
+                $id = $newQuizArray["newId"];
                 if (is_uploaded_file($_FILES["questionImageUpload"]["tmp_name"])) {
-                    quizLogic::updateQuestion($quizId, $questionIdGet, $questionTitle, $questionContent, $questionAlt, $targetFileName);
+                    editQuestionLogic::updateQuestion($quizId, $id, $questionTitle, $questionContent, $questionAlt, $targetFileName);
                 } else {
                     //don't update the image
-                    quizLogic::updateQuestion($quizId, $questionIdGet, $questionTitle, $questionContent, $questionAlt);
+                    editQuestionLogic::updateQuestion($quizId, $id, $questionTitle, $questionContent, $questionAlt);
                 }
                 //show the new question added
                 header('Location: '. CONFIG_ROOT_URL . '/edit-quiz/edit-question.php?quiz='.quizLogic::returnSharedQuizID($quizId)."&feedback=question-updated");
@@ -106,27 +101,14 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //pastt the appropiate page
             $error = 1;
         }
         if ($error == 0){ //no error
-            $quizId = quizLogic::maybeCloneQuiz($quizId);
-            quizLogic::updateAnswer($quizId, $id, $answerContent, $feedbackContent, $isCorrect, $link);
+            $newQuizArray = quizLogic::maybeCloneQuiz($quizId, $id, $type);
+            $quizId = $newQuizArray["quizId"];
+            $id = $newQuizArray["newId"];
+            editQuestionLogic::updateAnswer($quizId, $id, $answerContent, $feedbackContent, $isCorrect);
             //show the updated answer
             header('Location: '. CONFIG_ROOT_URL . '/edit-quiz/edit-question.php?quiz='.quizLogic::returnSharedQuizID($quizId)."&feedback=answer-updated");
             exit();
         }
-    } else if (isset($linkPageButton)){
-        //reset the data if tampered with
-        if (!isset($answerContent)){$answerContent = "";}
-        if (!isset($feedbackContent)){$feedbackContent = "";}
-        if (!isset($isCorrect)){$isCorrect = "";}
-        $dbLogic = new DB();
-        $parentId = quizLogic::returnParentId($dbLogic, $id, "question");
-        $returnHtml = quizHelper::prepareTree($dbLogic, $quizId, $parentId, "questions");
-        include('change-link-view.php');
-        exit; 
-    } else if (isset($linkPageBackButton)){
-        $linkFromLinkPage = NULL; //cancel the link
-    } else if (isset($linkPageUpdateButton)){
-        //do nothing just load the page
-        //post data already gotten using above statements 
     } else {
         configLogic::loadErrorPage("Unspecified action");
     }
@@ -142,16 +124,10 @@ if ($type == "answer"){
     if (!isset($feedbackContentError)){$feedbackContentError = "";}
     if (!isset($isCorrectError)){$isCorrectError = "";}
 
-    if (!isset($answerContent)){$answerContent = $result['ANSWER'];}
-    if (!isset($feedbackContent)){$feedbackContent = $result['FEEDBACK'];}
+    if (!isset($answerContent)){$answerContent = nl2br($result['ANSWER']);}
+    if (!isset($feedbackContent)){$feedbackContent = nl2br($result['FEEDBACK']);}
     if (!isset($isCorrect)){$isCorrect = (string)$result['IS_CORRECT'];}
     
-    if(!isset($linkFromLinkPage) && !isset($linkPageUpdateButton)){$linkFromLinkPage=(string)$result['LOOP_CHILD_ID'];}
-    if($linkFromLinkPage == ""){$linkFromLinkPage=NULL;}
-    if(!isset($link)){$link= NULL;}
-    $linkArray = linkLogic::prepareLinkHtml($link, $linkFromLinkPage);
-    $linkFromLinkPage = $linkArray['linkHtml'];
-    $linkStatus = $linkArray['linkStatus'];
     include("inspect-answer-view.php");
 } else {
     $parentId = quizLogic::returnParentId($dbLogic, $id, "question");
@@ -165,11 +141,11 @@ if ($type == "answer"){
     if (!isset($questionImageError)){$questionImageError = "";}
 
     if (!isset($questionTitle)){$questionTitle = $result['QUESTION'];}
-    if (!isset($questionContent)){$questionContent = $result['CONTENT']; }
+    if (!isset($questionContent)){$questionContent = nl2br($result['CONTENT']); }
     if (!isset($questionImage) && $result['IMAGE'] != NULL){ //only set if not null
             $questionImage = quizHelper::returnWebImageFilePath($quizId, $result['IMAGE']);
     }  
     if (!isset($questionKeepImage)){$questionKeepImage = "1";}
-    if (!isset($questionAlt)){$questionAlt = $result['IMAGE_ALT'];}
+    if (!isset($questionAlt)){$questionAlt = nl2br($result['IMAGE_ALT']);}
     include("inspect-question-view.php");
 }

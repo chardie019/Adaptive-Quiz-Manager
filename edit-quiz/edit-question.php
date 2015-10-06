@@ -7,16 +7,23 @@ require_once("../includes/config.php");
 // end of php file inclusion
 
 //real quiz id
-$quizIDGet = quizLogic::getQuizIdFromUrlElseReturnToEditQuiz();
-$quizUrl = "?quiz=".quizLogic::returnSharedQuizID($quizIDGet);
+$quizId = quizLogic::getQuizIdFromUrlElseReturnToEditQuiz();
+$sharedQuizId = quizLogic::returnSharedQuizID($quizId);
+$quizUrl = quizLogic::returnQuizUrl($sharedQuizId);
+$username = $userLogic->getUsername();
+quizLogic::canUserEditQuizElseReturnToEditQuiz($sharedQuizId, $username);
 $selectionError = "";
 
 if ($_SERVER['REQUEST_METHOD'] === "POST") { //pastt the appropiate page
     $answerPost = filter_input (INPUT_POST, "answer");
     $questionPost = filter_input (INPUT_POST, "question");
+    $noQuestionPost = filter_input (INPUT_POST, "no-question"); //a hidden input diplayed when no questions are are avilable/on screen
+    $directionPost = filter_input (INPUT_POST, "direction"); //radio control
+
     $inspectButtonPost = filter_input (INPUT_POST, "inspect");
     $addQuestionButtonPost = filter_input(INPUT_POST, "addQuestion");
     $addAnswerButtonPost = filter_input (INPUT_POST, "addAnswer");
+    $linkButtonPost = filter_input (INPUT_POST, "link");
     $removeButtonPost = filter_input (INPUT_POST, "remove");
 
     if (isset($inspectButtonPost)) {
@@ -30,23 +37,35 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //pastt the appropiate page
             $selectionError="Please choose a question or answer before trying to inspect.";
         }
     } else if (isset($addQuestionButtonPost)){
-        if (isset($answerPost)) {
-            //check if there is already a question there
-            if (quizLogic::isThereAQuestionAttachedtoThisAnswer($answerPost) == false){  //add a question to an answer
-                header('Location: ' . CONFIG_ROOT_URL . "/edit-quiz/edit-question/add-question.php$quizUrl&answer=$answerPost");
-                exit;
-            } else {    //maybe trying into add an initial question
-                $selectionError="Please choose a answer with no questions(or links) beofre trying to add a question (bottom of tree).";
-            }
-        } else {
-            $displayMessage = "initalQuestion";
+        //add a question to an answer
+        if (isset($directionPost) && $directionPost == "below" && isset($answerPost) && quizLogic::isThereAQuestionAttachedtoThisAnswer($answerPost) == false){ 
+            header('Location: ' . CONFIG_ROOT_URL . "/edit-quiz/edit-question/add-question.php$quizUrl&answer=$answerPost&direction=below");
+            exit;
+        } else if (isset($directionPost) && $directionPost == "above" && isset($answerPost) && quizLogic::isThereAQuestionAttachedtoThisAnswer($answerPost) == false){ 
+            header('Location: ' . CONFIG_ROOT_URL . "/edit-quiz/edit-question/add-question.php$quizUrl&answer=$answerPost&direction=above");
+            exit;
+        }else if (isset($noQuestionPost)) {  //add a question to no answer (so the first question)
+            header('Location: ' . CONFIG_ROOT_URL . "/edit-quiz/edit-question/add-question.php$quizUrl&direction=below");
+            exit;
+        } else {    //maybe trying into add an initial question
+            $selectionError="Please choose an answer with no questions(or links) before trying to add a question (eg bottom of tree with no links).";
         }
     } else if (isset($addAnswerButtonPost)){
-        if (isset($questionPost)){  //add an answer to a question
-            header('Location: ' . CONFIG_ROOT_URL . "/edit-quiz/edit-question/add-answer.php$quizUrl&question=$questionPost");
+        if (isset($directionPost) && $directionPost == "below" && isset($questionPost)) {
+            header('Location: ' . CONFIG_ROOT_URL . "/edit-quiz/edit-question/add-answer.php$quizUrl&question=$questionPost&direction=below");
+            exit;
+        } else if (isset($directionPost) && $directionPost == "above" && isset($questionPost)) {
+            header('Location: ' . CONFIG_ROOT_URL . "/edit-quiz/edit-question/add-answer.php$quizUrl&question=$questionPost&direction=above");
             exit;
         } else {
             $selectionError="Please choose a question to add an answer to.";
+        }
+    } else if (isset($linkButtonPost)){
+        if (isset($answerPost)){    //link an answer
+            header('Location: ' . CONFIG_ROOT_URL . "/edit-quiz/edit-question/change-link.php$quizUrl&answer=$answerPost");
+            exit;
+        }  else {
+            $selectionError="Please choose an answer before using the change link button.";
         }
     } else if (isset($removeButtonPost)){
         if (isset($answerPost)){    //remove an answer
@@ -114,7 +133,7 @@ if (!isset($message)){
     $message = ""; //no message if not set
 }
 $dbLogic = new DB();
-$htmlTree = quizHelper::prepareTree($dbLogic, $quizIDGet);
+$htmlTree = quizHelper::prepareTree($dbLogic, $quizId);
 
 
 //http://stackoverflow.com/a/15307555\

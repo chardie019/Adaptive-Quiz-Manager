@@ -5,9 +5,36 @@
 //kick the user back if they haven't selected quiz
 require_once("../../includes/config.php");
 $quizId = quizLogic::getQuizIdFromUrlElseReturnToEditQuiz();
+$sharedQuizId = quizLogic::returnSharedQuizID($quizId);
+$quizUrl = quizLogic::returnQuizUrl($sharedQuizId);
+$username = $userLogic->getUsername();
+quizLogic::canUserEditQuizElseReturnToEditQuiz($sharedQuizId, $username);
 // end of php file inclusion
 
 $prevAnswerId = filter_input(INPUT_GET, "answer");
+$prevQuestionId = filter_input(INPUT_GET, "question");
+$direction = filter_input(INPUT_GET, "direction"); //above or below
+
+//adding a answer or adding the initial question
+if (isset($prevAnswerId)) {
+    $prevId = $prevAnswerId;
+    $addToType = "answer"; //adding to which type
+}else if (isset($prevQuestionId)) {
+    $addToType = "question";
+    $prevId = $prevQuestionId;
+}
+
+if ($direction == "above") {
+    $operation = "addAbove";
+} else if ($direction == "below") {
+    $operation = "addBelow";
+}else {
+    $operation = "initial";
+    $direction = NULL; //direction not needed
+}
+
+
+
 
 if (filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING) === "POST") { //past the appropiate page
     $questionTitle = filter_input(INPUT_POST, "question-title");
@@ -38,23 +65,37 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING) === "PO
                 $imageUploadError = $imageResult['imageUploadError'];
                 $questionAltError = $imageResult['imageAltError'];
             }
-        }
-        
+    } else {
+        $targetFileName = NULL;
+        $questionAlt = NULL;
+    }
         if ($error == 0) {//all good
-            $quizId = quizLogic::maybeCloneQuiz($quizId);
-            quizLogic::insertQuestion($quizId, $prevAnswerId, $questionTitle, $questionContent, $targetFileName, $questionAlt);
-            //show soe the new question added
-            header('Location: '. CONFIG_ROOT_URL . '/edit-quiz/edit-question.php?quiz='.quizLogic::returnSharedQuizID($quizId)."&feedback=question-added");
+            $type = "answer"; //adding an answe (for clone quiz)
+            $newQuizArray = quizLogic::maybeCloneQuiz($quizId, $prevAnswerId, $type);
+            $quizId = $newQuizArray["quizId"];
+            $prevAnswerId = $newQuizArray["newId"];
+            if ($operation == "addBelow" || $operation == "addAbove") {
+                editQuestionLogic::insertQuestion($quizId, $prevId, $questionTitle, $questionContent, $targetFileName, $questionAlt, $operation, $addToType);
+                //show soe the new question added
+                header('Location: '. CONFIG_ROOT_URL . "/edit-quiz/edit-question.php$quizUrl&feedback=question-added");
+            } else { //"initial"
+                editQuestionLogic::insertInitalQuestionAnswer($quizId, $questionTitle, $questionContent, $targetFileName, $questionAlt);
+                //show soe the new question added
+                header('Location: '. CONFIG_ROOT_URL . "/edit-quiz/edit-question.php$quizUrl&feedback=initial-question-added");
+            }
             exit();
         }
     }
 
 }
-
 $dbLogic = new DB();
-$parentId = quizLogic::returnParentId($dbLogic, $prevAnswerId, "answer");
-$returnHtml = quizHelper::prepareTree($dbLogic, $quizId, $parentId, "none");
-
+if ($operation == "addToAnswer") {
+    $parentId = NULL;
+}
+if ($operation == "addToAnswer") {
+    $parentId = quizLogic::returnParentId($dbLogic, $prevAnswerId, "answer");
+}
+    $returnHtml = quizHelper::prepareTree($dbLogic, $quizId, $parentId, "none");
 //initalies strings;
 if (!isset($questionTitleError)){$questionTitleError = "";}
 if (!isset($questionContentError)){$questionContentError = "";}

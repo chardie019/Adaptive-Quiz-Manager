@@ -1,3 +1,32 @@
+###Version 5.6.6 - /10/2015 - Changes to edit question pages
+=Joshua
+linking (move to front screen)
+merage initial question and add question
+added "short" question answer ids
+fixed some cloning bugs
+various comments are wrong after refactoring  - no time to fix
+after stuff forgetten, noted in UAT google sheet
+
+###Version 5.6.6 - 4/10/2015 - Individual stat results
+=Harry
+- Stats overhaul, included 'Select a User' in editors, option where
+users who have completed the quiz can have their results pulled for
+current/previous.
+NOTE***Results of a particular attempt cannot be grabbed yet, not sure
+how to determine which on to retrieve eg Most recent ?
+- Updated layout of stats pages to reflect new user tables
+- Included user table in manage editors so users can be deleted at the
+click of a button now
+- Included user table in manage takers so users can be deleted at the
+click of a button now
+- User can no longer remove themselves as an editor from manage editors
+- Number of layout UAT fixes completed (See spreadsheet)
+- Merged create/edit quiz for a trial as 'Manage Quiz' *Still bugged
+with nav bar, See UAT list AQ 42
+***Note a lot of duplicated code in stats pages (editors, taker, user),
+but running out of time to implement class structure to call methods. If
+time permits I'll try and do this
+
 ###Version 5.6.5 - 1/10/2015 - Some UAT fixes mostly menus
 =Joshua
 Added code to verify user is an admin and save it - UAT - 8
