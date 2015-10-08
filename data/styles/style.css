@@ -50,17 +50,10 @@ margin: 0;
 }
  
 #nav {
-    position: relative;
-    height: 40px;
     margin: 0px auto;
     font-size: 1.2em;
-    /*margin-top: 20px; */
-    padding-top: 10px;
-    padding-left: 10px;
-    
-    /*border-radius: 5px; */
     background-color: #404040;
-    /*a: link white*/
+    clear: both; /*contain to line heights */
 }
 
 #nav ul
@@ -79,7 +72,6 @@ margin: 0;
     {
     display:  inline;
     list-style: none;
-    padding: 0 10px;
     color: #ffffff;
     text-align: center;
     display: table-cell;
@@ -91,23 +83,16 @@ margin: 0;
         text-decoration: none;
         width: 100%;
         display: block;
+        line-height: 2.5em;
     }
 #nav .selected {
-  background-color: rgb(233, 172, 0);
-  padding-bottom: 5px;
+  /* old colour
+  background-color: rgb(233, 172, 0);*/
+  background-color:  #076694;
 }
 
-/* 
-#nav a {
-display:inline;
-padding:10px;
-text-decoration:none;
-background-color:#f1f1f1;
-}
- */
 #nav a:hover {
     background-color:#B0B0B0;
-    padding-bottom: 5px;
 }
 
 #content {
@@ -141,12 +126,16 @@ background-color:#f1f1f1;
 
     #content-create-quiz select {
         height:30px;
-        width:100px;
+        width:120px;
         border: 1px solid rgb(80,80,80);
         border-radius: 2px;
         /*background-color: rgb(208,208,208);*/
         font-size: 18px;
         text-align: center;
+    }
+    /* for the hours/years etc */
+    #content-create-quiz select.timeselect {
+        width:80px;
     }
 
     #content-create-quiz input[type=text] {
@@ -269,10 +258,10 @@ select.quiz_list {
 
 /*Positions buttons in bottom right and left corners of div*/
 .mySubmit{
-    float: left;
+    float: right;
 }
 .myReturn{
-    float: right;
+    float: left;
 }
 
 .myEnabled{
@@ -434,6 +423,7 @@ input[type=text].defaultText {
 
 .lightLabel{
     color: #FFFFFF;
+    padding-left: 1em;
 }
 
 .radios .radio{
@@ -450,19 +440,17 @@ input[type=text].defaultText {
 .radios input[type=radio]:checked + .radio .quiz-desc{
     background-color: #e9ab00;
 }
+.radio-group:hover .quiz-title {
+    background-color:#006699;
+}
 .quiz-title {
     display:block;
-    width:100%;
     height:50%;
     background-color: #B0B0B0;
     padding: 5px;
 }
-.radio-group:hover .quiz-title {
-    background-color:#006699;
-}
 .quiz-desc {
     display:block;
-    width:100%;
     height:50%;
     background-color:#F0F0F0;
     

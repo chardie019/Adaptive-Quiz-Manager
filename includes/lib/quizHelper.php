@@ -45,44 +45,55 @@ class quizHelper
      * Uploads an image for the quiz question
      * 
      * @param array $filesUpload The file post array $_FILES
-     * @param string $targetFileName The name of the file being uploaded
+     * @param string $imageFieldName The name of the image upload's field being uploaded
      * @param string $quizId The id of the quiz assoicated
      * @return array|boolean false on fail. otherwise ['imageUploadError'] is a message and 
      * ['imageAltError'] is the alt error message
      * ['targetDir'] is the upload directory
      */
-    public static function handleImageUploadValidation($filesUpload, $targetFileName, $quizId, $questionAlt) {
+    public static function handleImageUploadValidation($filesUpload, $imageFieldName, $quizId, $questionAlt) {
         //Validate Image upload
         //Double \\ is needed at the end of path to cancel out the single \ effect leading into "
         //$target_dir = "C:\xampp\htdocs\aqm\data\quiz-images\\"; 
         $target_dir = self::returnRealImageFilePath($quizId);
+        $targetFileName = basename($_FILES[$imageFieldName]["name"]);
         $result['targetDir'] = $target_dir;
         $target_file = $target_dir . $targetFileName;
         $uploadOk = 1;
         $noError = 1;
         $noFileExistError = 1;
         $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
-
+        
+        //check image doesn't voilate php.ini's rules
+        if ($_FILES[$imageFieldName]['error'] != 0) {
+            $result['imageUploadError'] = $_FILES[$imageFieldName]['error'];
+            $uploadOk = 0;
+        }
+        
         // Check if image file is an actual image or fake image
-        if (createPath($target_dir) && is_uploaded_file($filesUpload["questionImageUpload"]["tmp_name"])){
+        if ($uploadOk === 1 && createPath($target_dir) && is_uploaded_file($filesUpload["questionImageUpload"]["tmp_name"])){
             $check = getimagesize($filesUpload["questionImageUpload"]["tmp_name"]);
             if($check !== false) {
                 $uploadOk = 1;
             } else {
+                $result['imageUploadError'] = "Error procession the file, are you sure it's an image?";
                 $uploadOk = 0;
             }
             // Check if file already exists inside folders
             if (file_exists($target_file)) {
+                $result['imageUploadError'] = "The name of your image may be alrady taken in this quiz. Try renaming the file.";
                 $uploadOk = 0;
                 $noFileExistError = 0;
             }
             // Check file size is smaller than 500kb, can change this later
             if ($filesUpload["questionImageUpload"]["size"] > 5000000) { //5MB
+                $result['imageUploadError'] = "The image must be less than 5 MB.";
                 $uploadOk = 0;
             }
             // Allow certain image file types only *Stop people uploading other file types e.g. pdf
             if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
             && $imageFileType != "gif" ) {
+                $result['imageUploadError'] = "The Image can only be .jpg, .png, .jpeg and .gif file types.";
                 $uploadOk = 0;
             }
             //only check ALT text if there is an image (which is optional)
@@ -101,12 +112,7 @@ class quizHelper
         }
         // Check if $uploadOk is set to 0 by an upload error. Exit if true.
         if ($uploadOk == 0 || $noError = 0) {
-            if ($uploadOk == 0) {
-                $result['imageUploadError'] =  "Error: There was an error with your image upload. Please check the following: \n"
-                        . "- File size is 500kb or less "
-                        . "- File must be in .jpg, .png, .jpeg and .gif file types\n"
-                        . "- The name of your file may be taken. Try renaming the file ";
-            } else {
+            if ($uploadOk == 1) {
                 $result['imageUploadError'] = "There was another unrelated error, please upload again after fixing it.";
             }
             if ($noFileExistError == 1){ //wasnt a files exist error, so delete it

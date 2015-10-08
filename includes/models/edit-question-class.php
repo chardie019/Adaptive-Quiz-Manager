@@ -99,7 +99,6 @@ class editQuestionLogic extends quizLogic {
         $dbLogic = new DB();
         //find the connection id
         if ($type == "question"){
-            var_dump($quizId, $id);
             $connId = self::checkQuestionBelongsToQuizReturnId($dbLogic, $quizId, $id);
             $shortKeyName = "SHORT_QUESTION_ID";
         } else { //type = answer
@@ -485,6 +484,7 @@ class editQuestionLogic extends quizLogic {
     protected static function insertQuestionIntoQuestionAnswerTable (DB $dbLogic, $questionOrAnswerId, $quizId, $parentId = NULL, $operation = "addBelow", $addToType = "answer"){
         //($operation == "addBelow" || $operation == "addAbove"
         //$addToType
+        
         if($operation == "addToAnswerAbove") {
             //get the parent id of the selected question or answer and use it
             $whereValuesArray = array(
@@ -493,6 +493,7 @@ class editQuestionLogic extends quizLogic {
             $parentIdArray = $dbLogic->select("PARENT_ID", "question_answer", $whereValuesArray);
             $parentId = $parentIdArray['PARENT_ID'];
         }
+        
         $insertArray = array(
             "question_QUESTION_ID" => $questionOrAnswerId,
              "TYPE" => "question",
@@ -501,6 +502,7 @@ class editQuestionLogic extends quizLogic {
         );
         if (is_null($parentId)) {    //inserting at the top
             $insertArray["DEPTH"] = "0";
+            $insertArray["SHORT_QUESTION_ID"] = "1";
             return $dbLogic->insert($insertArray, "question_answer");
         } else { //inserting somewhere else, use insert Selct to get the depth right
             $whereArray = array(
@@ -522,7 +524,7 @@ class editQuestionLogic extends quizLogic {
      * @param string $parentId The question to attach to (optional)
      * @return string The question_answer's primary key, ConnectionID (for the answer just inserted)
      */
-    protected static function insertAnswerIntoQuestionAnswerTable (DB $dbLogic, $answerId, $quizId, $link, $questionConnectionId, $operation, $addToType){
+    protected static function insertAnswerIntoQuestionAnswerTable (DB $dbLogic, $answerId, $quizId, $questionConnectionId, $operation, $addToType){
         //($operation == "addBelow" || $operation == "addAbove"
         //$addToType
         $parentId = NULL;
@@ -534,21 +536,19 @@ class editQuestionLogic extends quizLogic {
             $parentIdArray = $dbLogic->select("PARENT_ID", "question_answer", $whereValuesArray);
             $parentId = $parentIdArray['PARENT_ID'];
         }
-        $dbLink = self::checkQuestionBelongsToQuizReturnId($dbLogic, $quizId, $link);
-        if ($dbLink == false) {$dbLink = NULL;}
         $insertArray = array(
                 "answer_ANSWER_ID" => $answerId,
                  "TYPE" => "answer",
                 "PARENT_ID" => $questionConnectionId,
-                "quiz_QUIZ_ID" => $quizId,
-                "LOOP_CHILD_ID" => $dbLink
+                "quiz_QUIZ_ID" => $quizId
         );
         //inserting somewhere, use insert Select to get the depth right
         $whereArray = array(
             "CONNECTION_ID" => $parentId
         );
+        //COALESCE - return 1 if MAX(SHORT_ANSWER_ID is null 
         return $dbLogic->insertWithSelectWhere("question_answer", "DEPTH, SHORT_ANSWER_ID, answer_ANSWER_ID, TYPE, PARENT_ID, quiz_QUIZ_ID",
-                "DEPTH+1, MAX(SHORT_ANSWER_ID) +1", "question_answer", $whereArray, $insertArray); //depth is increased from last
+                "COALESCE(DEPTH+1, 0), COALESCE(MAX(SHORT_ANSWER_ID) +1, 1)", "question_answer", $whereArray, $insertArray); //depth is increased from last
     }
         /**
      * Check if the question is on the same quiz, returns false if not

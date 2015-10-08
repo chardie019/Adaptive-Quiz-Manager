@@ -13,6 +13,12 @@ $templateLogic->addCustomHeadersStart(); ?>
 .tree-area {
     height: 28em;
 }
+.float-left {
+    float:left;
+}
+.clear-both {
+    clear:both;
+}
 </style>
 <?php $templateLogic->addCustomHeadersEnd();
 $templateLogic->addCSS("jstree/themes/default/style.min.css", true);
@@ -40,30 +46,34 @@ $templateLogic->startBody();
             <br />
             <?php echo "<span class=\"inputError\">".$questionContentError."</span>"?>
             <br />
-            <div class="upload-inspect">
-                <p class="label">Question's Image (optional):</p>
-                <input type="file" name="questionImageUpload" accept="image/*">
-                <?php echo "<span class=\"inputError\">".$questionImageError."</span>"?>
-                <br />
-                <input id="keep-image-yes" type="radio" name="keep-image" value="1" <?php if ($questionKeepImage == "1"){echo "checked=\"checked\"";} ?> /> 
-                <label for="keep-image-yes">Keep or Update Image.</label>
-                <br />
-                <input id="keep-image-no" type="radio" name="keep-image" value="0" <?php if ($questionKeepImage == "0"){echo "checked=\"checked\"";} ?> />
-                <label for="keep-image-no">Delete Image<br /> (Overrides the uploaded file)</label>
-                <?php echo "<span class=\"inputError\">".$questionKeepImageError."</span>"?> 
-                <br />
-                <p class="label">Question's Image's tool tip for the sight impaired:</p>
-                <input type='text' id='question-alt' name='question-alt' size='30' value="<?php echo $questionAlt ?>" />
-                <br />
-            <?php echo "<span class=\"inputError\">".$questionAltError."</span>"?>  
-            </div>
             <div class="current-image-inspect">
                 <?php if (!empty($questionImage)) {
                     echo "<img src=\"$questionImage\" alt=\"$questionAlt\" title=\"$questionAlt\" />". PHP_EOL; 
                 } else {
                     echo "<p> No Image currently uploaded. </p>";
                 } ?>
-            </div>     
+            </div>  
+            <div class="upload-inspect">
+                <p class="label">Question's Image (optional):</p>
+                <input type="file" name="questionImageUpload" accept="image/*">
+                <br />
+                <?php if (!empty($questionImage)) { ?>
+                    <input id="keep-image-yes" type="radio" name="keep-image" value="keep-or-update" <?php if ($questionKeepImage == "keep-or-update"){echo "checked=\"checked\"";} ?> /> 
+                    <label for="keep-image-yes">Keep or Update Image.</label>
+                    <br />
+                        <input id="keep-image-no" type="radio" name="keep-image" value="delete" <?php if ($questionKeepImage == "delete"){echo "checked=\"checked\"";} ?> />
+                        <label for="keep-image-no">Delete Image<br /> (Overrides the uploaded file)</label>
+                <?php } else { ?>
+                    <input type="hidden" name="keep-image" value="do-nothing" />
+                <?php } ?>
+                </div>
+                <?php echo "<span class=\"inputError float-left\">".$questionImageError."</span>"?>
+                <?php echo "<span class=\"inputError\">".$questionKeepImageError."</span>"; ?>
+                <br class="clear-both" />
+                <p class="label">Question's Image's tool tip for the sight impaired:</p>
+                <input type='text' id='question-alt' name='question-alt' size='30' value="<?php echo $questionAlt ?>" />
+                <br />
+            <?php echo "<span class=\"inputError\">".$questionAltError."</span>"?>   
         </div>
     </div>
     <p class="submit-buttons-container">

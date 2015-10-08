@@ -22,11 +22,13 @@ if (isset($prevAnswerId)) {
 }else if (isset($prevQuestionId)) {
     $addToType = "question";
     $prevId = $prevQuestionId;
+} else {
+    $prevId = NULL;
 }
 
-if ($direction == "above") {
+if ($direction == "above" && isset($prevId)) {
     $operation = "addAbove";
-} else if ($direction == "below") {
+} else if ($direction == "below" && isset($prevId)) {
     $operation = "addBelow";
 }else {
     $operation = "initial";
@@ -41,6 +43,7 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING) === "PO
     $questionContent = filter_input(INPUT_POST, "question-content");
     //questionImageUpload
     $questionAlt = filter_input(INPUT_POST, "question-alt");
+    $imageFieldName = "questionImageUpload";
     
     //ToDo
     //other valaiation
@@ -52,14 +55,13 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING) === "PO
         $error = 1;
     }
     if($questionContent == " " || $questionContent == "" || $questionContent == NULL){
-        $questionContentError = "Error: You must enter the question's content.";
-        $error = 1;
+        $questionContent = ""; //optional field
     }
     if ($error == 0){
-        if (is_uploaded_file($_FILES["questionImageUpload"]["tmp_name"])) { //image is optional
+        if (is_uploaded_file($_FILES[$imageFieldName]["tmp_name"])) { //image is optional
             // If image passed all criteria, attempt to upload
-            $targetFileName = basename($_FILES["questionImageUpload"]["name"]);
-            $imageResult = quizHelper::handleImageUploadValidation($_FILES, $targetFileName, $quizId, $questionAlt);
+            $targetFileName = basename($_FILES[$imageFieldName]["name"]);
+            $imageResult = quizHelper::handleImageUploadValidation($_FILES, $imageFieldName, $quizId, $questionAlt);
             if($imageResult['result'] == false){
                 $error = 1;
                 $imageUploadError = $imageResult['imageUploadError'];
@@ -71,9 +73,9 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING) === "PO
     }
         if ($error == 0) {//all good
             $type = "answer"; //adding an answe (for clone quiz)
-            $newQuizArray = quizLogic::maybeCloneQuiz($quizId, $prevAnswerId, $type);
+            $newQuizArray = quizLogic::maybeCloneQuiz($quizId, $prevId, $type);
             $quizId = $newQuizArray["quizId"];
-            $prevAnswerId = $newQuizArray["newId"];
+            $prevId = $newQuizArray["newId"];
             if ($operation == "addBelow" || $operation == "addAbove") {
                 editQuestionLogic::insertQuestion($quizId, $prevId, $questionTitle, $questionContent, $targetFileName, $questionAlt, $operation, $addToType);
                 //show soe the new question added
@@ -88,14 +90,12 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING) === "PO
     }
 
 }
-$dbLogic = new DB();
-if ($operation == "addToAnswer") {
-    $parentId = NULL;
-}
-if ($operation == "addToAnswer") {
+//if adding to a question or answer
+if (isset($prevId)) {
+    $dbLogic = new DB();
     $parentId = quizLogic::returnParentId($dbLogic, $prevAnswerId, "answer");
-}
     $returnHtml = quizHelper::prepareTree($dbLogic, $quizId, $parentId, "none");
+}
 //initalies strings;
 if (!isset($questionTitleError)){$questionTitleError = "";}
 if (!isset($questionContentError)){$questionContentError = "";}

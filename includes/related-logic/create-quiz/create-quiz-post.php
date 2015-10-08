@@ -184,6 +184,7 @@ $quizName = filter_input(INPUT_POST, "quizName");
         if (!isset($invalidDateError2)){$invalidDateError2 = "";}
         if (!isset($imageUploadError)){$imageUploadError = "";}
         if (!isset($quizImageTextError)){$quizImageTextError = "";}
+        if (!isset($alwaysOpenError)){$alwaysOpenError = "";}
         //auto create the years (used for the view only)
         $yearCurrent = $currentDate["year"];
 

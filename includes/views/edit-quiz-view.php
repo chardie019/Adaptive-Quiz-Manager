@@ -20,12 +20,11 @@ $templateLogic->addCustomHeadersStart();
     .feedback-span {
         color: blue;
     }
-    span.inputError {
-        font-weight: normal;
+    li {
+    margin-bottom: 1em;
     }
-    /* span inside the error span */
-    .inputError span {
-        font-weight: bold;
+    .inputError.no-bold {
+        font-weight: normal;
     }
 </style>
 <?php
@@ -35,22 +34,18 @@ $templateLogic->startBody();
         <p>Welcome to the Edit Quiz Menu, please ensure the quiz is Disabled before choosing an option above to continue.</p>
         <br />
         <span class="feedback-span"><?php echo $confirmActive ?></span><span><?php echo $createQuizConfirmation; ?></span>
-        <span class="inputError">
-        <?php if(isset($invalidQuestionAnswersDisplayArray)){
-            echo "<span>There Were some integrity checks that failed:</span><br /><br />";
-            foreach ($invalidQuestionAnswersDisplayArray as $row) {
-                echo $row['problem']; ?>
-                <br />
-                <br />
-                <?php echo $row['fix']; ?>
-                <br /><br />
-                <?php
-            }
-        } ?>
-        </span>
-        <br />
         
-        <form action='<?php echo "?quiz=".  quizLogic::returnSharedQuizID($_SESSION['CURRENT_EDIT_QUIZ_ID']) ?>' id='enable' method='post'>
+        <?php if(isset($invalidQuestionAnswersDisplayArray)){ ?>
+            <span class="inputError">There Were some integrity checks that failed:</span><br />
+            <ul>
+            <?php foreach ($invalidQuestionAnswersDisplayArray as $row) { ?>
+                <li><span class="inputError no-bold"><?php echo $row['problem']; ?></span>
+                <br />
+                <?php echo $row['fix']; ?> </li>
+            <?php } ?>
+            </ul>
+        <?php } ?>
+        <form action='<?php echo $quizUrl; ?>' id='enable' method='post'>
             <p>This quiz is currently: </p>
             <p>
             <?php if($_SESSION['IS_QUIZ_ENABLED'] == true){   
@@ -64,7 +59,7 @@ $templateLogic->startBody();
                 }
             ?>
             </p>
-            <input type="hidden" name="quizID" value='<?php echo $_SESSION['CURRENT_EDIT_QUIZ_ID'];?>' >
+            <input type="hidden" name="quizid" value='<?php echo $sharedQuizId;?>' >
             <button class="mybutton myEnabled <?php if($_SESSION['IS_QUIZ_ENABLED'] == true){echo 'myGreyedOut" disabled="disabled';} ?>" type="submit" name="confirmEnabled" >Enable</button>
             <button class="mybutton myDisabled <?php if($_SESSION['IS_QUIZ_ENABLED'] == false){echo 'myGreyedOut" disabled="disabled';} ?>" type="submit" name="confirmDisabled" >Disable</button>
         </form>

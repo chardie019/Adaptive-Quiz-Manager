@@ -33,6 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //pastt the appropiate page
     $answerContent =filter_input(INPUT_POST, "answer-content");
     $feedbackContent = filter_input(INPUT_POST, "feedback-content");
     $isCorrect = filter_input(INPUT_POST, "is-correct");
+    $imageFieldName = "questionImageUpload";
     
     if (isset($submitQuestionButton)){
         $questionTitle = filter_input(INPUT_POST, "question-title");
@@ -49,19 +50,20 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //pastt the appropiate page
             $questionContentError = "Error: You must enter the question's content.";
             $error = 1;
         }
-        if(($questionKeepImage != "1" && $questionKeepImage != "0") || $questionKeepImage == NULL){
+        if(($questionKeepImage != "keep-or-update" && $questionKeepImage != "delete" && 
+                $questionKeepImage != "do-nothing") || $questionKeepImage == NULL){
             $questionKeepImageError = "Error: Please select whether to keep the image or not";
             $error = 1;
         }
 
         if ($error == 0){
-            if ($questionKeepImage == "0"){
+            if ($questionKeepImage == "delete"){
                 editQuestionLogic::removeImagefromQuestion($quizId, $id);
             } else {
-                if (is_uploaded_file($_FILES["questionImageUpload"]["tmp_name"])) { //image is optional
+                if (is_uploaded_file($_FILES[$imageFieldName]["tmp_name"])) { //image is optional
                     // If image passed all criteria, attempt to upload
-                    $targetFileName = basename($_FILES["questionImageUpload"]["name"]);
-                    $imageResult = quizHelper::handleImageUploadValidation($_FILES, $targetFileName, $quizId, $questionAlt);
+                    $targetFileName = basename($_FILES[$imageFieldName]["name"]);
+                    $imageResult = quizHelper::handleImageUploadValidation($_FILES, $imageFieldName, $quizId, $questionAlt);
                     if($imageResult['result'] == false){
                         $error = 1;
                         $questionImageError = $imageResult['imageUploadError'];
@@ -73,7 +75,8 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //pastt the appropiate page
                 $newQuizArray = quizLogic::maybeCloneQuiz($quizId, $id, $type);
                 $quizId = $newQuizArray["quizId"];
                 $id = $newQuizArray["newId"];
-                if (is_uploaded_file($_FILES["questionImageUpload"]["tmp_name"])) {
+                
+                if (isset($imageResult)) { //image function was run
                     editQuestionLogic::updateQuestion($quizId, $id, $questionTitle, $questionContent, $questionAlt, $targetFileName);
                 } else {
                     //don't update the image
@@ -145,7 +148,7 @@ if ($type == "answer"){
     if (!isset($questionImage) && $result['IMAGE'] != NULL){ //only set if not null
             $questionImage = quizHelper::returnWebImageFilePath($quizId, $result['IMAGE']);
     }  
-    if (!isset($questionKeepImage)){$questionKeepImage = "1";}
+    if (!isset($questionKeepImage)){$questionKeepImage = "keep-or-update";}
     if (!isset($questionAlt)){$questionAlt = nl2br($result['IMAGE_ALT']);}
     include("inspect-question-view.php");
 }

@@ -61,9 +61,9 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING) === "PO
         if ($error == 0){
             //all good
             $type = "question"; //adding to a question (for clone quiz only)
-            $newQuizArray = quizLogic::maybeCloneQuiz($quizId, $questionIdPost, $type);
+            $newQuizArray = quizLogic::maybeCloneQuiz($quizId, $prevId, $type);
             $quizId = $newQuizArray["quizId"];
-            $questionIdPost = $newQuizArray["newId"];
+            $prevId = $newQuizArray["newId"];
             $result = editQuestionLogic::insertAnswer($quizId, $prevId, $answerContent, $feedbackContent, $isCorrect, $direction, $addToType);
             //show soe the new question added
             header('Location: '. CONFIG_ROOT_URL . '/edit-quiz/edit-question.php'.$quizUrl."&feedback=answer-added");
@@ -73,10 +73,13 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING) === "PO
         configLogic::loadErrorPage("Unspecified action");
     }
 }
-
-$dbLogic = new DB();
-$parentId = quizLogic::returnParentId($dbLogic, $questionId, "question");
-$returnHtml =  quizHelper::prepareTree($dbLogic, $quizId, $parentId, "none");
+if (isset($prevId)) {
+    $dbLogic = new DB();
+    $parentId = quizLogic::returnParentId($dbLogic, $prevId, "question");
+    $returnHtml =  quizHelper::prepareTree($dbLogic, $quizId, $parentId, "none");
+} else {
+    $returnHtml = "";
+}
 
 //initalies strings;
 if (!isset($answerContentError)){$answerContentError = "";}

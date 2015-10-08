@@ -2,6 +2,7 @@
         /* take up the rest of the width */
         overflow:hidden;
         padding-left: 1em;
+        padding-right: 2em;
     }
     .label {
         font-weight: bold;
@@ -10,33 +11,30 @@
         padding-bottom: 1em;
     }
     textarea {
-        width: 90%;
+        box-sizing: border-box;
+        width:100%;
     }
     input[type=text] {
-        width: 90%
+        box-sizing: border-box;
+        width:100%;
     }
     .upload-inspect {
-        width:50%;
-        float: left;
+        overflow:hidden;
     }
     .current-image-inspect {
-        overflow:hidden; 
+        float: right; 
+        width:50%;
         padding-left: 0.5em;
         max-height: 11em;
-        padding-right: 3em;
     }
     .current-image-inspect img {
         max-width:100%;
-        max-height:100%;
         float: right;
+        max-height: 11em;
     }
     .submit-buttons-container {
         clear: both;
         padding-top: 1em;
-    }
-    .is-correct {
-        width:60%;
-        float:left;
     }
     .jump-to-question {
         overflow: hidden; /*take the rest of the space */

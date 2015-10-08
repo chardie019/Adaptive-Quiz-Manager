@@ -3,44 +3,6 @@
 $templateLogic = new templateLogic;
 $templateLogic->setTitle("Select Quiz");
 $templateLogic->setHeading("Approved Quiz List");
-$templateLogic->addCustomHeaders("
-<style>
-.radios .radio{
-    display:block;
-    border: 2px solid #404040;
-    cursor: pointer;
-}
-.radios input[type=radio]{
-    display:none
-}
-.radios input[type=radio]:checked + .radio .quiz-title{
-    background-color: #CC9933;
-}
-.radios input[type=radio]:checked + .radio .quiz-desc{
-    background-color: #e9ab00;
-}
-.quiz-title {
-    display:block;
-    width:100%;
-    height:50%;
-    background-color: #B0B0B0;
-    padding: 5px;
-}
-.radio-group:hover .quiz-title {
-background-color:#006699;
-}
-.quiz-desc {
-    display:block;
-    width:100%;
-    height:50%;
-    background-color:#F0F0F0;
-    
-    padding: 5px;
-}
-.radio-group:hover .quiz-desc{
-background-color: #0066FF;
-}
-</style>");
 $templateLogic->startBody();
 ?>
 
@@ -91,7 +53,7 @@ $templateLogic->startBody();
             <br />
             <br />
             How about having a go an creating a quiz?
-            <a href="<?php echo (CONFIG_ROOT_URL . "/create-quiz") ?>" class="mybutton mySubmit">
+            <a href="<?php echo (CONFIG_ROOT_URL . "/create-quiz.php") ?>" class="mybutton mySubmit">
                     Create Quiz
             </a>
             <a href="<?php echo (CONFIG_ROOT_URL) ?>" class="mybutton myReturn">

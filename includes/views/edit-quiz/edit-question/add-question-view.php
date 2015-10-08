@@ -12,7 +12,6 @@ $templateLogic->addCustomHeadersStart(); ?>
     height: 26em;
 }
 p.submit-buttons-container {
-    padding-top: 0;
     margin: 0;
 }
 </style>
@@ -20,14 +19,16 @@ p.submit-buttons-container {
 $templateLogic->startBody();
 ?>
 <form action='#' method='post' enctype="multipart/form-data" >
-    <div class="tree-area-container">
-        <h3>Selected Answer's Q's & A's</h3>
-        <div class="tree-area">
-            <div id="myjstree" class="demo">
-                <?php echo $returnHtml; ?>
+    <?php if (isset($returnHtml)) { ?>
+        <div class="tree-area-container">
+            <h3>Selected Answer's Q's & A's</h3>
+            <div class="tree-area">
+                <div id="myjstree" class="demo">
+                    <?php echo $returnHtml; ?>
+                </div>
             </div>
         </div>
-    </div>
+    <?php } ?>
     <div class="edit-right-side">
         <h3>Please add the Details for the new question.</h3>
         <p class="label">Please enter the Question:</p>
@@ -35,7 +36,7 @@ $templateLogic->startBody();
         <br />
         <?php echo "<span class=\"inputError\">".$questionTitleError."</span>"?>       
         <br />
-        <p class="label">Please enter the Question's Content:</p>
+        <p class="label">Please enter the Question's Content (optional):</p>
         <textarea name="question-content" id="question-content" rows="4" cols="50"><?php echo $questionContent ?></textarea>
         <br />
         <?php echo "<span class=\"inputError\">".$questionContentError."</span>"?>

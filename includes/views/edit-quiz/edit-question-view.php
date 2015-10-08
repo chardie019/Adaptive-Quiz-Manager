@@ -73,7 +73,7 @@ $templateLogic->startBody();
         </div>
     <?php } else { //no questions ?>
     <p> There are no questions on this quiz, How about adding some? <br /><br /> Click "Add Question" on the right to get started. </p>
-    <p> <input type=hidden" name="no-question" value="" /> <!-- post this to add first question -->
+    <p> <input type="hidden" name="no-question" value="" /> <!-- post this to add first question -->
     </p>  
     <?php } ?>
 </div>

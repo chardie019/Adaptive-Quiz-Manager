@@ -53,7 +53,7 @@ $templateLogic->startBody();
         <br />
         <p class="label">Is there a time limit to complete the quiz:</p>
         <label for="noTimelimit">No:</label>
-        <input type='radio' name='isTime' id="noTimelimit" value='0' <?php if ($isTime == "0"){echo "checked=\"checked\"";} ?> />
+        <input class="timeselect" type='radio' name='isTime' id="noTimelimit" value='0' <?php if ($isTime == "0"){echo "checked=\"checked\"";} ?> />
         <label for="yesTimeLimit">Yes:</label>
         <input type='radio' name='isTime' id="yesTimeLimit" value='1' <?php if ($isTime == "1"){echo "checked=\"checked\"";} ?> />
         <br />
@@ -61,7 +61,7 @@ $templateLogic->startBody();
         <br />
         <p class="label">*** If YES, please enter that time limit: ***</p>
         Hours
-        <select name='timeHours'>
+        <select class="timeselect" name='timeHours'>
             <option <?php if ($timeHours == "0"){echo "selected=\"selected\"";} ?>>0</option>
             <option <?php if ($timeHours == "1"){echo "selected=\"selected\"";} ?>>1</option>
             <option <?php if ($timeHours == "2"){echo "selected=\"selected\"";} ?>>2</option>
@@ -70,7 +70,7 @@ $templateLogic->startBody();
             <option <?php if ($timeHours == "5"){echo "selected=\"selected\"";} ?>>5</option>
         </select>
         Minutes
-        <select name='timeMinutes'>
+        <select class="timeselect"name='timeMinutes'>
             <option <?php if ($timeMinutes == "00"){echo "selected=\"selected\"";} ?>>00</option>
             <option <?php if ($timeMinutes == "05"){echo "selected=\"selected\"";} ?>>05</option>
             <option <?php if ($timeMinutes == "10"){echo "selected=\"selected\"";} ?>>10</option>
@@ -96,7 +96,7 @@ $templateLogic->startBody();
         <?php echo "<span class=\"inputError\">".$invalidDateError1."</span>"?>
         <br />
         <p class="label">When does this quiz open:</p>
-        <select name="dayStart"> 
+        <select class="timeselect" name="dayStart"> 
             <option <?php if ($dayStart == "1"){echo "selected=\"selected\"";} ?>>1</option>       
             <option <?php if ($dayStart == "2"){echo "selected=\"selected\"";} ?>>2</option>       
             <option <?php if ($dayStart == "3"){echo "selected=\"selected\"";} ?>>3</option>       
@@ -129,7 +129,7 @@ $templateLogic->startBody();
             <option <?php if ($dayStart == "30"){echo "selected=\"selected\"";} ?>>30</option>       
             <option <?php if ($dayStart == "31"){echo "selected=\"selected\"";} ?>>31</option>       
         </select> - 
-        <select name="monthStart"> 
+        <select class="timeselect" name="monthStart"> 
             <option <?php if ($monthStart == "1"){echo "selected=\"selected\"";} ?>>1</option>       
             <option <?php if ($monthStart == "2"){echo "selected=\"selected\"";} ?>>2</option>       
             <option <?php if ($monthStart == "3"){echo "selected=\"selected\"";} ?>>3</option>       
@@ -143,7 +143,7 @@ $templateLogic->startBody();
             <option <?php if ($monthStart == "11"){echo "selected=\"selected\"";} ?>>11</option>       
             <option <?php if ($monthStart == "12"){echo "selected=\"selected\"";} ?>>12</option>       
         </select> - 
-        <select name="yearStart">     
+        <select class="timeselect" name="yearStart">     
             <option <?php if ($yearStart == $yearCurrent){echo "selected=\"selected\"";} ?>><?php echo $yearCurrent; ?></option>       
             <option <?php if ($yearStart == $yearCurrent + 1){echo "selected=\"selected\"";} ?>><?php echo $yearCurrent + 1; ?></option>       
             <option <?php if ($yearStart == $yearCurrent + 2){echo "selected=\"selected\"";} ?>><?php echo $yearCurrent + 2; ?></option>       
@@ -155,7 +155,7 @@ $templateLogic->startBody();
         <br />
         <br />
         <p class="label">When does this quiz close:</p>
-        <select name="dayEnd"> 
+        <select class="timeselect" name="dayEnd"> 
             <option <?php if ($dayEnd == "1"){echo "selected=\"selected\"";} ?>>1</option>       
             <option <?php if ($dayEnd == "2"){echo "selected=\"selected\"";} ?>>2</option>       
             <option <?php if ($dayEnd == "3"){echo "selected=\"selected\"";} ?>>3</option>       
@@ -188,7 +188,7 @@ $templateLogic->startBody();
             <option <?php if ($dayEnd == "30"){echo "selected=\"selected\"";} ?>>30</option>       
             <option <?php if ($dayEnd == "31"){echo "selected=\"selected\"";} ?>>31</option>       
         </select> - 
-        <select name="monthEnd"> 
+        <select class="timeselect" name="monthEnd"> 
             <option <?php if ($monthEnd == "1"){echo "selected=\"selected\"";} ?>>1</option>       
             <option <?php if ($monthEnd == "2"){echo "selected=\"selected\"";} ?>>2</option>       
             <option <?php if ($monthEnd == "3"){echo "selected=\"selected\"";} ?>>3</option>       
@@ -202,7 +202,7 @@ $templateLogic->startBody();
             <option <?php if ($monthEnd == "11"){echo "selected=\"selected\"";} ?>>11</option>       
             <option <?php if ($monthEnd == "12"){echo "selected=\"selected\"";} ?>>12</option>       
         </select> - 
-        <select name="yearEnd">     
+        <select class="timeselect" name="yearEnd">     
             <option <?php if ($yearEnd == $yearCurrent + 3){echo "selected=\"selected\"";} ?>><?php echo $yearCurrent; ?></option>
             <option <?php if ($yearEnd == $yearCurrent + 3){echo "selected=\"selected\"";} ?>><?php echo $yearCurrent + 1; ?></option>
             <option <?php if ($yearEnd == $yearCurrent + 3){echo "selected=\"selected\"";} ?>><?php echo $yearCurrent + 2; ?></option>

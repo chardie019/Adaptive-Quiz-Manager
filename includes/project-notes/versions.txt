@@ -1,4 +1,24 @@
-###Version 5.6.6 - /10/2015 - Changes to edit question pages
+###Version 5.6.6.1 - 9/10/2015 - fixes to edit question pages
+=Joshua
+made the main menu bar
+- bigger
+- colour blue on highlight
+- link size take up all room 
+
+made errors for image upload more specific
+fixed image validation issue
+(image moved, is-image-uploadeed return false)
+removed radio box "keep image or not" when no image is present
+removed $_SESSION['CURRENT_EDIT_QUIZ_ID']
+refactored edit-quiz.php a little and put a few away into functions
+
+todo
+we-rite sql statements for add answer & question to for where quiz = id with coalose
+fix edit-details
+etc
+
+
+###Version 5.6.6 - 7/10/2015 - Changes to edit question pages
 =Joshua
 linking (move to front screen)
 merage initial question and add question

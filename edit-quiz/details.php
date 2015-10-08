@@ -299,7 +299,6 @@ $creationDatetime = date('Y-m-d H:i:s');
                 //Insert quiz into database
                 $dbLogic->updateSetWhere("quiz", $setValuesArray, $whereValuesArray);
 
-                $_SESSION['CURRENT_EDIT_QUIZ_ID'] = $current_quiz_id;
                 header('Location: ' . CONFIG_ROOT_URL . '/edit-quiz/details.php?quiz=' . $current_quiz_id);
                 exit;
             }     

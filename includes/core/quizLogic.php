@@ -172,16 +172,22 @@ class quizLogic
     /**
      * gets the REAL quiz ID by inspecting the db with teh shared quiz ID from teh URL
      * 
+     * @param string $quizIDPost [optional] validate the a different quiz id instead (eg post)
      * @return string THE REAL Quiz ID
      */
 
-    public static function getQuizIdFromUrlElseReturnToEditQuiz() {
-        $quizIDGet = (string)quizLogic::returnRealQuizID(filter_input(INPUT_GET, "quiz"));
-        if(is_null($quizIDGet)){
+    public static function getQuizIdFromUrlElseReturnToEditQuiz($quizIDPost = NULL) {
+        if (isset($quizIDPost)) {
+            $untrustedSharedQuizId = $quizIDPost;
+        } else {
+            $untrustedSharedQuizId = (string)quizLogic::returnRealQuizID(filter_input(INPUT_GET, "quiz"));
+        }
+        if(is_null($untrustedSharedQuizId)){
             //back to edit quiz
             self::jumpBackToEditQuizList("no-quiz-selected");  
         } else {
-            return $quizIDGet;
+            //it's real so return it
+            return $untrustedSharedQuizId;
         }
     }
     
@@ -291,13 +297,9 @@ class quizLogic
         
         if ($consistentArray['CONSISTENT_STATE'] == 0){ //if already cloned (1 is consistent, zero is NOT consistent
             // bail, no cloning needed
-            if (isset($type)) {
-                $returnArray['quizId'] = $oldQuizId;
-                $returnArray['newId'] = $oldId;
-                return $returnArray;
-            } else {
-                return $oldQuizId; 
-            }
+            $returnArray['quizId'] = $oldQuizId;
+            $returnArray['newId'] = $oldId;
+            return $returnArray;
         }
         //else if not cloned yet        
         //get the old quiz's data
