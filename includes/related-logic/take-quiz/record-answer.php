@@ -7,7 +7,7 @@ require_once("includes/config.php");
 //declares needed variable
 global $dbLogic;
 
-$dbLogic = new DB();
+$dbLogic = new dbLogic();
 
 //Creates a new result if one doesn't exist
 if (!isset($_SESSION["RESULT_ID"])) {

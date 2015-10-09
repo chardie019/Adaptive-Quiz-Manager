@@ -13,7 +13,7 @@ include ("timeConverter.php");
 
 $uid = $_SESSION['username'];
 $welcomeMessage = ' ';
-$dbLogic = new DB();
+$dbLogic = new dbLogic();
       
 
     //On first load

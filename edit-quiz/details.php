@@ -90,7 +90,7 @@ $creationDatetime = date('Y-m-d H:i:s');
         //no error yet
         $error = 0;
 
-        $dbLogic = new DB();
+        $dbLogic = new dbLogic();
        
 
         if($quizName == " " || $quizName == "" || $quizName == NULL){

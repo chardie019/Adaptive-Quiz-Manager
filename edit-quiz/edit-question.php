@@ -84,6 +84,8 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //pastt the appropiate page
 }
 
 $feedbackMessageURL = filter_input(INPUT_GET, "feedback");
+//to be implemented if i get time
+//$shortIdURL = filter_input(INPUT_GET, "short-id");
 
 switch ($feedbackMessageURL){
     case "initial-question":
@@ -118,6 +120,10 @@ switch ($feedbackMessageURL){
         $message = "Question Removed.";
         $messageClass = "feedback-span";
         break;
+    case "link-updated":
+        $message = "Link Updated.";
+        $messageClass = "feedback-span";
+        break;
     default:
         $feedbackMessage = "";
 }
@@ -132,8 +138,8 @@ if (!isset($displayMessage)){
 if (!isset($message)){
     $message = ""; //no message if not set
 }
-$dbLogic = new DB();
-$htmlTree = quizHelper::prepareTree($dbLogic, $quizId);
+$dbLogic = new dbLogic();
+$htmlTree = quizHelper::prepareTree($quizId);
 
 
 //http://stackoverflow.com/a/15307555\

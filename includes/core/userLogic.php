@@ -25,7 +25,7 @@ class userLogic {
      * @param boolean $admin true if they should be an admin
      */
     function __construct ($username = NULL, $admin = false) {
-            $this->dbLogic = new DB();  //set a db conenction per user
+            $this->dbLogic = new dbLogic();  //set a db conenction per user
             $this->username = $username;
             $this->admin = $admin;
             if (isset($this->username) && $this->exists() === false) {  //if not NULL & exists

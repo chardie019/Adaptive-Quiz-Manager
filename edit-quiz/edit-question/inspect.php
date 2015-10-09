@@ -47,8 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //pastt the appropiate page
             $error = 1;
         }
         if($questionContent == " " || $questionContent == "" || $questionContent == NULL){
-            $questionContentError = "Error: You must enter the question's content.";
-            $error = 1;
+            $questionContent = ""; //optional field
         }
         if(($questionKeepImage != "keep-or-update" && $questionKeepImage != "delete" && 
                 $questionKeepImage != "do-nothing") || $questionKeepImage == NULL){
@@ -121,7 +120,7 @@ $result = quizLogic::returnQuestionOrAnswerData($id , $type);
 //html
 if ($type == "answer"){
     $parentId = quizLogic::returnParentId($dbLogic, $id, "answer");
-    $returnHtml = quizHelper::prepareTree($dbLogic, $quizId, $parentId, "none");
+    $returnHtml = quizHelper::prepareTree($quizId, $parentId, "none");
     //initalies strings;
     if (!isset($answerContentError)){$answerContentError = "";}
     if (!isset($feedbackContentError)){$feedbackContentError = "";}
@@ -134,7 +133,7 @@ if ($type == "answer"){
     include("inspect-answer-view.php");
 } else {
     $parentId = quizLogic::returnParentId($dbLogic, $id, "question");
-    $returnHtml = quizHelper::prepareTree($dbLogic, $quizId, $parentId, "none");
+    $returnHtml = quizHelper::prepareTree($quizId, $parentId, "none");
     //initalies strings;
     if (!isset($questionTitleError)){$questionTitleError = "";}
     if (!isset($questionContentError)){$questionContentError = "";}

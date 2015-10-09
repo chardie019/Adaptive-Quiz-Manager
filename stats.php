@@ -12,7 +12,7 @@ require_once("includes/config.php");
 
 $uid = $_SESSION['username'];
 
-$dbLogic = new DB();
+$dbLogic = new dbLogic();
 
 $quizArray = array();
 

@@ -24,8 +24,6 @@ if (!empty($_SERVER['uid'])){ //if not logined through the dev envirnment
     $_SESSION["username"] = filter_var($_SERVER["uid"], FILTER_SANITIZE_STRING); //just in case csu auth gets compromised
 }
 
-
-
 //once logged in, check things
 if (!empty($_SESSION["username"])){
     $userLogic = new userLogic($_SESSION["username"]);  

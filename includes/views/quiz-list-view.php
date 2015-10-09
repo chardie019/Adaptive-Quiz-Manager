@@ -53,7 +53,7 @@ $templateLogic->startBody();
             <br />
             <br />
             How about having a go an creating a quiz?
-            <a href="<?php echo (CONFIG_ROOT_URL . "/create-quiz.php") ?>" class="mybutton mySubmit">
+            <a href="<?php echo (CONFIG_ROOT_URL . "/edit-quiz/create-quiz.php") ?>" class="mybutton mySubmit">
                     Create Quiz
             </a>
             <a href="<?php echo (CONFIG_ROOT_URL) ?>" class="mybutton myReturn">

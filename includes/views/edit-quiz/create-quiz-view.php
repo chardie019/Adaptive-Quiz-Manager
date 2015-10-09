@@ -3,9 +3,7 @@
 $templateLogic = new templateLogic;
 $templateLogic->setTitle('Create Quiz');
 $templateLogic->startBody();
-
 ?>
-
 
 <div id="content-create-quiz">
 

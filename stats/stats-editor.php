@@ -13,7 +13,7 @@ include ("timeConverter.php");
 
 $uid = $_SESSION['username'];
 
-$dbLogic = new DB();
+$dbLogic = new dbLogic();
   
         //On first load, set the $_SESSION variable to the QUIZ_ID selected form the quiz list
         //On subsequent page lloads between previous/current versions of the quiz, the $quizidconfirm will remain the same

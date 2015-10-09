@@ -96,12 +96,12 @@ if ($type == "answer"){
 switch ($displayType) {
     case "answer":
         $parentId = quizLogic::returnParentId($dbLogic, $id, "answer");
-        $returnHtml = quizHelper::prepareTree($dbLogic, $quizId, $parentId, "none");
+        $returnHtml = quizHelper::prepareTree($quizId, $parentId, "none");
         include("remove-answer-view.php");
         break;
     case "question":
         $parentId = quizLogic::returnParentId($dbLogic, $id, "question");
-        $returnHtml = quizHelper::prepareTree($dbLogic, $quizId, $parentId, "none");
+        $returnHtml = quizHelper::prepareTree($quizId, $parentId, "none");
         include("remove-question-view.php");
         break;
     case "confirm":

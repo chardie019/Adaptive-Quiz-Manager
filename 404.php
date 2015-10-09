@@ -8,7 +8,7 @@ include_once("includes/config.php");
 
 /*
 if (class_exists('DB')) {
-    $dbLogic = new DB();
+    $dbLogic = new dbLogic();
     if ($dbLogic->isError() === false) {
         $errorMessage = "Not found! 404 error";
     } else {

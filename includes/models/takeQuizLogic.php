@@ -14,7 +14,7 @@ class takeQuizLogic extends quizLogic {
         } else {
             $questionData["IMAGE"] = quizHelper::returnWebImageFilePath($_SESSION["QUIZ_CURRENT_QUIZ_ID"], $questionData["IMAGE"]);
         }
-        $dbLogic = new DB();
+        $dbLogic = new dbLogic();
         $data = array(
             "PARENT_ID" => $questionData["CONNECTION_ID"]
         );
@@ -37,7 +37,7 @@ class takeQuizLogic extends quizLogic {
      * "QUESTION_ID, CONTENT, QUESTION, IMAGE, IMAGE_ALT, CONNECTION_ID & feedback"
      */
     static public function nextQuestionDataFeedbackConnectionId($answerId, $previousQuestionId, $quizId) {
-        $dbLogic = new DB();
+        $dbLogic = new dbLogic();
         //ensure the answer is on the same quiz & get the question aossicated
         //SELECT PARENT_ID, FEEDBACK FROM `question_answer`, answer where answer_ANSWER_ID = <answerID> AND ANSWER_ID = answer_ANSWER_ID
         $where = array("answer_ANSWER_ID" => $answerId);
@@ -67,7 +67,7 @@ class takeQuizLogic extends quizLogic {
     }
     /**
      * 
-     * @param DB $dbLogic reuse current current to Database class
+     * @param dbLogic $dbLogic reuse current current to Database class
      * @param array $whereValuesArray the value to compare with eg ParentID = ConIdValue
      * return array the associative array result from dbLogic
      */
@@ -86,7 +86,7 @@ class takeQuizLogic extends quizLogic {
     /**
      * Creates a where values array for dbLogic later on "questionDataAndFeedback"
      * 
-     * @param DB $dbLogic reuse curent connection to the Databse
+     * @param dbLogic $dbLogic reuse curent connection to the Databse
      * @param string $answerId
      * return array|boolean return array Conn = LOOPIDValue or ParentID = ConIdValue
      */

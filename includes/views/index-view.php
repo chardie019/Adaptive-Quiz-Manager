@@ -100,7 +100,7 @@ $templateLogic->startBody();
             <span class="menu-icons">Take Quiz</span>
             </div>
         </a>
-        <a href="<?php echo (CONFIG_ROOT_URL); ?>/create-quiz.php" >
+        <a href="<?php echo (CONFIG_ROOT_URL); ?>/edit-quiz/create-quiz.php" >
             <div class="buttonborder">
                 <div id="buttonborder2">
                 </div>

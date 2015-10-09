@@ -11,7 +11,7 @@ $templateLogic->startBody();
     <p><?php echo $answer; ?></p>
     <br />
     <?php if ($linkRemoveRadio == "update") { ?><h4>This will delete any sub questions and answers underneath (if any)!</h4> <?php } ?>
-    <input type="hidden" name="question" value="<?php echo $answerId; ?>" />
+    <input type="hidden" name="question" value="<?php echo $linkFromLinkPage; ?>" />
     <input type="hidden" name="link-remove" value="<?php echo $linkRemoveRadio; ?>" />
     <p class="submit-buttons-container">
         <button class="mybutton myReturn" type="submit" name="link-return" value="Enter">Back</button>

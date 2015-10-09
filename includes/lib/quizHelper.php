@@ -128,15 +128,16 @@ class quizHelper
         return $result; //retrun the array now
     }
     /**
-     * Prints a tree of question answers using ul and li's (and jstree)
+     * returns html tree of question answers using ul and li's (and jstree)
      * 
      * Note: actual printing indone an another private function "buildTree"
      * 
-     * @param DB $dbLogic reuse tha current connection to the Database
-     * @param string $quizId The quiz to print from
-     * @return void
+     * @param $parentId
+     * @param string $printType [optional] decide which parts are printed - "NULL(default), "questions" & "none"
+     * @return string the html code for the tree
      */
-    public static function prepareTree(DB $dbLogic, $quizId, $parentId = "", $printType = NULL){
+    public static function prepareTree($quizId, $parentId = "", $printType = NULL){
+        $dbLogic = new dbLogic();
         //Create array for Outer join
         $where = array(
             "quiz_QUIZ_ID" => "$quizId" 
@@ -159,7 +160,7 @@ class quizHelper
      * 
      * @param array $arrs The Array to print and sort through
      * @param string $parentId The prent ID to print from (optional, prints from root) [is also recurive]
-     * @param type $printType decide which parts are printed - "NULL(default), "questions" & "none"
+     * @param string $printType decide which parts are printed - "NULL(default), "questions" & "none"
      * @param integer $listNum where to open the jstree from (mostly just a internal variable, leave be), default is zero
      * @param string $returnHtml internal string to build up html code
      * @return returns the HTML code
@@ -207,7 +208,7 @@ class quizHelper
                //to do, loop the tree
                if ($arr['LOOP_CHILD_ID'] != NULL){
                    $loopQuestionId = self::getLoopQuestionId($arr, $arrs);
-                   $item = $item . " (loop to Q" . $loopQuestionId.")";
+                   $item = $item . " (jump to Q" . $loopQuestionId.")";
                    $jsTreeType = "loop";
                }
                 $returnHtml .= "<ul>" . PHP_EOL;
@@ -234,7 +235,7 @@ class quizHelper
     private static function getLoopQuestionId ($singleArrayRow, $array) {
         foreach ($array as $arrLoopChild) {
             if ($arrLoopChild['CONNECTION_ID'] == $singleArrayRow['LOOP_CHILD_ID']) {
-                $questionId = $arrLoopChild['question_QUESTION_ID'];
+                $questionId = $arrLoopChild['SHORT_QUESTION_ID'];
             }
         }
         return $questionId;

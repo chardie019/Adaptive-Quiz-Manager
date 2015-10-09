@@ -74,9 +74,9 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING) === "PO
     }
 }
 if (isset($prevId)) {
-    $dbLogic = new DB();
+    $dbLogic = new dbLogic();
     $parentId = quizLogic::returnParentId($dbLogic, $prevId, "question");
-    $returnHtml =  quizHelper::prepareTree($dbLogic, $quizId, $parentId, "none");
+    $returnHtml =  quizHelper::prepareTree($quizId, $parentId, "none");
 } else {
     $returnHtml = "";
 }

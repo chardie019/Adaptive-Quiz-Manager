@@ -8,7 +8,7 @@ class takeQuizListLogic extends takeQuizLogic {
     public static function getQuizList ($uid) {
         //Get current date to check for open quizzes
         $dateCheck = date('Y-m-d H:i:s');
-        $dbLogic = new DB();
+        $dbLogic = new dbLogic();
         //SELECT SHARED_QUIZ_ID, QUIZ_NAME, DESCRIPTION FROM 
         //(SELECT SHARED_QUIZ_ID, QUIZ_NAME, DESCRIPTION, IS_PUBLIC, DATE_CLOSED, 
         //DATE_OPEN, IS_ENABLED FROM quiz ORDER BY VERSION desc) as TEMP_TABLE 

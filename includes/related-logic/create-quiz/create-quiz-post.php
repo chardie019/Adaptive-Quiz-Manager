@@ -32,7 +32,7 @@ $quizName = filter_input(INPUT_POST, "quizName");
     //no error yet
     $error = 0;
     
-    $dbLogic = new DB();
+    $dbLogic = new dbLogic();
 
     if($quizName == " " || $quizName == "" || $quizName == NULL){
         $quizNameError = "Error: You must enter a name for your quiz.";

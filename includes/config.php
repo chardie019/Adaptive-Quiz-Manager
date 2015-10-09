@@ -30,36 +30,13 @@ define( 'CONFIG_ROOT_DIR', dirname(dirname(__FILE__))); // C:\xampp\htdocs\aqm <
 define( 'CONFIG_ROOT_URL', substr($_SERVER['PHP_SELF'], 0, - (strlen($_SERVER['SCRIPT_FILENAME']) - strlen(CONFIG_ROOT_DIR)))); //    /aqm   <use to set the css location on another php file>
 //define('INCLUDES', __DIR__);        //  C:\xampp\htdocs\aqm\includes <include location>
 
-
-//set include path (so you don't reference other files, just this) (Part 1/2)
-$paths = array(
-    dirname(__FILE__) . '/../',                 //root directory
-    dirname(__FILE__),                          //include directory
-    dirname(__FILE__) . '/core/',               //core directory
-    dirname(__FILE__) . '/views/',              //views directory
-    dirname(__FILE__) . '/templates/',          //templates directory
-    dirname(__FILE__) . '/subMenus/',           //templates directory
-    dirname(__FILE__) . '/lib/',                //libraries directory
-    dirname(__FILE__) . '/related-logic/',        //logic directory (related logic to the pages)
-    dirname(__FILE__) . '/models/'              //related classes
- );
-set_include_path(get_include_path() . PATH_SEPARATOR . implode(PATH_SEPARATOR, $paths));
-
-//set global settings
-mb_internal_encoding(); //set internal utf-8 encoding
-mb_http_output();       //mb_* string functions must still be used
-date_default_timezone_set('Australia/Sydney'); // set default timezone incase system is set to wrong time (and avoid apache error)
-
-if(session_id() == '') { //it may of been started eariler eg login file.
-    session_start();
-}
-
-//php files needed by all
-include_once("quizLogic.php");
-
-//independant files
+//independant files (needed by others)
 //include all files in the "lib" & models directory
-$includePhpFilesArray = array('/lib/', '/models/');
+/*
+ * models is autoloaded now
+ * $includePhpFilesArray = array('/lib/', '/models/');     
+ */
+$includePhpFilesArray = array('/lib/');
 foreach ($includePhpFilesArray as $folder){
     try {
         $files = array();
@@ -76,16 +53,28 @@ foreach ($includePhpFilesArray as $folder){
                 throw new Exception('Error including library in config.');
             }
         foreach ($files as $file) {
-            include_once $file;
+            include_once dirname(__FILE__).$folder.$file;
         }
         $lib = null;
     } catch (Exception $e) {
         echo 'Caught exception: ',  $e->getMessage(), "\n";
     }
 }
+
+//set include path (so you don't reference other files, just this)
 $OtherDirectoriesToInclude = array (
+    '/../',                 //root directory
+    '',                          //include directory
+    '/core/',               //core directory
+    '/views/',              //views directory
+    '/templates/',          //templates directory
+    '/subMenus/',           //templates directory
+    '/lib/',                //libraries directory
+    '/related-logic/',        //logic directory (related logic to the pages)
+    '/models/',              //related classes
     '/related-logic/',
     '/views/',
+    '/models/',
     '/../about/',
     '/../edit-quiz/',
     '/../help/',
@@ -96,19 +85,38 @@ foreach ($OtherDirectoriesToInclude as $dir){
     $path = directoryToArray(dirname(__FILE__) . $dir, true, true, false);
     set_include_path(get_include_path() . PATH_SEPARATOR . implode(PATH_SEPARATOR, $path));
 }
+
+
+//set global settings
+mb_internal_encoding(); //set internal utf-8 encoding
+mb_http_output();       //mb_* string functions must still be used
+date_default_timezone_set('Australia/Sydney'); // set default timezone incase system is set to wrong time (and avoid apache error)
+
+if(session_id() == '') { //it may of been started eariler eg login file.
+    session_start();
+}
+//auto classnames by classname.php 
+spl_autoload_register();
+
+//php files needed by all
+include_once("quizLogic.php");
+
+
+
 include_once("styles.php");
 
 
 
 
 //check database works
-include_once("dbLogic.php");
+include_once("DB.php");
 
 //test DB works
-$dbLogic = new DB();
+$dbLogic = new dbLogic();
 
 //include other config files
 include_once("userLogic.php");
 
 include_once("userLogin.php");
 //note: when echo-ing html other language, use  echo (htmlentities($string));
+

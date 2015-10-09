@@ -1,3 +1,18 @@
+###Version 5.6.6.2 - 9/10/2015 - more fixes to edit question pages
+=Joshua
+fixed accsidental edit-quiz slect list error in refactoring
+fixed insert question answer to have default short id 
+added autoloading
+- all classes must now be called the same with their filenames
+eg class dbLogic is dbLogic.php
+fixed link change
+Quiz Successfully created!  - now is blue on edit-quiz.phjp
+
+Errors:
+
+clone quiz didn't check end question
+Edit Question - content should be optional
+
 ###Version 5.6.6.1 - 9/10/2015 - fixes to edit question pages
 =Joshua
 made the main menu bar

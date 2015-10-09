@@ -3,7 +3,7 @@
  * Provides easy DB access with DB protection mechanisim
  */
 
-class DB {
+class dbLogic {
     private static $connection; //private - no access to outsiders
     
     function __construct ($TINA = false) {
@@ -471,7 +471,8 @@ class DB {
         assert(is_string($insertTables));
         assert(is_string($insertColumns));
         assert(is_string($selectTables));
-        $tables = strtolower($tables); //lowercase tables
+        $insertTables = strtolower($insertTables); //lowercase tables
+        $selectColumns = strtolower($selectColumns); //lowercase tables
         $where = self::prepareWhereValuesSQL($whereValuesArray); //the values
         $selectColumns = self::prepareInsertValues($insertValuesArray, $selectColumns);
         $sql = "INSERT INTO $insertTables ($insertColumns) ".

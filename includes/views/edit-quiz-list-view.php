@@ -15,7 +15,7 @@ $templateLogic->startBody();
                     <br />
                     <br />
                     
-                    <a href="<?php echo (CONFIG_ROOT_URL . "/create-quiz.php") ?>" class="mybuttonlink mySubmit">
+                    <a href="<?php echo (CONFIG_ROOT_URL . "/edit-quiz/create-quiz.php") ?>" class="mybuttonlink mySubmit">
                             Create
                     </a>
                 </p>
@@ -24,7 +24,7 @@ $templateLogic->startBody();
                 <br />
                 <br />
 
-                <?php if (count($quizEditId) > 0) { //there are quizes?>
+                <?php if (count($nameArray) > 0) { //there are quizes?>
 
                 <form action="#" method="post">
                     <h3>Manage existing quiz</h3>
@@ -70,7 +70,7 @@ $templateLogic->startBody();
                     <br />
                     <br />
                     How about having a go an creating a quiz?
-                    <a href="<?php echo (CONFIG_ROOT_URL . "/create-quiz.php") ?>" class="mybuttonlink mySubmit">
+                    <a href="<?php echo (CONFIG_ROOT_URL . "/edit-quiz/create-quiz.php") ?>" class="mybuttonlink mySubmit">
                             Create Quiz
                     </a>
                     <a href="<?php echo (CONFIG_ROOT_URL) ?>" class="mybutton myReturn">

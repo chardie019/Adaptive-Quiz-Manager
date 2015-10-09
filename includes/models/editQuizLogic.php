@@ -7,7 +7,7 @@ class editQuizLogic extends quizLogic {
      * @return boolean|NULL true is enabled, false if not and NULL if unknown (could not find quiz in db)
      */
     public static function isQuizEnabled($quizId){
-        $dbLogic = new DB();
+        $dbLogic = new dbLogic();
         $whereValuesArray = array(
             "QUIZ_ID" => $quizId
         );
@@ -30,7 +30,7 @@ class editQuizLogic extends quizLogic {
      * @return the message that it is enabled
      */
     public static function setQuizToEnabled ($quizId) {
-        $dbLogic = new DB();
+        $dbLogic = new dbLogic();
         $setColumnsArray = array(
             "IS_ENABLED" => "1"
         );
@@ -47,7 +47,7 @@ class editQuizLogic extends quizLogic {
      * @return string the message that it is disabled.
      */
     public static function setQuizToDisabled ($quizId) {
-        $dbLogic = new DB();
+        $dbLogic = new dbLogic();
         $setColumnsArray = array(
             "IS_ENABLED" => "0"
         );
@@ -63,7 +63,7 @@ class editQuizLogic extends quizLogic {
      * @param string $username The username to be checked with
      */
     public static function returnEditorQuizList ($username) {
-        $dbLogic = new DB();
+        $dbLogic = new dbLogic();
          //where coloumns
 
         $whereValuesArray = array(
@@ -86,7 +86,7 @@ class editQuizLogic extends quizLogic {
         foreach($quizEditId as $columnResult){
 
             $wherevalues2 = array(
-                "user_USERNAME" => "$uid"
+                "user_USERNAME" => "$username"
             );
 
             $wherevalues3 = array(

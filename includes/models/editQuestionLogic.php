@@ -1,7 +1,7 @@
 <?php
 class editQuestionLogic extends quizLogic {
     public static function removeImagefromQuestion($quizId, $questionId){
-        $dbLogic = new DB();
+        $dbLogic = new dbLogic();
         //check the question is on the same quiz
         $prevConAnswerConId = self::checkQuestionBelongsToQuizReturnId($dbLogic, $quizId, $questionId);
         if ($prevConAnswerConId == false){
@@ -27,7 +27,7 @@ class editQuestionLogic extends quizLogic {
      * @return boolean false if operation fails, true if success
      */
     public static function updateQuestion($quizId, $questionId, $questionTitle, $questionContent, $questionAlt, $targetFileName = NULL){
-        $dbLogic = new DB();
+        $dbLogic = new dbLogic();
         //check the question is on the same quiz
         $prevConAnswerConId = self::checkQuestionBelongsToQuizReturnId($dbLogic, $quizId, $questionId);
         if ($prevConAnswerConId == false){
@@ -68,7 +68,7 @@ class editQuestionLogic extends quizLogic {
      * @return void
      */
     public static function updateAnswer($quizId, $answerId, $answerContent, $feedbackContent, $isCorrect){
-        $dbLogic = new DB();
+        $dbLogic = new dbLogic();
          //check the question is on the same quiz
         $connId = self::checkAnswerBelongsToQuizReturnId($dbLogic, $quizId, $answerId);
         
@@ -96,7 +96,7 @@ class editQuestionLogic extends quizLogic {
      * @return void
      */
     public static function removeAnswerOrQuestion($quizId, $id, $type, $deleteReturnButton){
-        $dbLogic = new DB();
+        $dbLogic = new dbLogic();
         //find the connection id
         if ($type == "question"){
             $connId = self::checkQuestionBelongsToQuizReturnId($dbLogic, $quizId, $id);
@@ -153,10 +153,10 @@ class editQuestionLogic extends quizLogic {
      * 
      * This will (with the a question link) create a integrity voilation which is checked later on "enable"
      * 
-     * @param DB $dbLogic reuse db connection
+     * @param dbLogic $dbLogic reuse db connection
      * @param type $connId the id of the answer or question to have its offspring linked to another node
      */
-    private static function linkSubNodesToParent (DB $dbLogic, $connId) {
+    private static function linkSubNodesToParent (dbLogic $dbLogic, $connId) {
         //find the parent ID of the current node
             $parentWhereValuesArray = array("CONNECTION_ID" => $connId);
             $parentIDResult = $dbLogic->select("PARENT_ID", "question_answer", $parentWhereValuesArray);
@@ -175,12 +175,12 @@ class editQuestionLogic extends quizLogic {
     /**
      * Recursive bottom-up tree traversal - Delete children on question_answer and their tables
      * 
-     * @param DB $dbLogic reuse current connection to Databse
+     * @param dbLogic $dbLogic reuse current connection to Databse
      * @param string $index the array to go through
      * @param string $parentId The node(it's Connection ID field) to be deleted and it's children
      * return void
      */
-   protected static function removeChildren(DB $dbLogic, $index, $parentId) {
+   protected static function removeChildren(dbLogic $dbLogic, $index, $parentId) {
        $parentId = $parentId === NULL ? "NULL" : $parentId;
        if (isset($index[$parentId])) {
             foreach ($index[$parentId] as $singleParentId) {
@@ -202,12 +202,12 @@ class editQuestionLogic extends quizLogic {
     /**
      * Rmove all refences to the node in the loop column
      * 
-     * @param DB $dbLogic reuse current connection to Databse
+     * @param dbLogic $dbLogic reuse current connection to Databse
      * @param string $index the array to go through
      * @param string $id The node to checked if there loop child matching
      * return array the modified array
      */
-    private static function removeReferencetoLoopChild(DB $dbLogic, array $index, $id){
+    private static function removeReferencetoLoopChild(dbLogic $dbLogic, array $index, $id){
        foreach ($index as $value){
             /* @var $value2 type */
             foreach ($value as $value2){
@@ -230,7 +230,7 @@ class editQuestionLogic extends quizLogic {
      * @param string $questionAlt
      */
     public static function insertInitalQuestionAnswer($quizId, $questionTitle, $questionContent, $questionImageUploadfile, $questionAlt) {
-        $dbLogic = new DB();
+        $dbLogic = new dbLogic();
         
         //inset the question and rcord the id
         $questionId = self::insertQuestionIntoQuestionTable($dbLogic, $questionTitle, $questionContent, $questionImageUploadfile, $questionAlt);
@@ -270,7 +270,7 @@ class editQuestionLogic extends quizLogic {
         //1. now quiz has to have at least 2 questions & 1 answer and has to have a question at the start 
         //3. has to have no answers adjancent or questions adjancent
         //2. has to have a question at the end of each of the branches
-        $dbLogic = new DB();
+        $dbLogic = new dbLogic();
         $problemQuestionAnswersArray = array();
         
         //1. now quiz has to have at least 2 questions & 1 answer and has to have a question at the start 
@@ -384,14 +384,14 @@ class editQuestionLogic extends quizLogic {
     /**
      * Creates a Array from the question_answer table to iterate through with other fuctions
      * 
-     * @param DB $dbLogic reuse current connection to the databse
+     * @param dbLogic $dbLogic reuse current connection to the databse
      * @param string $quizId the quiz to generate the list from
      * @return array The PHP array of similar structyre to the databse
      * ['id'] = the connection id
      * ['type'] = the type, question or answer, a string
      * ['questionOrAnswerId'] the id of the question or answer id
      */
-    protected static function prepareRecursiveListQuestionAnswer (DB $dbLogic, $quizId) {
+    protected static function prepareRecursiveListQuestionAnswer (dbLogic $dbLogic, $quizId) {
         $whereValuesArray = array("quiz_QUIZ_ID" => $quizId);//the root
         //do updating of depth for the children
         $children = $dbLogic->selectOrder("CONNECTION_ID, PARENT_ID, question_QUESTION_ID, answer_ANSWER_ID, LOOP_CHILD_ID", "question_answer",  $whereValuesArray, "DEPTH", false);
@@ -420,7 +420,7 @@ class editQuestionLogic extends quizLogic {
  * Recursive top-down tree traversal example:
  * Indent and print child nodes
  */
-    protected static function increaseDepthOfChildNodes (DB $dbLogic, $index, $parent_id){
+    protected static function increaseDepthOfChildNodes (dbLogic $dbLogic, $index, $parent_id){
        //if NULL, set the string to to "NULL", otherwise be yourself
         $parent_id = $parent_id === NULL ? "NULL" : $parent_id;
         //if exist
@@ -438,13 +438,13 @@ class editQuestionLogic extends quizLogic {
     /**
      * Inserts a answer into the "question" table
      * 
-     * @param DB $dbLogic The Current connection the databse (reuse it)
+     * @param dbLogic $dbLogic The Current connection the databse (reuse it)
      * @param string $answerContent The answer's text
      * @param string $feedbackContent The feedback from the answer
      * @param string $isCorrect The number (string) indictcating if correct, neutral etc
      * @return string The answer's primary key, ConnectionID
      */
-    protected static function insertAnswerintoAnswerTable (DB $dbLogic, $answerContent, $feedbackContent, $isCorrect){
+    protected static function insertAnswerintoAnswerTable (dbLogic $dbLogic, $answerContent, $feedbackContent, $isCorrect){
         $insertArray = array(
             "ANSWER" => $answerContent,
             "FEEDBACK" => $feedbackContent,
@@ -455,14 +455,14 @@ class editQuestionLogic extends quizLogic {
     /**
      * Inserts a question into the "question" table
      * 
-     * @param DB $dbLogic The Current connection the databse (reuse it)
+     * @param dbLogic $dbLogic The Current connection the databse (reuse it)
      * @param string $questionTitle The title of the question
      * @param string $questionContent The paragraph for the question
      * @param string $questionImageUploadfile The filename of the image
      * @param string $questionAlt The ALt text for the question's image
      * @return string The answer's primary key, ConnectionID
      */
-    protected static function insertQuestionIntoQuestionTable (DB $dbLogic, $questionTitle, $questionContent, $questionImageUploadfile, $questionAlt){
+    protected static function insertQuestionIntoQuestionTable (dbLogic $dbLogic, $questionTitle, $questionContent, $questionImageUploadfile, $questionAlt){
         $insertArray = array(
             "QUESTION" => $questionTitle,
              "CONTENT" => $questionContent,
@@ -474,19 +474,19 @@ class editQuestionLogic extends quizLogic {
     /**
      * Inserts a question into the "question_answer" table
      * 
-     * @param DB $dbLogic The Current connection the databse (reuse it)
+     * @param dbLogic $dbLogic The Current connection the databse (reuse it)
      * @param string $questionId The Question ID form the question table insert
      * @param string $quizId The quiz to assoicate the question with
      * @param string $parentId The parent CONNECTION_ID (optional, added to the otherwise)
      * @param string $answerConId The 
      * @return string The question_answer's primary key, ConnectionID (for the question just inserted)
      */
-    protected static function insertQuestionIntoQuestionAnswerTable (DB $dbLogic, $questionOrAnswerId, $quizId, $parentId = NULL, $operation = "addBelow", $addToType = "answer"){
+    protected static function insertQuestionIntoQuestionAnswerTable (dbLogic $dbLogic, $questionOrAnswerId, $quizId, $parentId = NULL, $operation = "addBelow", $addToType = "answer"){
         //($operation == "addBelow" || $operation == "addAbove"
         //$addToType
         
         if($operation == "addToAnswerAbove") {
-            //get the parent id of the selected question or answer and use it
+            //get the parent id of the selected question or answer and use it (same parent id as the slected node)
             $whereValuesArray = array(
                     "CONNECTION_ID" => $parentId
                 );
@@ -506,17 +506,18 @@ class editQuestionLogic extends quizLogic {
             return $dbLogic->insert($insertArray, "question_answer");
         } else { //inserting somewhere else, use insert Selct to get the depth right
             $whereArray = array(
-                "CONNECTION_ID" => $parentId
+                "question_answer.quiz_QUIZ_ID" => $quizId
             );
+            //COALESCE(DEPTH+1, 0) - insert 0 if depth is null
             //INSERT INTO question_answer (DEPTH, SHORT_QUESTION_ID, question_QUESTION_ID, TYPE, quiz_QUIZ_ID, PARENT_ID) SELECT DEPTH+1, MAX(SHORT_QUESTION_ID) +1, '114', 'question', '1', '208' FROM question_answer WHERE CONNECTION_ID = '208'
             return $dbLogic->insertWithSelectWhere("question_answer", "DEPTH, SHORT_QUESTION_ID, question_QUESTION_ID, TYPE, quiz_QUIZ_ID, PARENT_ID",
-                    "DEPTH+1, MAX(SHORT_QUESTION_ID) +1", "question_answer",$whereArray, $insertArray); //depth is increased from last
+                    "COALESCE(DEPTH+1, 0), COALESCE(MAX(SHORT_QUESTION_ID)+1, 1)", "question_answer",$whereArray, $insertArray); //depth is increased from last
         }
     }
     /**
      * Inserts a answer into the "question_answer" table
      * 
-     * @param DB $dbLogic The Current connection the databse (reuse it)
+     * @param dbLogic $dbLogic The Current connection the databse (reuse it)
      * @param string $answerId The answer ID form the answer table insert
      * @param string $quizId The quiz to assoicate the question with
      * @param string $link the question to link the naswer to in a different branch
@@ -524,7 +525,7 @@ class editQuestionLogic extends quizLogic {
      * @param string $parentId The question to attach to (optional)
      * @return string The question_answer's primary key, ConnectionID (for the answer just inserted)
      */
-    protected static function insertAnswerIntoQuestionAnswerTable (DB $dbLogic, $answerId, $quizId, $questionConnectionId, $operation, $addToType){
+    protected static function insertAnswerIntoQuestionAnswerTable (dbLogic $dbLogic, $answerId, $quizId, $questionOrAnswerConId, $operation, $addToType){
         //($operation == "addBelow" || $operation == "addAbove"
         //$addToType
         $parentId = NULL;
@@ -539,12 +540,12 @@ class editQuestionLogic extends quizLogic {
         $insertArray = array(
                 "answer_ANSWER_ID" => $answerId,
                  "TYPE" => "answer",
-                "PARENT_ID" => $questionConnectionId,
+                "PARENT_ID" => $questionOrAnswerConId,
                 "quiz_QUIZ_ID" => $quizId
         );
         //inserting somewhere, use insert Select to get the depth right
         $whereArray = array(
-            "CONNECTION_ID" => $parentId
+            "question_answer.quiz_QUIZ_ID" => $quizId
         );
         //COALESCE - return 1 if MAX(SHORT_ANSWER_ID is null 
         return $dbLogic->insertWithSelectWhere("question_answer", "DEPTH, SHORT_ANSWER_ID, answer_ANSWER_ID, TYPE, PARENT_ID, quiz_QUIZ_ID",
@@ -562,7 +563,7 @@ class editQuestionLogic extends quizLogic {
      * @return boolean false if operation fails, true if success
      */
     public static function insertAnswer($quizId, $prevQuestionOrAnswerId, $answerContent, $feedbackContent, $isCorrect, $operation, $addToType){
-        $dbLogic = new DB();
+        $dbLogic = new dbLogic();
         ///check the question/answer is on the same quiz
         if ($addToType == "answer") {
             $prevConId = self::checkAnswerBelongsToQuizReturnId($dbLogic, $quizId, $prevQuestionOrAnswerId);
@@ -575,7 +576,7 @@ class editQuestionLogic extends quizLogic {
         //insert answer and get it's answer id
         $answerId = self::insertAnswerintoAnswerTable($dbLogic, $answerContent, $feedbackContent, $isCorrect);
         //insert it using the id retrieved eariler
-        self::insertAnswerIntoQuestionAnswerTable($dbLogic, $answerId, $quizId, $prevConId, $operation, $addToType);
+        $newConId = self::insertAnswerIntoQuestionAnswerTable($dbLogic, $answerId, $quizId, $prevConId, $operation, $addToType);
         //relink the sub child to this one
         if($operation == "addToAnswerAbove") {
             //set the original to the new connection id of teh inbetweener
@@ -596,7 +597,7 @@ class editQuestionLogic extends quizLogic {
      * @return boolean false if operation fails, true if success
      */
     public static function insertQuestion($quizId, $prevQuestionOrAnswerId, $questionTitle, $questionContent, $targetFileName, $questionAlt, $operation, $addToType){
-        $dbLogic = new DB();
+        $dbLogic = new dbLogic();
         //check the question/answer is on the same quiz
         if ($addToType == "answer") {
             $prevConId = self::checkAnswerBelongsToQuizReturnId($dbLogic, $quizId, $prevQuestionOrAnswerId);
@@ -618,7 +619,7 @@ class editQuestionLogic extends quizLogic {
         //all good, so returnn true
         return true;
     }
-    private static function linkSubChildToThisConId (DB $dbLogic, $prevConId, $newConId){
+    private static function linkSubChildToThisConId (dbLogic $dbLogic, $prevConId, $newConId){
         //relink the sub child to this one
         if($operation == "addToAnswerAbove") {
             //set the original to the new connection id of teh inbetweener

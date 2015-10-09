@@ -12,7 +12,7 @@ require_once("includes/config.php");
 
 $_SESSION["QUIZ_CONFIRMED"] = ""; //not confirmed anymore
 //
-$dbLogic = new DB();
+$dbLogic = new dbLogic();
 
 $finishDate = date('Y-m-d H:i:s');
 //Insert FINISHED_AT time into database for this result before retrieving all results

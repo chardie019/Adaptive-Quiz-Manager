@@ -14,7 +14,7 @@ class quizLogic
      * @return string|boolean the quizID if it's exists, false if not
      */
     public static function verifyQuizIdExistsReturnQuizId ($quizId){
-        $dbLogic = new DB();
+        $dbLogic = new dbLogic();
         $whereValuesArray = array("QUIZ_ID" => $quizId);
         $quizIdArray = $dbLogic->select("QUIZ_ID", "quiz", $whereValuesArray);
         if ($quizIdArray['QUIZ_ID'] == $quizId){
@@ -32,7 +32,7 @@ class quizLogic
      * @return boolean returns true is this is the end, otherwise false
      */
     public static function isThereAQuestionAttachedtoThisAnswer($answerId){
-        $dbLogic = new DB();
+        $dbLogic = new dbLogic();
         //get the connection ID
         $whereValuesArray = array("answer_ANSWER_ID" => $answerId);
         $result = $dbLogic->select("CONNECTION_ID, LOOP_CHILD_ID", "question_answer", $whereValuesArray);
@@ -59,7 +59,7 @@ class quizLogic
      * @return array|boolean return the result array, false if operation fails
      */
     public static function returnQuestionOrAnswerData($questionOrAnswerId, $type){
-        $dbLogic = new DB();
+        $dbLogic = new dbLogic();
         if ($type == "question"){
             $whereValuesArray = array("QUESTION_ID" => $questionOrAnswerId);
             $result = $dbLogic->select("CONTENT, QUESTION, IMAGE, IMAGE_ALT", "question", $whereValuesArray);
@@ -83,7 +83,7 @@ class quizLogic
      * @return void
      */
     
-    public static function returnParentId(DB $dbLogic, $questionOrAnswerId, $type){
+    public static function returnParentId(dbLogic $dbLogic, $questionOrAnswerId, $type){
         if ($type == "question"){
             $whereValuesArray = array("question_QUESTION_ID" => $questionOrAnswerId);
         } else { //$type == "answer"
@@ -99,12 +99,12 @@ class quizLogic
         /**
      * Check if the question is on the same quiz, returns the CONNECTION_ID, false otherwise
      * 
-     * @param DB $dbLogic resue the current connection to teh databse
+     * @param dbLogic $dbLogic resue the current connection to teh databse
      * @param string $quizId The quiz ID
      * @param string $answerId The question ID to check
      * @return boolean|string CONNECTION_ID if is on same quiz, false otherwise
      */
-    protected static function checkAnswerBelongsToQuizReturnId(DB $dbLogic, $quizId, $answerId){
+    protected static function checkAnswerBelongsToQuizReturnId(dbLogic $dbLogic, $quizId, $answerId){
         //ensure the question  is on the same quiz
         //SELECT CONNECTION_ID FROM `question_answer`, WHERE answer_ANSWER_ID = <answerID> 
         $where = array(
@@ -121,12 +121,12 @@ class quizLogic
     /**
      * Check if the question is on the same quiz, returns false if not
      * 
-     * @param DB $dbLogic resue the current connection to teh databse
+     * @param dbLogic $dbLogic resue the current connection to teh databse
      * @param string $quizId The quiz ID
      * @param string $questionId The question ID to check
      * @return boolean|string CONNECTION_ID if is on same quiz, false otherwise
      */
-    protected static function checkQuestionBelongsToQuizReturnId(DB $dbLogic, $quizId, $questionId){
+    protected static function checkQuestionBelongsToQuizReturnId(dbLogic $dbLogic, $quizId, $questionId){
         //ensure the question  is on the same quiz
         //SELECT CONNECTION_ID FROM `question_answer`, WHERE question_QUESTION_ID = <questionID> 
         $where = array(
@@ -148,7 +148,7 @@ class quizLogic
      * @return boolean void; 
      */
     public static function canUserEditQuizElseReturnToEditQuiz ($sharedQuizId, $username) {
-        $dbLogic = new DB();
+        $dbLogic = new dbLogic();
         $whereValuesArray = array(
           "shared_SHARED_QUIZ_ID" => $sharedQuizId,
           "user_USERNAME" => $username
@@ -205,7 +205,7 @@ class quizLogic
         } else {                    //shared ID passed, this is what we'll use
             $updateSharedQuizID = $sharedQuizID;
         }
-        $dbLogic = new DB();
+        $dbLogic = new dbLogic();
         
         //set the shared quiz ID to the correct one
         //UPDATE quiz SET SHARED_QUIZ_ID =  '16' WHERE QUIZ_ID = 16;
@@ -222,7 +222,7 @@ class quizLogic
      */
     static public function returnSharedQuizID($quizId) {
         assert(is_string($quizId) || is_int($quizId));
-        $dbLogic = new DB();
+        $dbLogic = new dbLogic();
         
         //return the real quiz ID
         //SELECT SHARED_QUIZ_ID from quiz where quiz_id = 1;
@@ -251,7 +251,7 @@ class quizLogic
      */
     static public function returnRealQuizID($sharedQuizId) {
         assert(is_string($sharedQuizId));
-        $dbLogic = new DB();
+        $dbLogic = new dbLogic();
         
         //return the shared quiz ID
         //SELECT UIZ_ID from quiz where shared_quiz_id = 1;
@@ -267,11 +267,11 @@ class quizLogic
     /**
      * Sets quiz be consistent (no validation, just changes db value)
      * 
-     * @param DB $dbLogic Reuse current connection to dataabse
+     * @param dbLogic $dbLogic Reuse current connection to dataabse
      * @param type $quizId The real quiz ID to set to be consistent
      * return void
      */
-    public static function setQuizToConsistentState(DB $dbLogic, $quizId){
+    public static function setQuizToConsistentState(dbLogic $dbLogic, $quizId){
         assert(!is_null($quizId));
         $setValuesArray = array("CONSISTENT_STATE" => "1"); //one is consistent (true)
         $whereValuesArray = array("QUIZ_ID" => $quizId);
@@ -291,7 +291,7 @@ class quizLogic
         /*die ("cloneQuiz not working yet"); */
         assert(!is_null($oldQuizId));
         $returnArray = array();
-        $dbLogic = new DB();
+        $dbLogic = new dbLogic();
         $whereValuesArray = array("QUIZ_ID" => $oldQuizId);
         $consistentArray = $dbLogic->select("CONSISTENT_STATE", "quiz", $whereValuesArray);
         
@@ -469,7 +469,7 @@ class quizLogic
     /**
      * A loop to update the Question Answer table eg update all prent ids etc
      */
-     protected static function updateQuestionAnswerTableColumn(DB $dbLogic, array $arrayRow, $i, 
+     protected static function updateQuestionAnswerTableColumn(dbLogic $dbLogic, array $arrayRow, $i, 
             array $joinedQuestionAnswerArray, array $newQuestionAnswerIds, $column){
         if (!is_null($arrayRow[$column])){ //do NOT update the NULL value
                 $position = 0;
@@ -489,7 +489,7 @@ class quizLogic
     /**
      * Searches an array row and array matrix to and updates the apprioate column in the database
      * 
-     * @param DB $dbLogic reuse the current connection to teh database
+     * @param dbLogic $dbLogic reuse the current connection to teh database
      * @param array $arrayRow the current array of the foreach loop this fuction is in
      * @param integer $i the cuurent iteration of the foreach loop this function is inside
      * @param array $joinedQuestionAnswerArray the array matrix to lookup

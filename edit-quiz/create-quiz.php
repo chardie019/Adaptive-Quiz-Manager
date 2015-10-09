@@ -7,7 +7,7 @@
  */
 
 // include php files here 
-require_once("includes/config.php");
+require_once("../includes/config.php");
 // end of php file inclusion
 
 //If form is submitted, run this section of code, otherwise just load the view

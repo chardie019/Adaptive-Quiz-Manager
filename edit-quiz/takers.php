@@ -12,7 +12,7 @@ $confirmAddError = " ";
 $confirmRemoveMessage = " ";
 $confirmRemoveError = " ";
 $addDate = date('Y-m-d H:i:s');
-$dbLogic = new DB();
+$dbLogic = new dbLogic();
 
 if ($_SERVER['REQUEST_METHOD'] === "POST") { 
 

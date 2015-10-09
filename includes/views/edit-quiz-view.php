@@ -33,7 +33,7 @@ $templateLogic->startBody();
      <div id="content-create-quiz">
         <p>Welcome to the Edit Quiz Menu, please ensure the quiz is Disabled before choosing an option above to continue.</p>
         <br />
-        <span class="feedback-span"><?php echo $confirmActive ?></span><span><?php echo $createQuizConfirmation; ?></span>
+        <span class="feedback-span"><?php echo $confirmActive ?><?php echo $createQuizConfirmation; ?></span>
         
         <?php if(isset($invalidQuestionAnswersDisplayArray)){ ?>
             <span class="inputError">There Were some integrity checks that failed:</span><br />

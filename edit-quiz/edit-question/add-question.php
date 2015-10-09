@@ -92,9 +92,9 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING) === "PO
 }
 //if adding to a question or answer
 if (isset($prevId)) {
-    $dbLogic = new DB();
+    $dbLogic = new dbLogic();
     $parentId = quizLogic::returnParentId($dbLogic, $prevAnswerId, "answer");
-    $returnHtml = quizHelper::prepareTree($dbLogic, $quizId, $parentId, "none");
+    $returnHtml = quizHelper::prepareTree($quizId, $parentId, "none");
 }
 //initalies strings;
 if (!isset($questionTitleError)){$questionTitleError = "";}

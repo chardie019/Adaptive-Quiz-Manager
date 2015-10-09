@@ -10,7 +10,7 @@
 require_once("includes/config.php");
 // end of php file inclusion
 
-$dbLogic = new DB();
+$dbLogic = new dbLogic();
 
 /*
  * Store quizid from edit-quiz-list in session variable to be used in edit-quiz-view.php 
@@ -110,6 +110,7 @@ if($_SERVER['REQUEST_METHOD'] === "POST"){
     include('edit-quiz-view.php');
 //If coming from home page, display quiz list for user to select
 }else if(is_null($quizIDGet)){
+    $username = $userLogic->getUsername();
     //Retrieve the most current versions of quizzes for which the user is an editor
     $nameArray = editQuizLogic::returnEditorQuizList($username);
     include('edit-quiz-list-view.php');

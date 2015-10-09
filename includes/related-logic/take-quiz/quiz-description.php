@@ -33,7 +33,7 @@ require_once("includes/config.php");
     $quizAttempts = false;
     $attemptsReached = false; 
     $isEnabled = true;
-    $dbLogic = new DB();
+    $dbLogic = new dbLogic();
     
     //Get all quiz information
     $data = array(
