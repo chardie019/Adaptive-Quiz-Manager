@@ -292,11 +292,15 @@ class editQuestionLogic extends quizLogic {
                 "question_answer", $whereValuesArray, false);
         $numberOfQuestions = 0;
         $numberOfAnswers = 0;
+        $numberOfNulls = 0;
         $firstIsAQuestion = false; //not proven yet
         foreach ($questionsAndAnswersArray as $row) {
             //if first one is question (it must be) 
             if ($row['PARENT_ID'] == NULL && $row['TYPE'] == "question") {
                 $firstIsAQuestion = true;
+            }
+            if ($row['PARENT_ID'] == NULL) {
+                $numberOfNulls++;
             }
             //count questions
             if ($row['TYPE'] == "question") {
@@ -313,6 +317,13 @@ class editQuestionLogic extends quizLogic {
         if ($firstIsAQuestion == false) {
             $problemQuestionAnswersArray[] = array (
                 'problemCode' => "first-not-a-question",
+                "shortId" => NULL,
+                "questionOrAnswerId" => NULL
+            );
+        }
+        if ($numberOfNulls > 1) {
+            $problemQuestionAnswersArray[] = array (
+                'problemCode' => "too-many-start-nodes",
                 "shortId" => NULL,
                 "questionOrAnswerId" => NULL
             );
@@ -495,8 +506,8 @@ class editQuestionLogic extends quizLogic {
     protected static function insertQuestionIntoQuestionAnswerTable (dbLogic $dbLogic, $questionOrAnswerId, $quizId, $parentId = NULL, $operation = "addBelow", $addToType = "answer"){
         //($operation == "addBelow" || $operation == "addAbove"
         //$addToType
-        
-        if($operation == "addToAnswerAbove") {
+
+        if($operation == "addAbove") {
             //get the parent id of the selected question or answer and use it (same parent id as the slected node)
             $whereValuesArray = array(
                     "CONNECTION_ID" => $parentId
@@ -504,7 +515,7 @@ class editQuestionLogic extends quizLogic {
             $parentIdArray = $dbLogic->select("PARENT_ID", "question_answer", $whereValuesArray);
             $parentId = $parentIdArray['PARENT_ID'];
         }
-        
+
         $insertArray = array(
             "question_QUESTION_ID" => $questionOrAnswerId,
              "TYPE" => "question",
@@ -539,14 +550,10 @@ class editQuestionLogic extends quizLogic {
     protected static function insertAnswerIntoQuestionAnswerTable (dbLogic $dbLogic, $answerId, $quizId, $questionOrAnswerConId, $operation, $addToType){
         //($operation == "addBelow" || $operation == "addAbove"
         //$addToType
-        $parentId = NULL;
-        if($operation == "addToAnswerAbove") {
-            //get the parent id of the selected question or answer and use it
-            $whereValuesArray = array(
-                    "CONNECTION_ID" => $parentId
-                );
+        if($operation == "addAbove") {
+            $whereValuesArray = array("CONNECTION_ID" => $questionOrAnswerConId);
             $parentIdArray = $dbLogic->select("PARENT_ID", "question_answer", $whereValuesArray);
-            $parentId = $parentIdArray['PARENT_ID'];
+            $questionOrAnswerConId = $parentIdArray['PARENT_ID'];
         }
         $insertArray = array(
                 "answer_ANSWER_ID" => $answerId,
@@ -589,7 +596,7 @@ class editQuestionLogic extends quizLogic {
         //insert it using the id retrieved eariler
         $newConId = self::insertAnswerIntoQuestionAnswerTable($dbLogic, $answerId, $quizId, $prevConId, $operation, $addToType);
         //relink the sub child to this one
-        if($operation == "addToAnswerAbove") {
+        if($operation == "addAbove") {
             //set the original to the new connection id of teh inbetweener
             self::linkSubChildToThisConId ($dbLogic, $prevConId, $newConId);
         }
@@ -628,20 +635,14 @@ class editQuestionLogic extends quizLogic {
             //set the original to the new connection id of teh inbetweener
             self::linkSubChildToThisConId ($dbLogic, $prevConId, $newConId);
         }
-        var_dump($operation == "addAbove");
-        var_dump($operation);
-        //die();
         //all good, so returnn true
         return true;
     }
     private static function linkSubChildToThisConId (dbLogic $dbLogic, $prevConId, $newConId){
-        //relink the sub child to this one
-        if($operation == "addToAnswerAbove") {
-            //set the original to the new connection id of teh inbetweener
-            $whereValuesArray = array("CONNECTION_ID" => $prevConId);
-            $setValuesArray = array ("PARENT_ID" => $newConId);
-            $dbLogic->updateSetWhere("question_answer", $setValuesArray, $whereValuesArray);
-        }
+        //set the subchild to teh new question to the new connection id of teh inbetweener
+        $whereValuesArray = array("CONNECTION_ID" => $prevConId);
+        $setValuesArray = array ("PARENT_ID" => $newConId);
+        $dbLogic->updateSetWhere("question_answer", $setValuesArray, $whereValuesArray);
     }
 }
 

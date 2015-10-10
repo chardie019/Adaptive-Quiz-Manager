@@ -30,6 +30,11 @@ class editQuizViewLogic {
                     $invalidQuestionAnswersDisplayArray[$i]['fix'] = 
                             "To fix please <a href=\"". CONFIG_ROOT_URL . "/edit-quiz/edit-question/add-question.php$quizUrl\"".">add a question</a> at the top.";
                     break;
+                case "too-many-start-nodes":
+                    $invalidQuestionAnswersDisplayArray[$i]['problem'] = "There are too many starting questions, there can only be one.";
+                    $invalidQuestionAnswersDisplayArray[$i]['fix'] = 
+                            "To fix please <a href=\"". CONFIG_ROOT_URL . "/edit-quiz/edit-question/add-question.php$quizUrl\"".">adjust</a>so there is only one at the top.";
+                    break;
                 case "add-more-questions":
                     $invalidQuestionAnswersDisplayArray[$i]['problem'] = "There is not enough questions, ensure there must be least two questions (start and end summary screen).";
                     $invalidQuestionAnswersDisplayArray[$i]['fix'] = 

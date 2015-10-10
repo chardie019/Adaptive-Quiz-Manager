@@ -1,3 +1,13 @@
+###Version 5.6.6.3 - 9/10/2015 - edit question and config loader fixes
+=Joshua
+fixed inlclude folders including unnecessary folders
+fixed autoloader coverting filenames to lowercase under linux
+made manage quiz's sub menu flat
+after move, the loop is still looped - fixed
+add question above - working
+add answer above question - wokring
+fixed quiz id retrieval function when using post variable (related thats why clone quiz wasn't working)
+
 ###Version 5.6.6.3 - 9/10/2015 - emergency autoload fix
 =joshua
 passed update to get harry working, change log will be in next update

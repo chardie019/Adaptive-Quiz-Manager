@@ -180,14 +180,15 @@ class quizLogic
         if (isset($quizIDPost)) {
             $untrustedSharedQuizId = $quizIDPost;
         } else {
-            $untrustedSharedQuizId = (string)quizLogic::returnRealQuizID(filter_input(INPUT_GET, "quiz"));
+            $untrustedSharedQuizId = filter_input(INPUT_GET, "quiz");
         }
-        if(is_null($untrustedSharedQuizId)){
+        $sharedQuizId = (string)quizLogic::returnRealQuizID($untrustedSharedQuizId);
+        if(is_null($sharedQuizId)){
             //back to edit quiz
             self::jumpBackToEditQuizList("no-quiz-selected");  
         } else {
             //it's real so return it
-            return $untrustedSharedQuizId;
+            return $sharedQuizId;
         }
     }
     

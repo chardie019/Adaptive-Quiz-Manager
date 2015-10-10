@@ -64,7 +64,7 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING) === "PO
             $newQuizArray = quizLogic::maybeCloneQuiz($quizId, $prevId, $type);
             $quizId = $newQuizArray["quizId"];
             $prevId = $newQuizArray["newId"];
-            $result = editQuestionLogic::insertAnswer($quizId, $prevId, $answerContent, $feedbackContent, $isCorrect, $direction, $addToType);
+            $result = editQuestionLogic::insertAnswer($quizId, $prevId, $answerContent, $feedbackContent, $isCorrect, $operation, $addToType);
             //show soe the new question added
             header('Location: '. CONFIG_ROOT_URL . '/edit-quiz/edit-question.php'.$quizUrl."&feedback=answer-added");
             exit();
