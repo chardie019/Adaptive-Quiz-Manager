@@ -23,6 +23,7 @@ $templateLogic->addCustomHeadersStart(); ?>
         margin-top: 0.5em;
         margin-bottom: 0.5em;
         width: 10em;
+        padding: 0.9em 0;
     }
     .edit-question-sidebar .surround-controls {
         border: #000 1px solid;
@@ -89,8 +90,9 @@ $templateLogic->startBody();
             <label for="direction-below">Add Below</label>
         </div>
         <input class="mybutton" type="submit" name="link" value="Change Link" />
+        <input class="mybutton" type="submit" name="move" value="Move" />
         <input class="mybutton" type="submit" name="remove" value="Remove" />
-        <input class="mybutton" type="reset" value="Clear" />
+        <!-- not necessary <input class="mybutton" type="reset" value="Clear" /> -->
 </div>
 </form>
 

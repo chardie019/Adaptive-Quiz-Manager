@@ -14,5 +14,5 @@ class configLogic {
     public static function loadErrorPage($errorMessage = "", $errorMessageSpecific = "") {
         include '404.php';
         exit;
-    }
+    }    
 }

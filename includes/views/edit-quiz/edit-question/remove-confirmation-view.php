@@ -10,6 +10,7 @@ $templateLogic->startBody();
     <p><?php echo $content ?></p>
     <br />
     <h4>This will delete the <?php echo $deleteTypeDisplay ?>.</h4>
+    <input name="delete-type" type="hidden" value="<?php echo $deleteTypeSelection; ?>" />
     <p class="submit-buttons-container">
         <button class="mybutton myReturn" type="submit" name="delete-return" value="Enter">Back</button>
         <button class="mybutton mySubmit" type="submit" name="delete-confirm" value="Enter">Confirm</button>

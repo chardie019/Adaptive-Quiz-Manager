@@ -23,6 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //pastt the appropiate page
     $inspectButtonPost = filter_input (INPUT_POST, "inspect");
     $addQuestionButtonPost = filter_input(INPUT_POST, "addQuestion");
     $addAnswerButtonPost = filter_input (INPUT_POST, "addAnswer");
+    $moveButtonPost = filter_input (INPUT_POST, "move");
     $linkButtonPost = filter_input (INPUT_POST, "link");
     $removeButtonPost = filter_input (INPUT_POST, "remove");
 
@@ -41,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //pastt the appropiate page
         if (isset($directionPost) && $directionPost == "below" && isset($answerPost) && quizLogic::isThereAQuestionAttachedtoThisAnswer($answerPost) == false){ 
             header('Location: ' . CONFIG_ROOT_URL . "/edit-quiz/edit-question/add-question.php$quizUrl&answer=$answerPost&direction=below");
             exit;
-        } else if (isset($directionPost) && $directionPost == "above" && isset($answerPost) && quizLogic::isThereAQuestionAttachedtoThisAnswer($answerPost) == false){ 
+        } else if (isset($directionPost) && $directionPost == "above" && isset($answerPost)){ 
             header('Location: ' . CONFIG_ROOT_URL . "/edit-quiz/edit-question/add-question.php$quizUrl&answer=$answerPost&direction=above");
             exit;
         }else if (isset($noQuestionPost)) {  //add a question to no answer (so the first question)
@@ -66,6 +67,16 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //pastt the appropiate page
             exit;
         }  else {
             $selectionError="Please choose an answer before using the change link button.";
+        }
+    } else if (isset($moveButtonPost)){
+        if (isset($answerPost)){    //move an answer
+            header('Location: ' . CONFIG_ROOT_URL . "/edit-quiz/edit-question/move.php$quizUrl&answer=$answerPost");
+            exit;
+        } else if (isset($questionPost)) {  //move a question
+            header('Location: ' . CONFIG_ROOT_URL . "/edit-quiz/edit-question/move.php$quizUrl&question=$questionPost");
+            exit;
+        } else {
+            $selectionError="Please choose a question or answer before using the remove button.";
         }
     } else if (isset($removeButtonPost)){
         if (isset($answerPost)){    //remove an answer

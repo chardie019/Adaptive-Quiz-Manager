@@ -30,6 +30,8 @@ define( 'CONFIG_ROOT_DIR', dirname(dirname(__FILE__))); // C:\xampp\htdocs\aqm <
 define( 'CONFIG_ROOT_URL', substr($_SERVER['PHP_SELF'], 0, - (strlen($_SERVER['SCRIPT_FILENAME']) - strlen(CONFIG_ROOT_DIR)))); //    /aqm   <use to set the css location on another php file>
 //define('INCLUDES', __DIR__);        //  C:\xampp\htdocs\aqm\includes <include location>
 
+
+
 //independant files (needed by others)
 //include all files in the "lib" & models directory
 /*
@@ -62,30 +64,27 @@ foreach ($includePhpFilesArray as $folder){
 }
 
 //set include path (so you don't reference other files, just this)
-$OtherDirectoriesToInclude = array (
-    '/../',                 //root directory
+$slash = DIRECTORY_SEPARATOR;
+$directoriesToInclude = array (
     '',                          //include directory
-    '/core/',               //core directory
-    '/views/',              //views directory
-    '/templates/',          //templates directory
-    '/subMenus/',           //templates directory
-    '/lib/',                //libraries directory
-    '/related-logic/',        //logic directory (related logic to the pages)
-    '/models/',              //related classes
-    '/related-logic/',
-    '/views/',
-    '/models/',
-    '/../about/',
-    '/../edit-quiz/',
-    '/../help/',
-    '/../stats/',
-    '/../edit-quiz/'  
+    $slash.'..'.$slash.'about',
+    $slash.'..'.$slash.'edit-quiz',
+    $slash.'..'.$slash.'help',
+    $slash.'..'.$slash.'stats'
 );
-foreach ($OtherDirectoriesToInclude as $dir){
-    $path = directoryToArray(dirname(__FILE__) . $dir, true, true, false);
+foreach ($directoriesToInclude as $dir){
+    $path = directoryToArrayAndAddCurrentDirectory(dirname(__FILE__) . $dir, true, true, false);
     set_include_path(get_include_path() . PATH_SEPARATOR . implode(PATH_SEPARATOR, $path));
 }
-
+//set include path (so you don't reference other files, just this)
+$OtherDirectoriesToInclude = array (
+    '/../',                 //root directory
+);
+//dont explore these fodler
+foreach ($OtherDirectoriesToInclude as $dir){
+    $path = dirname(__FILE__) . $dir;
+    set_include_path(get_include_path() . PATH_SEPARATOR . $path);
+}
 
 //set global settings
 mb_internal_encoding(); //set internal utf-8 encoding
@@ -96,20 +95,17 @@ if(session_id() == '') { //it may of been started eariler eg login file.
     session_start();
 }
 //auto classnames by classname.php 
-spl_autoload_register();
+//note not using default since php 5.3 convert to lowercase, we don't want that
+//spl_autoload_register();
+spl_autoload_register( function( $class ) { include $class . '.php'; });
 
 //php files needed by all
 include_once("quizLogic.php");
 
-
-
 include_once("styles.php");
 
-
-
-
 //check database works
-include_once("DB.php");
+include_once("dbLogic.php");
 
 //test DB works
 $dbLogic = new dbLogic();

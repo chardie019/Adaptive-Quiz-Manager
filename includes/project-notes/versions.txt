@@ -1,3 +1,7 @@
+###Version 5.6.6.3 - 9/10/2015 - emergency autoload fix
+=joshua
+passed update to get harry working, change log will be in next update
+
 ###Version 5.6.6.2 - 9/10/2015 - more fixes to edit question pages
 =Joshua
 fixed accsidental edit-quiz slect list error in refactoring

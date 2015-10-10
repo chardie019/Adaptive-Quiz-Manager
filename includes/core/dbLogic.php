@@ -55,7 +55,7 @@ class dbLogic {
     }
     
     /**
-     * Runs a select query like: "SELECT $column FROM $table WHERE $whereValues AND $column IS NULL;"
+     * Runs a select query like: "SELECT $column FROM $table WHERE $whereValues AND $column;"
      * 
      * @param string  $columns The columns to be selected in the SQL query. In the form: "xx, yyy, max(zzz) etc"
      * @param string $tables The tables to be selected by the SQL query. in the form of "xx, yyy, zzz etc"

@@ -171,6 +171,10 @@ class quizHelper
                 $printQuestions = true;
                 $printAnswers = false;
                 break;
+            case "answers":
+                $printQuestions = false;
+                $printAnswers = true;
+                break;
             case "none":
                 $printQuestions = false;
                 $printAnswers = false;

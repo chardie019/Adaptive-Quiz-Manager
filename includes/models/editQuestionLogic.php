@@ -123,6 +123,8 @@ class editQuestionLogic extends quizLogic {
                 //recurisve call a few time to delete the answers
                 self::removeAnswerOrQuestion($quizId, $connectedAnswer["answer_ANSWER_ID"], "answer", "single");
             }
+            //relink the sub node if any (before delete operation) (like questions)
+            self::linkSubNodesToParent($dbLogic, $connId);
         } else { //single
             //relink the sub node if any (before delete operation)
             self::linkSubNodesToParent($dbLogic, $connId);
@@ -156,14 +158,13 @@ class editQuestionLogic extends quizLogic {
      * @param dbLogic $dbLogic reuse db connection
      * @param type $connId the id of the answer or question to have its offspring linked to another node
      */
-    private static function linkSubNodesToParent (dbLogic $dbLogic, $connId) {
+    protected static function linkSubNodesToParent (dbLogic $dbLogic, $connId) {
         //find the parent ID of the current node
             $parentWhereValuesArray = array("CONNECTION_ID" => $connId);
             $parentIDResult = $dbLogic->select("PARENT_ID", "question_answer", $parentWhereValuesArray);
             $parentId = $parentIDResult["PARENT_ID"];
             //relink sub nodes now
-            $whereValuesArray = array("PARENT_ID" => $connId);
-            $result = $dbLogic->select("CONNECTION_ID", "question_answer", $whereValuesArray, false);
+            $result = self::returnChildrenArray ($dbLogic, $connId);
             if (count($result) > 0) { //if there is sub node(s)
                 foreach ($result as $row) {
                     $whereValuesArray = array("CONNECTION_ID" => $row["CONNECTION_ID"]);
@@ -171,6 +172,16 @@ class editQuestionLogic extends quizLogic {
                     $dbLogic->updateSetWhere("question_answer", $setValuesArray, $whereValuesArray);
                 }
             }
+    }
+    /**
+     * Querys the database for all nodes with parent ids on teh connection passed (all children)
+     * 
+     * @param dbLogic $dbLogic
+     * @param type $connId
+     */
+    protected static function returnChildrenArray (dbLogic $dbLogic, $connId) {
+        $whereValuesArray = array("PARENT_ID" => $connId);
+        return $dbLogic->select("CONNECTION_ID", "question_answer", $whereValuesArray, false);
     }
     /**
      * Recursive bottom-up tree traversal - Delete children on question_answer and their tables
@@ -607,15 +618,19 @@ class editQuestionLogic extends quizLogic {
         if ($prevConId == false){
             return false;
         }
+        
         //insert question and get it's Question id
         $questionId = self::insertQuestionIntoQuestionTable($dbLogic, $questionTitle, $questionContent, $targetFileName, $questionAlt);
         //insert it using the id retrieved eariler
         $newConId = self::insertQuestionIntoQuestionAnswerTable($dbLogic, $questionId, $quizId, $prevConId, $operation, $addToType);
         //relink the sub child to this one
-        if($operation == "addToAnswerAbove") {
+        if($operation == "addAbove") {
             //set the original to the new connection id of teh inbetweener
             self::linkSubChildToThisConId ($dbLogic, $prevConId, $newConId);
         }
+        var_dump($operation == "addAbove");
+        var_dump($operation);
+        //die();
         //all good, so returnn true
         return true;
     }

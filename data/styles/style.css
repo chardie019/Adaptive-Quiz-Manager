@@ -177,8 +177,15 @@ margin: 0;
     padding-top: 70px;
 }
 
+
+#edit-console{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    margin: 0 auto;
+    text-align: center;
+}
 .nav-button{
-        position: relative;
 	background-color:#e9ab00;
 	-moz-border-radius:28px;
 	-webkit-border-radius:28px;
@@ -186,14 +193,18 @@ margin: 0;
 	border:1px solid #808080;
 	display:inline-block;
 	cursor:pointer;
-        width: 80px;
+        width: 18%;
 	color:#ffffff;
 	font-size:1.2em;
-	padding:16px 31px;
+	padding: 0.9em 0;
 	text-decoration:none;
 	text-shadow:0px 1px 0px #808080;
         text-align: center;
 }
+.selectedSubMenu {
+    background-color: #404040;
+}
+
 
 /*Creates a thinner middle column*/
 #content-centre{
@@ -238,10 +249,9 @@ select.quiz_list {
 	border:1px solid #808080;
 	display:inline-block;
 	cursor:pointer;
-        width: 180px;
 	color:#ffffff;
 	font-size:1.2em;
-	padding:16px 31px;
+	padding: 0.9em 4em;
 	text-decoration:none;
 	text-shadow:0px 1px 0px #808080;
         text-align: center;  

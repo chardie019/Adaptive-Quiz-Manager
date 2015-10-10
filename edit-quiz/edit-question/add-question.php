@@ -35,9 +35,6 @@ if ($direction == "above" && isset($prevId)) {
     $direction = NULL; //direction not needed
 }
 
-
-
-
 if (filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING) === "POST") { //past the appropiate page
     $questionTitle = filter_input(INPUT_POST, "question-title");
     $questionContent = filter_input(INPUT_POST, "question-content");

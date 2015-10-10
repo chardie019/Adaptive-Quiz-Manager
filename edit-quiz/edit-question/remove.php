@@ -32,9 +32,11 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //pastt the appropiate page
     $deleteConfirm = filter_input (INPUT_POST, "delete-confirm");
     $deleteReturnButton = filter_input (INPUT_POST, "delete-return");
     $error = 0; //no error yet
-    
-    if (!isset($deleteReturnButton) && (!isset($deleteConfirm)) && (!isset($deleteTypeSelection) || 
-            ($deleteTypeSelection != "single" && $deleteTypeSelection != "branch" && $deleteTypeSelection != "whole-question"))) {
+    if ((!isset($deleteReturnButton) && !isset($deleteConfirm) && !isset($deleteSubmit)) || //if no button pressed OR
+         !isset($deleteTypeSelection) || //select button not defined OR
+            $deleteTypeSelection != "single" &&     //select button isn't correct
+            $deleteTypeSelection != "branch" && 
+            $deleteTypeSelection != "whole-question") {
         //if NOT the return & confirm buttons & delete type is null or not any of the valid options
         $error = 1;
     }
@@ -123,6 +125,7 @@ switch ($displayType) {
             $title = "Remove Answer";
             $content = $answerContent;
         }
+        if(!isset($deleteTypeSelection)){$deleteTypeSelection = "";} //its nothing if it's a question
         include("remove-confirmation-view.php");
         break;
     default:
