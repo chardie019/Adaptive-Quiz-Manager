@@ -105,5 +105,99 @@ class editQuizLogic extends quizLogic {
         }
         return $nameArray;
     }
+    /**
+     * Removes type image on a quiz from the databse and the filesystem
+     * 
+     * @param string $quizId trhe real quiz id to have it's image removed
+     */
+    public static function removeImagefromQuiz($quizId){
+        $dbLogic = new dbLogic();
+        //get image value
+        $whereValuesArray = array("QUIZ_ID" => $quizId);
+        $result = $dbLogic->select("IMAGE", "quiz", $whereValuesArray);
+
+        //remove the image from db
+        $setColumnsArray = array("IMAGE" => NULL);
+        $dbLogic->updateSetWhere("quiz", $setColumnsArray, $whereValuesArray);
+        //delete current image file
+        unlink(quizHelper::returnRealImageFilePath($quizId, $result['IMAGE']));
+    }
+    /**
+     * 
+     * @param type $quizId
+     * @param type $isTime
+     * @param type $timeHours
+     * @param type $timeMinutes
+     * @param string $noAttempts
+     * @param type $yearStart
+     * @param type $monthStart
+     * @param type $dayStart
+     * @param type $alwaysOpen
+     * @param type $yearEnd
+     * @param type $monthEnd
+     * @param type $dayEnd
+     * @param type $quizName
+     * @param type $quizDescription
+     * @param type $isPublic
+     * @param type $isSave
+     * @param type $quizImageText
+     * @param type $quizImageUpload
+     * @return string
+     */
+    public static function updateQuizDetails($quizId, $isTime, $timeHours, $timeMinutes,
+            $noAttempts, $yearStart, $monthStart, $dayStart, $alwaysOpen, 
+            $yearEnd, $monthEnd, $dayEnd, $quizName, $quizDescription, $isPublic, 
+            $isSave, $quizImageText, $imageFieldName = NULL ) {
+        $dbLogic = new dbLogic();
+        
+        if($isTime == '0'){
+            $isTime = '00:00:00';
+        }else{
+            $isTime = '0'.$timeHours.':'.$timeMinutes.':00';
+        }
+
+        //Set Number of attempts to 0 for storing in database if there are unlimited attempts
+        if($noAttempts == 'Unlimited'){
+            $noAttempts = '0';
+        }
+
+        //Create String value for dateStart and dateEnd values
+        $dateOpen = $yearStart."-".$monthStart."-".$dayStart." 00:00:00";
+        if ($alwaysOpen == 0) {
+            $dateClose = $yearEnd."-".$monthEnd."-".$dayEnd." 11:59:00"; 
+        } else {
+            $dateClose = NULL; 
+        }
+          
+
+        $setValuesArray = array(
+            "QUIZ_NAME" => $quizName,
+            "DESCRIPTION" => $quizDescription,
+            "IS_PUBLIC" => $isPublic,
+            "NO_OF_ATTEMPTS" => $noAttempts,
+            "TIME_LIMIT" => $isTime,
+            "IS_SAVABLE" => $isSave,
+            "DATE_OPEN" => $dateOpen,
+            "DATE_CLOSED" => $dateClose,
+            "IMAGE" => $imageFieldName,
+            "IMAGE_ALT" => $quizImageText
+        );
+
+        $whereValuesArray = array("QUIZ_ID" => $quizId);
+
+        //Insert quiz into database
+        $dbLogic->updateSetWhere("quiz", $setValuesArray, $whereValuesArray);
+        return "Your quiz has been successfully updated.";
+    }
+    public static function getQuizData($quizId){
+        //Retrieve Quiz details to populate form
+        $dbLogic = new dbLogic();
+        $columns = "*";
+
+        $dataArray = array(
+            "QUIZ_ID" => $quizId
+        );
+        return $dbLogic->select($columns, 'quiz', $dataArray, true);
+    }
 }
 

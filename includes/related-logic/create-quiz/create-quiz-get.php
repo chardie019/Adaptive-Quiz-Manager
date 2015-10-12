@@ -34,7 +34,7 @@ $alwaysOpenError = "";
     $isTime = "0";
     $timeHours = "0";
     $timeMinutes = "0";
-    $isSave = "0";
+    $isSave = "1";
     
      //default is today
     $monthStart = $currentDate["mon"];

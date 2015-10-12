@@ -51,7 +51,7 @@ class quizHelper
      * ['imageAltError'] is the alt error message
      * ['targetDir'] is the upload directory
      */
-    public static function handleImageUploadValidation($filesUpload, $imageFieldName, $quizId, $questionAlt) {
+    public static function handleImageUploadValidation($filesUpload, $imageFieldName, $quizId, $questionAlt, $oldFilename = "") {
         //Validate Image upload
         //Double \\ is needed at the end of path to cancel out the single \ effect leading into "
         //$target_dir = "C:\xampp\htdocs\aqm\data\quiz-images\\"; 
@@ -59,11 +59,16 @@ class quizHelper
         $targetFileName = basename($_FILES[$imageFieldName]["name"]);
         $result['targetDir'] = $target_dir;
         $target_file = $target_dir . $targetFileName;
+        $target_old_file = $target_dir . $oldFilename;
         $uploadOk = 1;
         $noError = 1;
         $noFileExistError = 1;
         $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
-        
+
+        //delete old file beofre upload
+        if (!empty($oldFilename) && file_exists($target_old_file)) {
+            unlink($target_old_file);
+        }
         //check image doesn't voilate php.ini's rules
         if ($_FILES[$imageFieldName]['error'] != 0) {
             $result['imageUploadError'] = $_FILES[$imageFieldName]['error'];
@@ -71,8 +76,8 @@ class quizHelper
         }
         
         // Check if image file is an actual image or fake image
-        if ($uploadOk === 1 && createPath($target_dir) && is_uploaded_file($filesUpload["questionImageUpload"]["tmp_name"])){
-            $check = getimagesize($filesUpload["questionImageUpload"]["tmp_name"]);
+        if ($uploadOk === 1 && createPath($target_dir) && is_uploaded_file($filesUpload[$imageFieldName]["tmp_name"])){
+            $check = getimagesize($filesUpload[$imageFieldName]["tmp_name"]);
             if($check !== false) {
                 $uploadOk = 1;
             } else {
@@ -86,13 +91,13 @@ class quizHelper
                 $noFileExistError = 0;
             }
             // Check file size is smaller than 500kb, can change this later
-            if ($filesUpload["questionImageUpload"]["size"] > 5000000) { //5MB
+            if ($filesUpload[$imageFieldName]["size"] > 5000000) { //5MB
                 $result['imageUploadError'] = "The image must be less than 5 MB.";
                 $uploadOk = 0;
             }
             // Allow certain image file types only *Stop people uploading other file types e.g. pdf
-            if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-            && $imageFileType != "gif" ) {
+            if(strcasecmp($imageFileType, "jpg") != 0  && strcasecmp($imageFileType, "png") != 0 && strcasecmp($imageFileType, "jpeg") != 0
+            && strcasecmp($imageFileType, "gif") != 0) {
                 $result['imageUploadError'] = "The Image can only be .jpg, .png, .jpeg and .gif file types.";
                 $uploadOk = 0;
             }
@@ -103,7 +108,7 @@ class quizHelper
             }
             //still good
             if ($uploadOk == 1){
-                if (move_uploaded_file($filesUpload["questionImageUpload"]["tmp_name"], $target_file)) {
+                if (move_uploaded_file($filesUpload[$imageFieldName]["tmp_name"], $target_file)) {
                     //uploaded
                 } else { //nope it failed
                     $uploadOk  = 0;
@@ -115,7 +120,7 @@ class quizHelper
             if ($uploadOk == 1) {
                 $result['imageUploadError'] = "There was another unrelated error, please upload again after fixing it.";
             }
-            if ($noFileExistError == 1){ //wasnt a files exist error, so delete it
+            if ($noFileExistError == 1 && file_exists($target_file)){ //wasnt a files exist error, so delete it
                unlink($target_file); //delete the file 
             }
             $result['result'] = false;

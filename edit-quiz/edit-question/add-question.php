@@ -64,10 +64,10 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING) === "PO
                 $imageUploadError = $imageResult['imageUploadError'];
                 $questionAltError = $imageResult['imageAltError'];
             }
-    } else {
-        $targetFileName = NULL;
-        $questionAlt = NULL;
-    }
+        } else {
+            $targetFileName = NULL;
+            $questionAlt = NULL;
+        }
         if ($error == 0) {//all good
             $type = "answer"; //adding an answe (for clone quiz)
             $newQuizArray = quizLogic::maybeCloneQuiz($quizId, $prevId, $type);

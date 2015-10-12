@@ -1,3 +1,11 @@
+###Version 5.6.6.4 - 13/10/2015 - edit details re-done
+=Joshua
+redid edit details - works now
+fixed manage quiz not posting the shared quiz id (again another issue :/ )
+fixed quizhelper not using a dynaimc field name for image upload
+noticed a slight inconsistently in quiz table & some questions - db upgraded to v9
+    complete reload available
+
 ###Version 5.6.6.3 - 9/10/2015 - edit question and config loader fixes
 =Joshua
 fixed inlclude folders including unnecessary folders

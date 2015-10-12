@@ -62,19 +62,23 @@ if (is_null($isEnabledState)){
     $enableSubMenuLinks = $isEnabledState;
 }
 
+
 if($_SERVER['REQUEST_METHOD'] === "POST"){
     $quizIDPost = filter_input(INPUT_POST, "quizid");
+
     $quizId = quizLogic::getQuizIdFromUrlElseReturnToEditQuiz($quizIDPost);
     $sharedQuizId = quizLogic::returnSharedQuizID($quizId);
     $quizUrl = quizLogic::returnQuizUrl($sharedQuizId);
     $username = $userLogic->getUsername();
-    quizLogic::canUserEditQuizElseReturnToEditQuiz($sharedQuizId, $username);
+    //quizLogic::canUserEditQuizElseReturnToEditQuiz($sharedQuizId, $username);
 
     $selectQuizButton = filter_input(INPUT_POST, "selectQuiz");
     $confirmEnabledButton = filter_input(INPUT_POST, 'confirmEnabled');
     $confirmDisabledButton = filter_input(INPUT_POST, 'confirmDisabled');
 
+    
     if (isset($selectQuizButton)) {
+        
         //Page is being loaded from edit-quiz-list with quizid selected    
         header('Location: ' . CONFIG_ROOT_URL . '/edit-quiz.php'.$quizUrl);
         exit;

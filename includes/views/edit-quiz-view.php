@@ -17,9 +17,6 @@ $templateLogic->addCustomHeadersStart();
     span.status-enabled{
         background-color: #A5FFA5;
     }
-    .feedback-span {
-        color: blue;
-    }
     li {
     margin-bottom: 1em;
     }

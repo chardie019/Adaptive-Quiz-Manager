@@ -26,7 +26,7 @@ $templateLogic->startBody();
 
                 <?php if (count($nameArray) > 0) { //there are quizes?>
 
-                <form action="#" method="post">
+                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post">
                     <h3>Manage existing quiz</h3>
                     <div id='listWrapper'>
                         <h4 class='lightLabel'>Select a quiz to manage from the list below:</h4>
@@ -34,8 +34,8 @@ $templateLogic->startBody();
                             <div class="radios">
                             <?php foreach ($nameArray as $answerRow) { ?>
                                 <div class="radio-group">
-                                <?php echo ("<input type=\"radio\" name=\"quizid\" value=\"".$answerRow["QUIZ_ID"]."\" id=\"q".$answerRow["QUIZ_ID"]."\" />") ?>
-                                    <?php echo ("<label class=\"radio\" for=\"q".$answerRow["QUIZ_ID"]."\">"); ?>
+                                <?php echo ("<input type=\"radio\" name=\"quizid\" value=\"".$answerRow["SHARED_QUIZ_ID"]."\" id=\"quiz-".$answerRow["SHARED_QUIZ_ID"]."\" />") ?>
+                                    <?php echo ("<label class=\"radio\" for=\"quiz-".$answerRow["SHARED_QUIZ_ID"]."\">"); ?>
                                         <span class="quiz-title"><span id='label'>Quiz Name: </span><?php echo $answerRow["QUIZ_NAME"]; ?></span>
                                         <span class="quiz-desc"><span id='label'>Description: </span><?php echo $answerRow["DESCRIPTION"]; ?></span>
                                     <?php echo "</label>" ?>
@@ -59,10 +59,6 @@ $templateLogic->startBody();
                     </p>
                     <br />
                     <br />
-                    <?php echo "<input type=\"hidden\" name=\"selectQuizId\" value=". ($answerRow["QUIZ_ID"])." />"?>
-
-                        
-                        
                     </form>
                 <?php } else {  //there are NO quizes?>
                 <p>

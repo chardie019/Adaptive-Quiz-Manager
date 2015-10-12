@@ -25,7 +25,7 @@ $templateLogic->startBody();
  <div id="content-centre">
     <p>
         <img alt="<?php echo($questionData["IMAGE_ALT"]) ?>" src="<?php echo($questionData["IMAGE"]) ?>" />
-        <?php echo ($questionData["QUESTION"]); ?>
+        <?php echo (nl2br($questionData["QUESTION"])); ?>
 
         <br />
         <br />

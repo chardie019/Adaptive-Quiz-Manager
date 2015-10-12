@@ -151,6 +151,13 @@ $templateLogic->startBody();
         <br />
         <?php echo "<span class=\"inputError\">".$invalidDateError2."</span>"?>
         <br />
+        <?php echo "<span class=\"inputError\">".$alwaysOpenError."</span>"?>
+        <p class="label">Will this quiz be permanently open?</p>
+        <label for="noAlwaysOpen">No:</label>
+        <input type='radio' name='alwaysOpen' id="noAlwaysOpen" value='0' <?php if ($alwaysOpen == "0"){echo "checked=\"checked\"";} ?> />
+        <label for="yesAlwaysOpen">Yes:</label>
+        <input type='radio' name='alwaysOpen' id="yesAlwaysOpen" value='1' <?php if ($alwaysOpen == "1"){echo "checked=\"checked\"";} ?> />
+        <br />
         <br />
         <p class="label">When does this quiz close:</p>
         <select class="timeselect" name="dayEnd"> 
@@ -207,14 +214,6 @@ $templateLogic->startBody();
             <option <?php if ($yearEnd == $yearCurrent + 3){echo "selected=\"selected\"";} ?>><?php echo $yearCurrent + 3; ?></option>     
         </select> 
         <span class="dateOrder">(Day-Month-Year)</span> 
-        <br />
-        <?php echo "<span class=\"inputError\">".$alwaysOpenError."</span>"?>
-        <br />
-        <p class="label">Will this quiz be permanently open?</p>
-        <label for="noAlwaysOpen">No:</label>
-        <input type='radio' name='alwaysOpen' id="noAlwaysOpen" value='0' <?php if ($alwaysOpen == "0"){echo "checked=\"checked\"";} ?> />
-        <label for="yesAlwaysOpen">Yes:</label>
-        <input type='radio' name='alwaysOpen' id="yesAlwaysOpen" value='1' <?php if ($alwaysOpen == "1"){echo "checked=\"checked\"";} ?> />
         <br />
         <?php echo "<span class=\"inputError\">".$imageUploadError."</span>"?>
         <br />

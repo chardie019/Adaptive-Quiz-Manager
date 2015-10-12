@@ -183,7 +183,7 @@ class quizLogic
             $untrustedSharedQuizId = filter_input(INPUT_GET, "quiz");
         }
         $sharedQuizId = (string)quizLogic::returnRealQuizID($untrustedSharedQuizId);
-        if(is_null($sharedQuizId)){
+        if(!isset($sharedQuizId) || $sharedQuizId === ""){
             //back to edit quiz
             self::jumpBackToEditQuizList("no-quiz-selected");  
         } else {
