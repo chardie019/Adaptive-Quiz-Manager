@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/**
  * The loader for the stats user page
  */
 
@@ -95,7 +95,7 @@ $dbLogic = new dbLogic();
         
         if(empty($graphResults)){
 	    
-            include ("stats-results-empty-view.php");
+            include ("stats-editor-empty-view.php");
             exit();
         }
         

@@ -34,10 +34,8 @@ $templateLogic->startBody();
         <br />
                     
         <p>
-            Select a quiz from the list above to view usage statistics for. It contains all quizzes on 
-            which your account are listed with Edit permissions.
-            Upon selection, you will be taken to the Statistics Usage page, where 
-            you will be presented with a series of graphs and tables displaying the user analysis of this quiz.
+            Selecting a quiz will load that quiz result summary. Here you are able to view overall results for the
+            most current version of the quiz or all versions combined.
         </p>
 
         <br />

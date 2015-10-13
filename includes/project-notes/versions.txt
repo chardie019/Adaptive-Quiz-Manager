@@ -1,10 +1,21 @@
+###Version 5.7.1 - 13/10/2015 - Fixing UAT bugs - stats & others
+=Harry
+- fixed bug where undefined variable was displayed if no users had attempted a quiz in stats-editor mode
+- Changed 'Quiz Id: ' to 'Quiz Name: ... " in quiz-description.php
+- Small style changes to div padding and button em (from 4 to 3)
+- Fixed 'active-button' error on stats pages where appropriate active button wasn't being highlighted
+- Fixed a bug where empty results from stats-taker.php would take the user to empty editor result sets. with the
+  addition of individual users, had to create separate empty-result-views for both takers and editors as different 
+   must be available
+- Change label on Edit Quiz icon on home page to 'Manage Quiz'
+
 ###Version 5.7 - 13/10/2015 - commenting & some splitting
 =Joshua
 fixed quizLogic::returnQuizUrl doing to additonal checkeding (shouldn't)
 added test for edit permission on manage editors/takers
 refactored manage editors/takers a little
 split quizLogic a apart a fair bit
-ensured most funcations were documented in prepartation for phpdoc
+ensured most functions were documented in prepartation for phpdoc
 
 ###Version 5.6.6.4 - 13/10/2015 - edit details re-done
 =Joshua

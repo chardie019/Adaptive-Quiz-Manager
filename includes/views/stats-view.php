@@ -10,9 +10,9 @@ $templateLogic->startBody();
     <div id="left-column">
         <h2>Created quiz results</h2>
         <br />   
-        <p>View the analysis for the attempts on quizzes for which you currently hold 'Edit' permissions on. Choose to 
-        include only the overall statistics for the most current version of the quiz, or include data from all previous 
-        versions of the quiz as well.</p>
+        <p>
+            View analysis for the results linked to quizzes for which you currently hold 'Edit' permissions. 
+        </p>
         <br />
         <br />
         <button class="mybutton mySubmit" type="submit" name="editorStats" value="Select Quiz">Editor results</button>
@@ -21,9 +21,10 @@ $templateLogic->startBody();
     <div id="right-column">
         <h2>Personal quiz results</h2>
         <br />  
-        <p>View your personal attempt results for the public quizzes you have completed, as well as private quizzes
-        which you currently hold 'Take' permissions on. Choose to include only the overall statistics for the most 
-        current version of the quiz, or include data from all previous versions of the quiz as well.</p>
+        <p>
+            View your personal results for the public and private quizzes you have completed. 
+        </p>
+        <br />
         <br />
         <button class="mybutton mySubmit" type="submit" name="takerStats" value="Select Quiz">Taker results</button>
     </div>

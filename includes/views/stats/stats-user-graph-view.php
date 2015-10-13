@@ -51,7 +51,7 @@ $templateLogic->startBody();
         
         <div id="content-charts">
             
-                <div id='chart-actions'>
+            <div id='chart-actions'>
                 <form action='#' method='post'>    
                     <a class="mybuttonlink" href="<?php echo (CONFIG_ROOT_URL)."/stats.php"?>">Change<br /> quiz</a>
                     <br />
@@ -74,39 +74,36 @@ $templateLogic->startBody();
                 <p><span id="label">Shortest completion time: </span> <?php echo $minTime ?></p>
                 <p><span id="label">Longest completion time: </span> <?php echo $maxTime ?></p>
                 <br />
-       <div id='tableWrapper'>
-        <div id='tableScroll'>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Current Takers</th>
-                    </tr>
-                </thead>
-                
-                <tbody>
-                    <?php 
-                        for($j=0; $j<count($uniqueFinishers); $j++){
-                            echo "<tr>"
-                                    . "<td><form action='#' name='".$uniqueFinishers[$j]."' method='post'>" . 
-        "<input type='hidden' name='getResult' value='".$uniqueFinishers[$j]."'>" . $uniqueFinishers[$j] .
-        "<input type='submit' class='myReturn' name='userCurrent' value='Current Version'>" . 
-           "<input type='submit' class='myReturn' name='userPrevious' value='Previous Version'></form>"
-                                    . "</td>"
-                               . "</tr>";
-                        }
-                    ?>
-                
-                </tbody>
-            </table>
-        </div>
-    </div>
-           
-              
-             
-            
-            
-            
+                    <div id='tableWrapper'>
+                     <div id='tableScroll'>
+                         <table>
+                             <thead>
+                                 <tr>
+                                     <th>Current Takers</th>
+                                 </tr>
+                             </thead>
+
+                             <tbody>
+                                 <?php 
+                                     for($j=0; $j<count($uniqueFinishers); $j++){
+                                         echo "<tr>"
+                                                 . "<td><form action='#' name='".$uniqueFinishers[$j]."' method='post'>" . 
+                     "<input type='hidden' name='getResult' value='".$uniqueFinishers[$j]."'>" . $uniqueFinishers[$j] .
+                     "<input type='submit' class='myReturn' name='userCurrent' value='Current Version'>" . 
+                        "<input type='submit' class='myReturn' name='userPrevious' value='Previous Version'></form>"
+                                                 . "</td>"
+                                            . "</tr>";
+                                     }
+                                 ?>
+                             </tbody>
+                         </table>
+                     </div>
+                 </div>
                 <h2 class=''>Answers selected for each question</h2>
+                <p>
+                    The graphs below show the number of times each each question was encountered throughout all attempts at this quiz,
+                    along with the number of times each answer was selected for that question. 
+                </p>
                 <?php
                     for($x=0; $x<count($newQuestionArray); $x++){
                         echo "<div id=\"chart_div".$x."\"></div>";                    

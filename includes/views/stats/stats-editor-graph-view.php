@@ -78,6 +78,10 @@ $templateLogic->startBody();
                 <br />
                 <br />
                 <h2 class=''>Answers selected for each question</h2>
+                <p>
+                    The graphs below show the number of times each each question was encountered throughout all attempts at this quiz,
+                    along with the number of times each answer was selected for that question. 
+                </p>
                 <?php
                     for($x=0; $x<count($newQuestionArray); $x++){
                         echo "<div id=\"chart_div".$x."\"></div>";                    

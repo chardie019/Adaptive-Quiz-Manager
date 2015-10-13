@@ -1,7 +1,7 @@
 <?php
 
-/* 
- * The loader for the stats editor page
+/** 
+ * The loader for the individual user stats selection page
  */
 
 // include php files here 
@@ -45,7 +45,7 @@ $dbLogic = new dbLogic();
             $currentResults = false;
         } 
 
-        $wherecolumn = array(
+        $wherevalue = array(
             $shareColumn => $quizidconfirm
             
         );
@@ -54,13 +54,13 @@ $dbLogic = new dbLogic();
                 
         );
         $notNullColumn = "FINISHED_AT";
-        $graphResults = $dbLogic->selectWithColumnsIsNotNull('*', 'result, result_answer', $wherecolumn, 
+        $graphResults = $dbLogic->selectWithColumnsIsNotNull('*', 'result, result_answer', $wherevalue, 
                 $wherecolumn2, $notNullColumn, false);
         
         //If no results are returned, quiz hasnt been attempted. Load empty result view
         if(empty($graphResults)){
 	    
-            include("stats-results-empty-view.php");
+            include("stats-editor-empty-view.php");
             exit();
         }
         //Creates a new array of the RESULT_ID's
@@ -124,7 +124,6 @@ $dbLogic = new dbLogic();
                     "result, result_answer, answer", $whereQuestion, $whereAnswer, $notNullColumn, "answer.answer", false);
             
             foreach($answerResults as $answerNumbers){
-                echo $answerNumbers['answer'] = $answerNumbers['CHOSEN']."<br >";
                 $graphData{$l}[$answerNumbers['answer']] = $answerNumbers['CHOSEN'];
             }            
         }

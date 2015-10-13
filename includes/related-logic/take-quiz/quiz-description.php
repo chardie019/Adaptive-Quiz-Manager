@@ -76,7 +76,7 @@ require_once("includes/config.php");
         echo "QUIZ IS DISABLED FALSE";
     }
     
-  
+    $quizName = $quizData['QUIZ_NAME'];
     //Set null value to appropriate terminology for the view file.
     if($quizData['DESCRIPTION'] == null){
         $quiz_description = "No description provided";

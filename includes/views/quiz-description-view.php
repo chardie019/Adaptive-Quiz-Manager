@@ -13,7 +13,7 @@ $templateLogic->startBody();
 <img alt="<?php echo($quizData['IMAGE_ALT']); ?>" src="<?php echo($quizData["IMAGE"]); ?>" />
     <br />
     <br />
-    <span id="label">Quiz ID: </span><?php echo ($_SESSION["QUIZ_CURRENT_QUIZ_ID"]); ?>
+    <span id="label">Quiz Name: </span><?php echo $quizName; ?>
     <br />
     <br />
     <span id="label">Description: </span><?php echo ($quiz_description); ?>

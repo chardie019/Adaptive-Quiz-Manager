@@ -113,7 +113,7 @@ $templateLogic->startBody();
             <div class="buttonborder">
                 <div id="buttonborder3">
                 </div>
-                <span class="menu-icons">Edit Quiz</span>
+                <span class="menu-icons">Manage Quiz</span>
             </div>
         </a>
         <a href="<?php echo(CONFIG_ROOT_URL) ?>/stats.php">

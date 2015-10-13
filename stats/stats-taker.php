@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/** 
  * The loader for the stats taker page
  */
 
@@ -56,7 +56,7 @@ $dbLogic = new dbLogic();
         
         if(empty($graphResults)){
 	    
-            include ("stats-results-empty-view.php");
+            include ("stats-taker-empty-view.php");
             exit();
         }
         
