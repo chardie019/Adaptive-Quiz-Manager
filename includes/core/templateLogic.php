@@ -43,8 +43,6 @@ class templateLogic {
     function __construct() {
         //add these to all pages
         $this->addCSS("style.css");
-        $this->addCSS("misc.css");
-        $this->addCSS("misc2.css");
         $this->addJavascriptTop("jquery-1.11.2.min.js");
     }
     /** 
@@ -154,7 +152,7 @@ class templateLogic {
      * 
      * @param string $inputType The type to be set
      * @param string $inputIndex sets the submenu, set to the page name (take-quiz, create-quiz, edit-quiz, stats, help)
-     * @param boolean $enableSubMenuLinks truew (default) links are clickable, false are no
+     * @param boolean $disableSubMenuLinks false (default) links are clickable, true they are NOT clickable
      */
     function setSubMenuType($inputType = NULL, $inputIndex = NULL, $disableSubMenuLinks = false) {
         //choose which file to include on the template page

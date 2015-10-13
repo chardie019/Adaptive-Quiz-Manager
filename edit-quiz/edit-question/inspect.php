@@ -1,15 +1,19 @@
 <?php
+
+/*
+ * The Loader for the Edit Page in edit quiz area
+ */
     
 // include php files here 
 //kick the user back if they haven't selected quiz
 require_once("../../includes/config.php");
 // end of php file inclusion
 
-$quizId = quizLogic::getQuizIdFromUrlElseReturnToEditQuiz();
+$quizId = editQuizInitialLoadLogic::getQuizIdFromUrlElseReturnToEditQuiz();
 $sharedQuizId = quizLogic::returnSharedQuizID($quizId);
-$quizUrl = quizLogic::returnQuizUrl($sharedQuizId);
+$quizUrl = editQuizInitialLoadLogic::returnQuizUrl($sharedQuizId);
 $username = $userLogic->getUsername();
-quizLogic::canUserEditQuizElseReturnToEditQuiz($sharedQuizId, $username);
+editQuizInitialLoadLogic::canUserEditQuizElseReturnToEditQuiz($sharedQuizId, $username);
 
 
 $answerIdGet = filter_input (INPUT_GET, "answer");
@@ -71,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //pastt the appropiate page
                 }
             }
             if ($error == 0) {//if still all good
-                $newQuizArray = quizLogic::maybeCloneQuiz($quizId, $id, $type);
+                $newQuizArray = editQuizCloneLogic::maybeCloneQuiz($quizId, $id, $type);
                 $quizId = $newQuizArray["quizId"];
                 $id = $newQuizArray["newId"];
                 
@@ -103,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //pastt the appropiate page
             $error = 1;
         }
         if ($error == 0){ //no error
-            $newQuizArray = quizLogic::maybeCloneQuiz($quizId, $id, $type);
+            $newQuizArray = editQuizCloneLogic::maybeCloneQuiz($quizId, $id, $type);
             $quizId = $newQuizArray["quizId"];
             $id = $newQuizArray["newId"];
             editQuestionLogic::updateAnswer($quizId, $id, $answerContent, $feedbackContent, $isCorrect);
@@ -120,7 +124,7 @@ $result = quizLogic::returnQuestionOrAnswerData($id , $type);
 //html
 if ($type == "answer"){
     $parentId = quizLogic::returnParentId($dbLogic, $id, "answer");
-    $returnHtml = quizHelper::prepareTree($quizId, $parentId, "none");
+    $returnHtml = quizMiscLogic::prepareTree($quizId, $parentId, "none");
     //initalies strings;
     if (!isset($answerContentError)){$answerContentError = "";}
     if (!isset($feedbackContentError)){$feedbackContentError = "";}
@@ -133,7 +137,7 @@ if ($type == "answer"){
     include("inspect-answer-view.php");
 } else {
     $parentId = quizLogic::returnParentId($dbLogic, $id, "question");
-    $returnHtml = quizHelper::prepareTree($quizId, $parentId, "none");
+    $returnHtml = quizMiscLogic::prepareTree($quizId, $parentId, "none");
     //initalies strings;
     if (!isset($questionTitleError)){$questionTitleError = "";}
     if (!isset($questionContentError)){$questionContentError = "";}

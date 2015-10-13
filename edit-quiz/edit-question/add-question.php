@@ -1,14 +1,16 @@
 <?php
-    
+/**
+ * The Loader for the add Question page in manage quiz area
+ */
     
 // include php files here 
 //kick the user back if they haven't selected quiz
 require_once("../../includes/config.php");
-$quizId = quizLogic::getQuizIdFromUrlElseReturnToEditQuiz();
+$quizId = editQuizInitialLoadLogic::getQuizIdFromUrlElseReturnToEditQuiz();
 $sharedQuizId = quizLogic::returnSharedQuizID($quizId);
-$quizUrl = quizLogic::returnQuizUrl($sharedQuizId);
+$quizUrl = editQuizInitialLoadLogic::returnQuizUrl($sharedQuizId);
 $username = $userLogic->getUsername();
-quizLogic::canUserEditQuizElseReturnToEditQuiz($sharedQuizId, $username);
+editQuizInitialLoadLogic::canUserEditQuizElseReturnToEditQuiz($sharedQuizId, $username);
 // end of php file inclusion
 
 $prevAnswerId = filter_input(INPUT_GET, "answer");
@@ -70,7 +72,7 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING) === "PO
         }
         if ($error == 0) {//all good
             $type = "answer"; //adding an answe (for clone quiz)
-            $newQuizArray = quizLogic::maybeCloneQuiz($quizId, $prevId, $type);
+            $newQuizArray = editQuizCloneLogic::maybeCloneQuiz($quizId, $prevId, $type);
             $quizId = $newQuizArray["quizId"];
             $prevId = $newQuizArray["newId"];
             if ($operation == "addBelow" || $operation == "addAbove") {
@@ -91,7 +93,7 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING) === "PO
 if (isset($prevId)) {
     $dbLogic = new dbLogic();
     $parentId = quizLogic::returnParentId($dbLogic, $prevAnswerId, "answer");
-    $returnHtml = quizHelper::prepareTree($quizId, $parentId, "none");
+    $returnHtml = quizMiscLogic::prepareTree($quizId, $parentId, "none");
 }
 //initalies strings;
 if (!isset($questionTitleError)){$questionTitleError = "";}

@@ -1,6 +1,8 @@
 <?php
 
-
+/*
+ * The loader for the error page
+ */
 
 // include php files here 
 include_once("includes/config.php");

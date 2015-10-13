@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * A class to that does things with the change link page
+ */
 class changeLinkLogic extends editQuestionLogic {
     /**
      * Updates a answer's link (LOOP_ID_CHILD) and remove below chilren if any

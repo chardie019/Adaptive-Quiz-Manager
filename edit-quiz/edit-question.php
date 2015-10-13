@@ -1,5 +1,8 @@
 <?php
-    
+
+/**
+ * The Loader for the edit question page in edit quiz area
+ */
     
 // include php files here 
 //kick the user back if they haven't selected quiz
@@ -7,11 +10,11 @@ require_once("../includes/config.php");
 // end of php file inclusion
 
 //real quiz id
-$quizId = quizLogic::getQuizIdFromUrlElseReturnToEditQuiz();
+$quizId = editQuizInitialLoadLogic::getQuizIdFromUrlElseReturnToEditQuiz();
 $sharedQuizId = quizLogic::returnSharedQuizID($quizId);
-$quizUrl = quizLogic::returnQuizUrl($sharedQuizId);
+$quizUrl = editQuizInitialLoadLogic::returnQuizUrl($sharedQuizId);
 $username = $userLogic->getUsername();
-quizLogic::canUserEditQuizElseReturnToEditQuiz($sharedQuizId, $username);
+editQuizInitialLoadLogic::canUserEditQuizElseReturnToEditQuiz($sharedQuizId, $username);
 $selectionError = "";
 
 if ($_SERVER['REQUEST_METHOD'] === "POST") { //pastt the appropiate page
@@ -39,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //pastt the appropiate page
         }
     } else if (isset($addQuestionButtonPost)){
         //add a question to an answer
-        if (isset($directionPost) && $directionPost == "below" && isset($answerPost) && quizLogic::isThereAQuestionAttachedtoThisAnswer($answerPost) == false){ 
+        if (isset($directionPost) && $directionPost == "below" && isset($answerPost) && editQuestionSpecificLogic::isThereAQuestionAttachedtoThisAnswer($answerPost) == false){ 
             header('Location: ' . CONFIG_ROOT_URL . "/edit-quiz/edit-question/add-question.php$quizUrl&answer=$answerPost&direction=below");
             exit;
         } else if (isset($directionPost) && $directionPost == "above" && isset($answerPost)){ 
@@ -150,7 +153,7 @@ if (!isset($message)){
     $message = ""; //no message if not set
 }
 $dbLogic = new dbLogic();
-$htmlTree = quizHelper::prepareTree($quizId);
+$htmlTree = quizMiscLogic::prepareTree($quizId);
 
 
 //http://stackoverflow.com/a/15307555\

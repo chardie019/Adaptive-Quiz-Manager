@@ -1,14 +1,16 @@
 <?php
-    
+/**
+ * The loader for the change link page in manage quiz area
+ */
     
 // include php files here 
 //kick the user back if they haven't selected quiz
 require_once("../../includes/config.php");
-$quizId = quizLogic::getQuizIdFromUrlElseReturnToEditQuiz();
+$quizId = editQuizInitialLoadLogic::getQuizIdFromUrlElseReturnToEditQuiz();
 $sharedQuizId = quizLogic::returnSharedQuizID($quizId);
-$quizUrl = quizLogic::returnQuizUrl($sharedQuizId);
+$quizUrl = editQuizInitialLoadLogic::returnQuizUrl($sharedQuizId);
 $username = $userLogic->getUsername();
-quizLogic::canUserEditQuizElseReturnToEditQuiz($sharedQuizId, $username);
+editQuizInitialLoadLogic::canUserEditQuizElseReturnToEditQuiz($sharedQuizId, $username);
 // end of php file inclusion
 
 $answerId = filter_input(INPUT_GET, "answer");  
@@ -29,7 +31,7 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING) === "PO
         exit;
     } else if (isset($linkFromLinkPage) && isset($confirmLinkButton) &&  $linkRemoveRadio == "update") {
         $type = "question";
-        $newQuizArray = quizLogic::maybeCloneQuiz($quizId, $linkFromLinkPage, $type);
+        $newQuizArray = editQuizCloneLogic::maybeCloneQuiz($quizId, $linkFromLinkPage, $type);
         $quizId = $newQuizArray["quizId"];
         $linkFromLinkPage = $newQuizArray["newId"];
         changeLinkLogic::updateLink ($quizId, $linkFromLinkPage, $answerId);
@@ -38,7 +40,7 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING) === "PO
         exit();
     }else if (isset($confirmLinkButton) && $linkRemoveRadio == "remove") { 
         $type = "answer";
-        $newQuizArray = quizLogic::maybeCloneQuiz($quizId, $answerId, $type);
+        $newQuizArray = editQuizCloneLogic::maybeCloneQuiz($quizId, $answerId, $type);
         $quizId = $newQuizArray["quizId"];
         $answerId = $newQuizArray["newId"];
         changeLinkLogic::removeLink($quizId, $answerId);
@@ -53,7 +55,7 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING) === "PO
 }
 
 if (!isset($selectionError)) {$selectionError = "";}
-$returnHtml = quizHelper::prepareTree($quizId, NULL, "questions");
+$returnHtml = quizMiscLogic::prepareTree($quizId, NULL, "questions");
 
 //html
 include("change-link-view.php");

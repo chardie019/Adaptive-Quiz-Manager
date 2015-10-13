@@ -1,13 +1,10 @@
 <?php
 
 /* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * The core bootstrap loaded by all files. 
+ * 
+ * To disable error displays, change the below "define( 'CONFIG_DEV_ENV', true);" to false
  */
-// Report all PHP errors (disable to hide mysql error)
-//error_reporting(-1);
-
 //are developing
 define( 'CONFIG_DEV_ENV', true);
 //DB variables
@@ -20,6 +17,8 @@ if (CONFIG_DEV_ENV == true){
     assert_options(ASSERT_ACTIVE, 1); //enable asseration
     assert_options (ASSERT_CALLBACK, array('configLogic', 'assertFailed'));
     ini_set("log_errors", 1);
+    ini_set('display_errors', '1');
+    error_reporting(E_ALL);
     ini_set("error_log", "not_synced/PHP_errors.log"); //relative to htaccess in the aqm
 } else {
     assert_options(ASSERT_ACTIVE, 0); //diable assertions sp no performance hit
@@ -29,7 +28,6 @@ if (CONFIG_DEV_ENV == true){
 define( 'CONFIG_ROOT_DIR', dirname(dirname(__FILE__))); // C:\xampp\htdocs\aqm <inlude file from another location relative to here? >
 define( 'CONFIG_ROOT_URL', substr($_SERVER['PHP_SELF'], 0, - (strlen($_SERVER['SCRIPT_FILENAME']) - strlen(CONFIG_ROOT_DIR)))); //    /aqm   <use to set the css location on another php file>
 //define('INCLUDES', __DIR__);        //  C:\xampp\htdocs\aqm\includes <include location>
-
 
 
 //independant files (needed by others)
@@ -95,7 +93,7 @@ if(session_id() == '') { //it may of been started eariler eg login file.
     session_start();
 }
 //auto classnames by classname.php 
-//note not using default since php 5.3 convert to lowercase, we don't want that
+//note not using default (the no parms version) since php 5.3 convert to lowercase, we don't want that
 //spl_autoload_register();
 spl_autoload_register( function( $class ) { include $class . '.php'; });
 
@@ -103,6 +101,8 @@ spl_autoload_register( function( $class ) { include $class . '.php'; });
 include_once("quizLogic.php");
 
 include_once("styles.php");
+
+require_once('templateLogic.php');
 
 //check database works
 include_once("dbLogic.php");

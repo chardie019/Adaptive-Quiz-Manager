@@ -3,6 +3,7 @@
  * Class PdoDebugger
  *
  * Emulates the PDO SQL statement in an extremely simple kind of way
+ * Soucrced from stackflow I think
  */
 class PdoDebugger
 {

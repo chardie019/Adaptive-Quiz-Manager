@@ -1,4 +1,7 @@
 <?php
+/**
+ * Some funcation to do with the taker quiz list page
+ */
 class takeQuizListLogic extends takeQuizLogic {
     /**
      * Returns an array for the for the quiz list page

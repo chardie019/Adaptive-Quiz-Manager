@@ -14,6 +14,4 @@
                 <span><!-- line up the button --></span><a href="<?php echo(CONFIG_ROOT_URL); ?>/misc/logout.php">Logout</a>
             </p>
     </div>
- 
- 
 </div>

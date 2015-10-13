@@ -1,4 +1,7 @@
 <?php
+/**
+ * Hanldes the POST request on the create quiz page
+ */
 
 //Get current system date values in the same format as user entererd them
 $currentDate = getdate(date("U"));

@@ -8,25 +8,8 @@ $templateLogic->startBody();
             
    <div id="content-centre">                  
                 <br />
-                <h3>Create Quiz</h3>
-                <br />
-                <p>
-                    Create a new adaptive quiz on a topic of your choosing. 
-                    <br />
-                    <br />
-                    
-                    <a href="<?php echo (CONFIG_ROOT_URL . "/edit-quiz/create-quiz.php") ?>" class="mybuttonlink mySubmit">
-                            Create
-                    </a>
-                </p>
-                <br />
-                <br />
-                <br />
-                <br />
-
-                <?php if (count($nameArray) > 0) { //there are quizes?>
-
                 <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post">
+                <?php if (count($nameArray) > 0) { //there are quizes?>
                     <h3>Manage existing quiz</h3>
                     <div id='listWrapper'>
                         <h4 class='lightLabel'>Select a quiz to manage from the list below:</h4>
@@ -47,7 +30,6 @@ $templateLogic->startBody();
 
                     <!-- pad  the space between submit button and dropdown box -->
                     <br />
-                    <br />
                     </p>
                     <p>
                         The quiz list contains all those quizzes for which you currently hold 'Edit' permissions.
@@ -58,25 +40,25 @@ $templateLogic->startBody();
                         </button>
                     </p>
                     <br />
-                    <br />
-                    </form>
                 <?php } else {  //there are NO quizes?>
                 <p>
                     Currently you have no quizzes created or have no edit permissions on any quiz.
                     <br />
                     <br />
                     How about having a go an creating a quiz?
-                    <a href="<?php echo (CONFIG_ROOT_URL . "/edit-quiz/create-quiz.php") ?>" class="mybuttonlink mySubmit">
-                            Create Quiz
-                    </a>
-                    <a href="<?php echo (CONFIG_ROOT_URL) ?>" class="mybutton myReturn">
-                            Home
-                    </a>
                 </p>
                 
                 <?php }//end quiz if statement ?> 
-                
-                
+                <h3>Create Quiz</h3>
+                <p>
+                    Create a new adaptive quiz on a topic of your choosing. 
+                    <br />
+                    <br /> 
+                    <a href="<?php echo (CONFIG_ROOT_URL . "/edit-quiz/create-quiz.php") ?>" class="mybuttonlink mySubmit">
+                            Create
+                    </a>
+                </p>
+                </form>
             </div>
 
 <?php

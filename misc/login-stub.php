@@ -1,4 +1,7 @@
 <?php
+/**
+ * This login page is loaded when the site is used out of the csu environment
+ */
 define ("USERLOGIC_ON_LOGIN_PAGE", "SET");       //Arrived
 
 if(session_id() == '') { //if redirected from another place

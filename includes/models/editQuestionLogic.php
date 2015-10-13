@@ -1,5 +1,15 @@
 <?php
+/**
+ * The Funcations shared by almost all sub pages of edit question menu
+ */
 class editQuestionLogic extends quizLogic {
+    /**
+     * Removes a image from a question and it's file
+     * 
+     * @param string $quizId  The quiz associated -The real quiz ID
+     * @param string $questionId The question ID associated
+     * @return void
+     */
     public static function removeImagefromQuestion($quizId, $questionId){
         $dbLogic = new dbLogic();
         //check the question is on the same quiz

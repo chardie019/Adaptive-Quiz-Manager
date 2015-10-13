@@ -1,14 +1,16 @@
 <?php
-    
+/**
+ * The Loader for the details page in edit quiz area
+ */
     
 // include php files here 
 //kick the user back if they haven't selected quiz
 require_once("../includes/config.php");
-$quizId = quizLogic::getQuizIdFromUrlElseReturnToEditQuiz();
+$quizId = editQuizInitialLoadLogic::getQuizIdFromUrlElseReturnToEditQuiz();
 $sharedQuizId = quizLogic::returnSharedQuizID($quizId);
-$quizUrl = quizLogic::returnQuizUrl($sharedQuizId);
+$quizUrl = editQuizInitialLoadLogic::returnQuizUrl($sharedQuizId);
 $username = $userLogic->getUsername();
-quizLogic::canUserEditQuizElseReturnToEditQuiz($sharedQuizId, $username);
+editQuizInitialLoadLogic::canUserEditQuizElseReturnToEditQuiz($sharedQuizId, $username);
 // end of php file inclusion
 
 
@@ -133,7 +135,7 @@ if (isset($_POST['confirmUpdate'])) {
         if ($error == 0) {// no errors update the database
             //determine if cloning is needed, i is teh same if no needed, else, is the new quiz id
             
-            $newQuizArray = quizLogic::maybeCloneQuiz($quizId);
+            $newQuizArray = editQuizCloneLogic::maybeCloneQuiz($quizId);
             $quizId = $newQuizArray["quizId"];
             if (isset($imageResult)) { //image function was run
                 $quizUpdated = editQuizLogic::updateQuizDetails($quizId, $isTime, $timeHours, $timeMinutes, 
@@ -229,8 +231,6 @@ if(!isset($currentImage)){
     $currentImage = quizHelper::returnWebImageFilePath($sharedQuizId, $currentImageFileName);
     //$currentImageFileName stays same
 }
-
-
 
 //Set page error messages blank upon initial loading
 if(!isset($quizUpdated)){ $quizUpdated = ""; }

@@ -1,3 +1,11 @@
+###Version 5.7 - 13/10/2015 - commenting & some splitting
+=Joshua
+fixed quizLogic::returnQuizUrl doing to additonal checkeding (shouldn't)
+added test for edit permission on manage editors/takers
+refactored manage editors/takers a little
+split quizLogic a apart a fair bit
+ensured most funcations were documented in prepartation for phpdoc
+
 ###Version 5.6.6.4 - 13/10/2015 - edit details re-done
 =Joshua
 redid edit details - works now

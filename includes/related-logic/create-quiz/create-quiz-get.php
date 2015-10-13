@@ -1,4 +1,7 @@
 <?php
+/**
+ * Handles the GET request onthe create quiz page
+ */
 
     //Set page error messages blank upon initial loading
 $quizNameError = "";

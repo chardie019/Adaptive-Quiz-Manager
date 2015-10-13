@@ -1,6 +1,8 @@
 <?php
 
 /* 
+ * The loader for take quiz
+ * 
  * TO-DO
  * track which question the user is up up
  */

@@ -1,4 +1,7 @@
 <?php 
+/**
+ * Sub menu html for edit quiz menu
+ */
 //add ?quiz=ID to the nav buttons
 $quizIDGet = filter_input(INPUT_GET, "quiz");
 if (!is_null($quizIDGet)){

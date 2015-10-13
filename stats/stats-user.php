@@ -1,9 +1,7 @@
 <?php
 
 /* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * The loader for the stats user page
  */
 
 // include php files here 
@@ -14,12 +12,9 @@ include ("timeConverter.php");
 $uid = $_SESSION['username'];
 $welcomeMessage = ' ';
 $dbLogic = new dbLogic();
-      
 
     //On first load
     
-    
-
         //On first load, set the $_SESSION variable to the QUIZ_ID selected form the quiz list
         //On subsequent page lloads between previous/current versions of the quiz, the $quizidconfirm will remain the same
         

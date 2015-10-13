@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * The loader for when the takers's quiz is finished (completion screen)
+ */
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates

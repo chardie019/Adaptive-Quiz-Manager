@@ -1,7 +1,10 @@
 <?php
+/**
+ * Contains function to do wth the edit quiz page
+ */
 class editQuizLogic extends quizLogic {
     /**
-     * Returns teh state if quiz is enabled or not
+     * Returns the state if quiz is enabled or not
      * 
      * @param string $quizId the real quiz id
      * @return boolean|NULL true is enabled, false if not and NULL if unknown (could not find quiz in db)
@@ -179,9 +182,11 @@ class editQuizLogic extends quizLogic {
             "IS_SAVABLE" => $isSave,
             "DATE_OPEN" => $dateOpen,
             "DATE_CLOSED" => $dateClose,
-            "IMAGE" => $imageFieldName,
             "IMAGE_ALT" => $quizImageText
         );
+        if (isset($imageFieldName)) { //if not null
+            $setValuesArray["IMAGE"] = $imageFieldName; //add image file name to array
+        }
 
         $whereValuesArray = array("QUIZ_ID" => $quizId);
 

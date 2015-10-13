@@ -1,6 +1,16 @@
 <?php
-
+/**
+ * A class that does some things in the move page in the edit question area
+ */
 class moveLogic extends editQuestionLogic {
+    /**
+     * Moves asingle questtion to different area
+     * 
+     * @param string $quizId the real quiz id
+     * @param string $questionId the question ID of teh the question to be moved
+     * @param string $moveToAnswerId the answer ID to be movced under
+     * @return boolean returns flase if the question isn't on the same quiz
+     */
     public static function moveQuestion($quizId, $questionId, $moveToAnswerId) {
         $dbLogic = new dbLogic();
         $conId = self::checkQuestionBelongsToQuizReturnId($dbLogic, $quizId, $questionId);
@@ -12,6 +22,14 @@ class moveLogic extends editQuestionLogic {
             self::assignNodeToAnotherNode($dbLogic, $conId, $moveToConId);
         }
     }
+    /**
+     * Moves an Answer to under another question
+     * 
+     * @param string $quizId the real quiz associated
+     * @param string $answerId the answer ID of the answer tobe moved
+     * @param string $moveToQuestionId the question ID for teh answer to be moved underneath
+     * @return boolean returns false if teh answer is not on this quiz
+     */
     public static function moveAnswer($quizId, $answerId, $moveToQuestionId) {
         $dbLogic = new dbLogic();
         $conId = self::checkAnswerBelongsToQuizReturnId($dbLogic, $quizId, $answerId);

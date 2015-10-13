@@ -1,4 +1,7 @@
 <?php
+/**
+ * Records users answers as they take them
+ */
 
 // include php files here 
 require_once("includes/config.php");

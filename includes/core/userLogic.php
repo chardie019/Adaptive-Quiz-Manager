@@ -1,23 +1,12 @@
 <?php
 
 /* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * This Class creates and set user permssions (admin or not)
  */
-//getters and setters
-
-
-//user class
-
-//admin class
-
 
 class userLogic {
     private $admin;
     private $username;
-    private $dbLogic; //reuse the db access everytime
-    
     /**
      * creates a user instance
      * 
@@ -25,40 +14,11 @@ class userLogic {
      * @param boolean $admin true if they should be an admin
      */
     function __construct ($username = NULL, $admin = false) {
-            $this->dbLogic = new dbLogic();  //set a db conenction per user
             $this->username = $username;
             $this->admin = $admin;
-            if (isset($this->username) && $this->exists() === false) {  //if not NULL & exists
-                $this->create();
+            if (isset($username) && self::exists($username) === false) {  //if not NULL & not exists
+                self::create($username, $admin);
             }
-    }
-    /**
-     * add useername to DB
-     */
-    private function create() {
-        if ($this->admin === true) { //if true
-            $adminToggle = "1";
-        } else {
-            $adminToggle = "0";
-        }
-        //make the mysql data
-        $data = array(
-            "USERNAME"      => $this->username,
-            "ADMIN_TOGGLE"  => $adminToggle
-        );
-        $this->dbLogic->insert($data, "user");
-    }
-    /**
-     * Returns True if account exists
-     */
-    private function exists() {
-        $data = array("USERNAME" => $this->username);
-        $results = $this->dbLogic->select("USERNAME", "user", $data);
-        if (count($results) == 0){
-            return False;
-        } else {
-            return True;
-        }
     }
     /**
      * Returns a boolean if the user is an admin or not
@@ -108,5 +68,63 @@ class userLogic {
             return NULL; //return NULL
         } 
     }
-
+    /**
+     * Add useername to DB
+     * 
+     * @param string $username the username to be used
+     * @param string $admin [optional] set user to admin or not (default is not)
+     */
+    private static function create($username, $admin = false) {
+        $dbLogic = new dbLogic();
+        if ($admin === true) { //if true
+            $adminToggle = "1";
+        } else {
+            $adminToggle = "0";
+        }
+        //make the mysql data
+        $data = array(
+            "USERNAME"      => $username,
+            "ADMIN_TOGGLE"  => $adminToggle
+        );
+        $dbLogic->insert($data, "user");
+    }
+    /**
+     * Returns True if account exists
+     * 
+     * @param string $username the username to check if exists
+     * @return boolean return true if exists, false if not
+     */
+    private static function exists($username) {
+        $dbLogic = new dbLogic();
+        $data = array("USERNAME" => $username);
+        $results = $dbLogic->select("USERNAME", "user", $data);
+        if (count($results) == 0){
+            return False;
+        } else {
+            return True;
+        }
+    }
+    /**
+     * Checks  the database if the user specified exists and creates it if not exist
+     * 
+     * @param string $username the username to check if exists & create
+     * @param boolean $admin [optioanl] create user as an admin (if they don't exist) (true for admin, false if not [default])
+     */
+    public static function createUserIfNotExist($username, $admin = false){
+        if (isset($username) && self::exists($username) === false) {  //if not NULL & not exists
+            self::create($username, $admin);
+        }
+    }
+    public static function setUserType ($username, $admin = false){
+        $dbLogic = dbLogic();
+        if ($admin === true) {
+            $adminToggle = "1";
+        } else {
+            $adminToggle = "0";
+        }
+        $setValuesArray = array ("ADMIN_TOGGLE"  => $adminToggle);
+        $whereValuesArray = array("USERNAME" => $username);
+        $tables = "user";
+        $dbLogic->updateSetWhere($tables, $setValuesArray, $whereValuesArray);
+    }
 }

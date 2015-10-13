@@ -1,15 +1,19 @@
 <?php
+
+/*
+ * The Loader for the move page in edit quiz area
+ */
     
 // include php files here 
 //kick the user back if they haven't selected quiz
 require_once("../../includes/config.php");
 // end of php file inclusion
 
-$quizId = quizLogic::getQuizIdFromUrlElseReturnToEditQuiz();
+$quizId = editQuizInitialLoadLogic::getQuizIdFromUrlElseReturnToEditQuiz();
 $sharedQuizId = quizLogic::returnSharedQuizID($quizId);
-$quizUrl = quizLogic::returnQuizUrl($sharedQuizId);
+$quizUrl = editQuizInitialLoadLogic::returnQuizUrl($sharedQuizId);
 $username = $userLogic->getUsername();
-quizLogic::canUserEditQuizElseReturnToEditQuiz($sharedQuizId, $username);
+editQuizInitialLoadLogic::canUserEditQuizElseReturnToEditQuiz($sharedQuizId, $username);
 
 
 $answerIdGet = filter_input (INPUT_GET, "answer");
@@ -44,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //pastt the appropiate page
 
         if (isset($answerIdPost)) {
             //do question stuff on a answer post
-            $newQuizArray = quizLogic::maybeCloneQuiz($quizId, $id, $type);
+            $newQuizArray = editQuizCloneLogic::maybeCloneQuiz($quizId, $id, $type);
             $quizId = $newQuizArray["quizId"];
             $id = $newQuizArray["newId"];
             moveLogic::moveQuestion($quizId, $id, $answerIdPost);
@@ -53,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //pastt the appropiate page
             exit();
         } else if (isset($questionIdPost)) {
             //do answer stuff on a question post
-            $newQuizArray = quizLogic::maybeCloneQuiz($quizId, $id, $type);
+            $newQuizArray = editQuizCloneLogic::maybeCloneQuiz($quizId, $id, $type);
             $quizId = $newQuizArray["quizId"];
             $id = $newQuizArray["newId"];
             moveLogic::moveAnswer($quizId, $id, $questionPost);
@@ -71,9 +75,9 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //pastt the appropiate page
 $result = quizLogic::returnQuestionOrAnswerData($id , $type);
 //html
 if ($type == "answer"){
-    $returnHtml = quizHelper::prepareTree($quizId, '', "questions"); //only questions are radio boxes
+    $returnHtml = quizMiscLogic::prepareTree($quizId, '', "questions"); //only questions are radio boxes
 } else {
-    $returnHtml = quizHelper::prepareTree($quizId, '', "answers"); //only answers are radio boxes
+    $returnHtml = quizMiscLogic::prepareTree($quizId, '', "answers"); //only answers are radio boxes
 }
 if (!isset($selectionError)) {$selectionError = "";}
 include("move-view.php");

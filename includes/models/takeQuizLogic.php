@@ -1,4 +1,7 @@
 <?php
+/**
+ * Some Functions on the take quiz pages
+ */
 class takeQuizLogic extends quizLogic {
     /**
      * Inistalises the link variable and the html, 

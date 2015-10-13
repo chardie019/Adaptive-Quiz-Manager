@@ -1,5 +1,7 @@
 <?php
-//setups everything the person
+/*
+ * setups everything when a person logins in
+ */
 
 //STUB
 //check user is logged in (dev envirnment)
@@ -31,33 +33,3 @@ if (!empty($_SESSION["username"])){
 } else {
     $userLogic = new userLogic(); //no one here
 }
-
-/*old 
- * 
- * //once logged in, check things
-//if (!empty($_SESSION["username"])){
-        
-//}
- *     if (empty($_SESSION["USERLOGIC_USER_EXISTS"]) && $userBean->exists($_SESSION["username"]) == False) {
-        $userBean->create($_SESSION["username"]);
-    } else {
-        $_SESSION["USERLOGIC_USER_EXISTS"] = true;
-    }
- */
-
-
-
-//$_SESSION["usertype"] = "stub";
-//check if user exists
-//$answeredData = $dbLogic->select("PASS_NO", "result_answer", $data2, false);
-
-// add user
-
-
-
-
-
-//More stuff to be added pending connor
-
-
-

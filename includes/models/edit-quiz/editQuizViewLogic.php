@@ -1,4 +1,7 @@
 <?php
+/**
+ * Some functions to to do with the edit quiz view - more way be added
+ */
 class editQuizViewLogic {
     /**
      * formats the the problem & explanations and urls to be used in edit quiz

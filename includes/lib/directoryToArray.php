@@ -1,6 +1,6 @@
 <?php
     /**
-     * Get an array that represents directory tree
+     * Get an array that represents directory tree (and a the inputted directory)
      * 
      * Also returns the current directory
      * 

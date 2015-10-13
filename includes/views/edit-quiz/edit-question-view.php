@@ -99,7 +99,7 @@ $templateLogic->startBody();
 <?php
 $templateLogic->endBody();
 $templateLogic->addJavascriptBottom("jstree/jstree.min.js", true);
-$templateLogic->addCustomBottom(quizHelper::printRunJstreeCssCode());
+$templateLogic->addCustomBottom(quizMiscLogic::printRunJstreeCssCode());
 
 //html
 echo $templateLogic->render();

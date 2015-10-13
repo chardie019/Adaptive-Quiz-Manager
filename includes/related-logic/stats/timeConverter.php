@@ -1,4 +1,10 @@
 <?php
+/**
+ * Converts an amount of seconds to the Hours
+ * 
+ * @param integer $secs the amount seconds to be converted
+ * @return string the hours tobe returned
+ */
 function secs_to_h($secs)
 {
         $units = array(

@@ -1,14 +1,16 @@
 <?php
-    
-    
+/*
+ * The Loader for the remove page in edit quiz area
+ */
+     
 // include php files here 
 //kick the user back if they haven't selected quiz
 require_once("../../includes/config.php");
-$quizId = quizLogic::getQuizIdFromUrlElseReturnToEditQuiz();
+$quizId = editQuizInitialLoadLogic::getQuizIdFromUrlElseReturnToEditQuiz();
 $sharedQuizId = quizLogic::returnSharedQuizID($quizId);
-$quizUrl = quizLogic::returnQuizUrl($sharedQuizId);
+$quizUrl = editQuizInitialLoadLogic::returnQuizUrl($sharedQuizId);
 $username = $userLogic->getUsername();
-quizLogic::canUserEditQuizElseReturnToEditQuiz($sharedQuizId, $username);
+editQuizInitialLoadLogic::canUserEditQuizElseReturnToEditQuiz($sharedQuizId, $username);
 // end of php file inclusion
 
 $answerIdGet = filter_input (INPUT_GET, "answer");
@@ -48,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") { //pastt the appropiate page
     } else if (isset($deleteConfirm)){
         //really delete it
         //okay clone first?
-        $newQuizArray = quizLogic::maybeCloneQuiz($quizId, $id, $type);
+        $newQuizArray = editQuizCloneLogic::maybeCloneQuiz($quizId, $id, $type);
         $quizId = $newQuizArray["quizId"];
         $id = $newQuizArray["newId"];
         //delete stuff
@@ -98,12 +100,12 @@ if ($type == "answer"){
 switch ($displayType) {
     case "answer":
         $parentId = quizLogic::returnParentId($dbLogic, $id, "answer");
-        $returnHtml = quizHelper::prepareTree($quizId, $parentId, "none");
+        $returnHtml = quizMiscLogic::prepareTree($quizId, $parentId, "none");
         include("remove-answer-view.php");
         break;
     case "question":
         $parentId = quizLogic::returnParentId($dbLogic, $id, "question");
-        $returnHtml = quizHelper::prepareTree($quizId, $parentId, "none");
+        $returnHtml = quizMiscLogic::prepareTree($quizId, $parentId, "none");
         include("remove-question-view.php");
         break;
     case "confirm":

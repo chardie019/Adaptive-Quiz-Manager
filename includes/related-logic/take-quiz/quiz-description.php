@@ -1,10 +1,7 @@
-
 <?php
 
 /* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * The Loader for the descirption page after quiz is first selected in the take quiz area
  */
 
 // include php files here 

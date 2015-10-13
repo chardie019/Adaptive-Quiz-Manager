@@ -3,6 +3,14 @@
 $templateLogic = new templateLogic;
 $templateLogic->setTitle('Manage Takers');
 $templateLogic->setSubMenuType("edit-quiz", "takers");
+$templateLogic->addCustomHeadersStart(); ?>
+<style type="text/css">
+    .myReturn {
+        margin-right: 0.5em;
+    }
+</style>
+<?php
+$templateLogic->addCustomHeadersEnd();
 $templateLogic->startBody();
 ?>
 

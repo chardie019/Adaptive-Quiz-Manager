@@ -1,22 +1,17 @@
 <?php
 
 /* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * The loader for the edit quiz page & list
  */
 
 // include php files here 
 require_once("includes/config.php");
 // end of php file inclusion
 
-$dbLogic = new dbLogic();
-
 /*
  * Store quizid from edit-quiz-list in session variable to be used in edit-quiz-view.php 
  * as it passes as empty after the first time it is posted from edit-quiz-list and cant be accessed.
  */
-
 
 $confirmActive = "";
 $enableSubMenuLinks = true; //default the links work
@@ -66,11 +61,11 @@ if (is_null($isEnabledState)){
 if($_SERVER['REQUEST_METHOD'] === "POST"){
     $quizIDPost = filter_input(INPUT_POST, "quizid");
 
-    $quizId = quizLogic::getQuizIdFromUrlElseReturnToEditQuiz($quizIDPost);
+    $quizId = editQuizInitialLoadLogic::getQuizIdFromUrlElseReturnToEditQuiz($quizIDPost);
     $sharedQuizId = quizLogic::returnSharedQuizID($quizId);
-    $quizUrl = quizLogic::returnQuizUrl($sharedQuizId);
+    $quizUrl = editQuizInitialLoadLogic::returnQuizUrl($sharedQuizId);
     $username = $userLogic->getUsername();
-    //quizLogic::canUserEditQuizElseReturnToEditQuiz($sharedQuizId, $username);
+    editQuizInitialLoadLogic::canUserEditQuizElseReturnToEditQuiz($sharedQuizId, $username);
 
     $selectQuizButton = filter_input(INPUT_POST, "selectQuiz");
     $confirmEnabledButton = filter_input(INPUT_POST, 'confirmEnabled');
@@ -78,7 +73,6 @@ if($_SERVER['REQUEST_METHOD'] === "POST"){
 
     
     if (isset($selectQuizButton)) {
-        
         //Page is being loaded from edit-quiz-list with quizid selected    
         header('Location: ' . CONFIG_ROOT_URL . '/edit-quiz.php'.$quizUrl);
         exit;
@@ -98,7 +92,7 @@ if($_SERVER['REQUEST_METHOD'] === "POST"){
             //Set flag variable that is checked before commiting edits in other pages
             $_SESSION["IS_QUIZ_ENABLED"] = true;
             $enableSubMenuLinks = true;
-            quizLogic::setQuizToConsistentState($dbLogic, $quizId);
+            editQuizCloneLogic::setQuizToConsistentState($quizId);
         } else {
             $invalidQuestionAnswersDisplayArray = editQuizViewLogic::formatProblemQuizArray($problemQuestionAnswersArray, $quizUrl);
         }
@@ -119,11 +113,11 @@ if($_SERVER['REQUEST_METHOD'] === "POST"){
     include('edit-quiz-list-view.php');
 // GET request
 }else{
-    $quizId = quizLogic::getQuizIdFromUrlElseReturnToEditQuiz();
+    $quizId = editQuizInitialLoadLogic::getQuizIdFromUrlElseReturnToEditQuiz();
     $sharedQuizId = quizLogic::returnSharedQuizID($quizId);
-    $quizUrl = quizLogic::returnQuizUrl($sharedQuizId);
+    $quizUrl = editQuizInitialLoadLogic::returnQuizUrl($sharedQuizId);
     $username = $userLogic->getUsername();
-    quizLogic::canUserEditQuizElseReturnToEditQuiz($sharedQuizId, $username);
+    editQuizInitialLoadLogic::canUserEditQuizElseReturnToEditQuiz($sharedQuizId, $username);
     //get request and the quiz was specified
     include('edit-quiz-view.php');
 }   
