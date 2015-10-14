@@ -53,7 +53,7 @@ $templateLogic->startBody();
                             echo "<tr>"
                                     . "<td><form action='#' name='".$takers['user_USERNAME']."' method='post'>" . 
         "<input type='hidden' name='removename' value='".$takers['user_USERNAME']."'>" . $takers['user_USERNAME'] .
-        "<input type='submit' class='myReturn' name='removeTaker' value='Delete'></form>"
+        "<input type='submit' class='mySubmit' name='removeTaker' value='Delete'></form>"
                                     . "</td>"
                                . "</tr>";
                         }

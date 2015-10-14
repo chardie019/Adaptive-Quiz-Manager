@@ -89,8 +89,8 @@ $templateLogic->startBody();
                                          echo "<tr>"
                                                  . "<td><form action='#' name='".$uniqueFinishers[$j]."' method='post'>" . 
                      "<input type='hidden' name='getResult' value='".$uniqueFinishers[$j]."'>" . $uniqueFinishers[$j] .
-                     "<input type='submit' class='myReturn' name='userCurrent' value='Current Version'>" . 
-                        "<input type='submit' class='myReturn' name='userPrevious' value='Previous Version'></form>"
+                     "<input type='submit' class='mySubmit' name='userCurrent' value='Current Version'>" . 
+                        "<input type='submit' class='mySubmit' name='userPrevious' value='Previous Version'></form>"
                                                  . "</td>"
                                             . "</tr>";
                                      }

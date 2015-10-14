@@ -60,7 +60,7 @@ $templateLogic->startBody();
                             echo "<tr>"
                                     . "<td><form action='#' name='".$editors['user_USERNAME']."' method='post'>" . 
         "<input type='hidden' name='removename' value='".$editors['user_USERNAME']."'>" . $editors['user_USERNAME'] .
-        "<input type='submit' class='myReturn' name='removeEditor' value='Delete'></form>"
+        "<input type='submit' class='mySubmit' name='removeEditor' value='Delete'></form>"
                                     . "</td>"
                                . "</tr>";
                         }

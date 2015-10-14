@@ -21,10 +21,8 @@ $dbLogic = new dbLogic();
         if(isset($_POST['quizid'])){
             $_SESSION['quizid'] = filter_input(INPUT_POST, "quizid");
             
-            //Replace with '1' or '1' for testing until  take quiz is sorted with newest current version
+
         }
-        
-        
 
         if(!isset($_POST['getResult'])){
             $pageUser = 'No user selected';
@@ -40,7 +38,7 @@ $dbLogic = new dbLogic();
             
             $currentResults = true;
             //Get shared quiz id for chosen quiz to prepare results inclusive of older versions
-            //Get the shared_ID of the quiz
+            
             $whereSharedQuiz = array(
                 "QUIZ_ID"=> $quizidconfirm
             );
@@ -89,6 +87,7 @@ $dbLogic = new dbLogic();
                 $finisherList[$v] = $finishers['user_USERNAME'];
                 $v++;
             } 
+            //Keep only 1 instance of each username in a new array
              $newFinisherList = array_unique($finisherList);
              //Creates new array and fills it with unique values granting new array keys [0], [1] etc instead of old.
              $uniqueFinishers = array_values($newFinisherList);
@@ -119,16 +118,16 @@ $dbLogic = new dbLogic();
             $j++;
         }
            
-        //Retrieves only the unqiue values of RESULT_ID's
+        //Retrieves only the unqiue questions answered from attempts
         $uniqueQuestions = array_unique($questions);
-        //Creates new array and fills it with unique values granting new array keys [0], [1] etc instead of old.
+        //Creates new array and fills it with unique question values
         $newQuestionArray = array_values($uniqueQuestions);
         
         //Place questions of quiz in ascending order
         sort($newQuestionArray);
         
         //Get question text for Graph Title
-        //Retrieves Question text using question_ids from result, then populates an array to use in stats-graph-view.php
+        //Retrieves Question text using question_ids from unique question array, then populates an array to use in stats-graph-view.php
         $questionText = array();
         $q=0;
         for($y=0; $y<count($newQuestionArray); $y++){
@@ -143,6 +142,8 @@ $dbLogic = new dbLogic();
                     $q++;
                 }
         }
+        
+        //Retrieves answers selected and number of times answer was chosen for each question collected above
         $graphData = array();
         for($l=0; $l<count($newQuestionArray); $l++){
             

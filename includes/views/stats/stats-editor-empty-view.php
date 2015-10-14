@@ -9,7 +9,7 @@ $templateLogic->startBody();
         
         <div id="content-charts">
             <div id="chart-actions">
-                <form action='#' method='post'>    
+                <form action='stats-user.php' method='post'>    
                     <a class="mybuttonlink" href="<?php echo (CONFIG_ROOT_URL)."/stats.php"?>">Change<br /> quiz</a>
                     <br />
                     <br />
