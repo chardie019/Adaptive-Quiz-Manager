@@ -26,9 +26,9 @@ $templateLogic->startBody();
 	cursor:pointer;
 	color:#f6f6f6;
 	font-family:Arial;
-	font-size:15px;
+	font-size:14px;
 	font-weight:bold;
-	padding:16px 24px;
+	padding:8px 12px;
 	text-decoration:none;
 }
 .myButton:hover {
@@ -39,17 +39,40 @@ $templateLogic->startBody();
 	position:relative;
 	top:1px;
 }
+
+.mainButton {
+	background-color:#e9ab00;
+	border-radius:42px;
+	border:1px solid #dcdcdc;
+	display:inline-block;
+	cursor:pointer;
+	color:#f6f6f6;
+	font-family:Arial;
+	font-size:20px;
+	font-weight:bold;
+	padding:16px 24px;
+	text-decoration:none;
+}
+.mainButton:hover {
+	background-color:#f6f6f6;
+	color:#666666;
+}
+.mainButton:active {
+	background-color:#e9ab00;
+	position:relative;
+	top:1px;
+}
 </style>
 
 <div id="hasScript" style="display:none">
 	<br />
 	<p>
-	<button title="Show/Hide" class="myButton" type="button" onclick="sHide('help')">How to...</button>
+	<button title="Show/Hide" class="mainButton" type="button" onclick="sHide('help')">How to...</button>
 
 	<div id="help" style="display:none"> 
 		
 		<br />
-		<p>
+		<p ALIGN=Center>
 		<button title="Show/Hide" class="myButton" type="button" onclick="sHide('take')">Take a quiz</button>
 
 		<div id="take" style="display:none"> 
@@ -67,7 +90,7 @@ $templateLogic->startBody();
 		</p>
 
 		<br />
-		<p>
+		<p ALIGN=Center>
 		<button title="Show/Hide" class="myButton" type="button" onclick="sHide('createquiz')">Create or Edit a quiz</button>
 
 		<div id="createquiz" style="display:none">
@@ -86,7 +109,7 @@ $templateLogic->startBody();
 		</p>
 	
 		<br />
-		<p>
+		<p ALIGN=Center>
 		<button title="Show/Hide" class="myButton" type="button" onclick="sHide('createquestion')">Create questions and answers</button>
 
 		<div id="createquestion" style="display:none"> 
@@ -119,7 +142,7 @@ $templateLogic->startBody();
 		</p>
 		
 		<br />
-		<p>
+		<p ALIGN=Center>
 		<button title="Show/Hide" class="myButton" type="button" onclick="sHide('users')">Manage quiz takers and editors</button>
 
 		<div id="users" style="display:none">
@@ -135,7 +158,7 @@ $templateLogic->startBody();
 		</p>
 	
 		<br />
-		<p>
+		<p ALIGN=Center>
 		<button title="Show/Hide" class="myButton" type="button" onclick="sHide('stat')">View statistics or results</button>
 
 		<div id="stat" style="display:none">
@@ -163,10 +186,61 @@ $templateLogic->startBody();
 	<br />
 	
 	<p>
-	<button title="Show/Hide" class="myButton" type="button" onclick="sHide('faq')">Frequently Asked Questions</button>
+	<button title="Show/Hide" class="mainButton" type="button" onclick="sHide('faq')">Frequently Asked Questions</button>
 
 	<div id="faq" style="display:none"> 
-	FAQ CONTENT HERE 
+	<p><b> 
+	I can't see the quiz I created in the quiz list, why not?
+	</b></p>
+	<p>
+	If the quiz isn't appearing in your editable quiz list, ensure you filled out all areas of the quiz creation form.
+	</p>
+	<p>
+	If the quiz isn't appearing in the list of quizzes to take, ensure you enabled the quiz in the edit quiz menu
+	after you finished editing it. If it is appearing to you but not anyone else, ensure you set the quiz to public
+	or you add their usernames to the list of quiz takers.
+	</p>
+	<br/>
+	
+	<p><b> 
+	I need to take a quiz, why isn't it in the quiz list?
+	</b></p>
+	<p>
+	If you can't see the quiz you need to take, contact the creator of the quiz and ensure the quiz is enabled
+	and that you have quiz taker permissions.
+	</p>
+	<br/>
+	
+	<p><b>  
+	How do I know I'm improving?
+	</b></p>
+	<p>
+	As quizzes can have a varied number of questions depending on the answers you give a mark out of a specific 
+	number is not available. However in the personal results page you can view the time it takes you to complete a quiz, 
+	as well as the percentage of questions you got correct out of those you did answer.
+	</p>
+	<br/>
+	
+	<p><b> 
+	How do I know my progress through a quiz?
+	</b></p>
+	<p>
+	Due to the wide variety of paths, loops and alternate endings possible in a quiz, progress cannot be tracked. 
+	If you have any concerns about your progress through a specific quiz, try to contact its creator 
+	as they should have an idea of its size and what path you have been taken down.
+	</p>
+	<br/>
+	
+	<p><b>
+	Why am I getting the same question multiple times?
+	</b></p>
+	<p>
+	Adaptive quizzes can potentially link back to previous questions depending on the answer given, 
+	or even back to the current question. If you are encountering the same question repeatedly, 
+	try carefully rereading the learning content and re-evaluating you answer. 
+	If you have tried multiple answers and believe you are stuck in a loop with no way out, contact the quiz creator.
+	</p>
+	
 	</div> 
 	</p>
 </div>
@@ -266,9 +340,57 @@ document.getElementById('hasScript').style.display='block';
 <p>
 <h2>FAQ</h2>
 
-	<p> 
-	FAQ CONTENT HERE 
-	</p> 
+	<p><b> 
+	I can't see the quiz I created in the quiz list, why not?
+	</b></p>
+	<p>
+	If the quiz isn't appearing in your editable quiz list, ensure you filled out all areas of the quiz creation form.
+	</p>
+	<p>
+	If the quiz isn't appearing in the list of quizzes to take, ensure you enabled the quiz in the edit quiz menu
+	after you finished editing it. If it is appearing to you but not anyone else, ensure you set the quiz to public
+	or you add their usernames to the list of quiz takers.
+	</p>
+	<br/>
+	
+	<p><b> 
+	I need to take a quiz, why isn't it in the quiz list?
+	</b></p>
+	<p>
+	If you can't see the quiz you need to take, contact the creator of the quiz and ensure the quiz is enabled
+	and that you have quiz taker permissions.
+	</p>
+	<br/>
+	
+	<p><b>  
+	How do I know I'm improving?
+	</b></p>
+	<p>
+	As quizzes can have a varied number of questions depending on the answers you give a mark out of a specific 
+	number is not available. However in the personal results page you can view the time it takes you to complete a quiz, 
+	as well as the percentage of questions you got correct out of those you did answer.
+	</p>
+	<br/>
+	
+	<p><b> 
+	How do I know my progress through a quiz?
+	</b></p>
+	<p>
+	Due to the wide variety of paths, loops and alternate endings possible in a quiz, progress cannot be tracked. 
+	If you have any concerns about your progress through a specific quiz, try to contact its creator 
+	as they should have an idea of its size and what path you have been taken down.
+	</p>
+	<br/>
+	
+	<p><b>
+	Why am I getting the same question multiple times?
+	</b></p>
+	<p>
+	Adaptive quizzes can potentially link back to previous questions depending on the answer given, 
+	or even back to the current question. If you are encountering the same question repeatedly, 
+	try carefully rereading the learning content and re-evaluating you answer. 
+	If you have tried multiple answers and believe you are stuck in a loop with no way out, contact the quiz creator.
+	</p>
 	
 </p>
 </noscript>

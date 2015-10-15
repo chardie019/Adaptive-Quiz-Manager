@@ -22,13 +22,10 @@ $templateLogic->startBody();
 ?>
 <div id="content-centre">
 <p> 
-	Time remaining as of loading this page: 
 	<?php
 	if ($_SESSION["QUIZ_TIME_LIMIT"] != 86000) {
+		echo "Time remaining as of loading this page: ";
 		echo gmdate("H:i:s", $_SESSION["QUIZ_TIME_LIMIT"]);
-	}
-	else {
-		echo "Unlimited";
 	}?>
 	<br />
 	<br />
