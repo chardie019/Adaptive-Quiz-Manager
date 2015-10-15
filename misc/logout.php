@@ -12,6 +12,7 @@ require_once("../includes/config.php");
 
 // Unset all of the session variables.
 $_SESSION = array();
+$userLogic->logOut();
 
 // If it's desired to kill the session, also delete the session cookie.
 // Note: This will destroy the session, and not just the session data!

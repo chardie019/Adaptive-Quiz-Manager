@@ -57,6 +57,12 @@ class userLogic {
         }
     }
     /**
+     * Set username to null to logout
+     */
+    public function logOut (){
+        $this->username = NULL;
+    }
+    /**
      * returns the username
      * 
      * @return string|NULL returns the username or NULL if no one logged in

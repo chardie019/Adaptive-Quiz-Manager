@@ -1,3 +1,9 @@
+###Version 5.7.1.1 - 13/10/2015 - Fixed bug dying on DB no connect & added install notes
+=Joshua
+- Changed template system to not die on dbd password error
+(no useful message was shown that was the actual error)
+- added install notes in includes/project-notes/notes.txt
+
 ###Version 5.7.1 - 13/10/2015 - Fixing UAT bugs - stats & others
 =Harry
 - fixed bug where undefined variable was displayed if no users had attempted a quiz in stats-editor mode

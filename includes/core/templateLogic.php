@@ -38,6 +38,12 @@ class templateLogic {
     private $javascriptsBottom=array(); 
     /** @var string Any custom string added at the bottom */
     private $customBottom = "";
+    /** @var string The current username */
+    private $username;
+    /** @var string the current user's type */
+    private $userType;
+    /** @var string the html for the logout link (so we can hide it) */
+    private $logoutLinkHtml;
 
     /** templateLogic constructor adds data to ALL the pages */
     function __construct() {
@@ -97,7 +103,7 @@ class templateLogic {
         ob_start();
     }
     /** 
-     * This functionends adding data to the top of the HTML page.
+     * This function ends adding data to the top of the HTML page.
      * 
      * Put the data in-between this and addCustomHeadersStart to achieve result.
      * (like startbody and endbody)
@@ -211,7 +217,7 @@ class templateLogic {
     ob_start();
     }
     /** 
-     * This function collects the buffer's contents to variable
+     * This function collects the body buffer's contents to variable
      * 
      * If a string is passed to it, the buffer will be disacarded and the body 
      * will be set the the that string
@@ -284,7 +290,7 @@ class templateLogic {
         ob_start();
     }
     /** 
-     * This functionends adding data to the top of the HTML page.
+     * This function ends adding data to the top of the HTML page.
      * 
      * Put the data in-between this and addCustomBottomStart to achieve result.
      * (like startbody and endbody)
@@ -293,6 +299,21 @@ class templateLogic {
      */
     function addCustomBottomEnd() {
         $this->customBottom .= ob_get_clean();   //add the output to string
+    }
+    /**
+     * This function sets the variables to be used in the hear suach as username and logout html link
+     */
+    function setLoginInfo() {
+        global $userLogic; //access the user functions for the heading
+        if (isset($userLogic) && $userLogic->isAUserLoggedIn() === true){ 
+            $this->username = $userLogic->getUsername();
+            $this->userType = $userLogic->getUserTypeDisplay();
+            $this->logoutLinkHtml = '<a href="'.CONFIG_ROOT_URL.'/misc/logout.php">Logout</a>';
+        } else {
+            $this->username = "Not logged in";
+            $this->userType = "";
+            $this->logoutLinkHtml = '';
+        }
     }
     /** 
      * Ensures that the core places of the page are set
@@ -316,6 +337,7 @@ class templateLogic {
         if (is_null($this->footer)){
             $this->setFooter();
         }
+        
     }
     /** 
      * Renders the the page using the previously set variables 
@@ -329,7 +351,7 @@ class templateLogic {
      * @return void
      */
     function render($whichTemplate = NULL) {
-        global $userLogic; //access the user functions for the heading
+        $this->setLoginInfo();
         $this->checkPageIsReady();
         ob_start();
         header('Content-Type: text/html; charset=UTF-8'); //all pages are utf-8

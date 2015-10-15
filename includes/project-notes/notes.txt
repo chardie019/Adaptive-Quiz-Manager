@@ -1,3 +1,66 @@
+The following assumes windows, MySQL & PHP 5.3.3, steps are similar for linux etc.
+Note: project can use another database s it uses PDO in PHP, see below on the where to change,.
+
+--------------
+[Installation]
+--------------
+
+1. copy all files under "aqm" folder to the Websever eg c:\xampp\htadocs\aqm
+
+2. create a SQL account & password & database. 
+
+3. change aqm\includes\config.php top lines:
+
+//are developing
+define( 'CONFIG_DEV_ENV', false);		- set to the false to disable error display (set to true on development machine)
+//DB variables
+define( 'DB_HOST', "hostname");   		- Hostanme eg "localhost" if on same machine
+define( 'DB_DB', "database_name");		- The datasbase name eg "aqm"
+define( 'DB_USERNAME', "database_username");	- The databse name username eg "aqm" 
+define( 'DB_PASSWORD', "datbase_password");	- The database password
+
+4. [if using datbase other than MySQL]
+
+chnage the database class in aqm\includes\core\dbLogic.php.
+
+change "mysql" in this line to your database type:
+
+"self::$connection = new PDO('mysql:host='.DB_HOST.';dbname='.DB_DB, DB_USERNAME, DB_PASSWORD, $options);" 
+
+5. [if using a datbase name other than "aqm" ]
+
+Alter the database name in the SQL data file:
+
+aqm\includes\project-notes\vX-complete.sql 
+
+where X is the version number. As of writing v9 is the latest.
+
+Change "use aqm;" to your database name.
+
+6. Import the SQL file.
+
+Use your preferred method of import.
+
+If using phpmyadmin:
+a. Go to the phpmyadmin page eg <website.com>/phpmyadmin/
+b. Go to the "Import" tab
+c. Click Choose file
+d. and import teh file named above.
+
+7. Done, test the website ny going to the website:
+
+eg c:\xampp\htadocs\aqm -> http://localhost/aqm 
+
+if the main menu pops up, great! if not, an error will appear.
+
+-------------
+[Other Notes]
+-------------
+
+--------------------------
+-- Set Apache time zone --
+--------------------------
+
 #set time zone
 1. In httpd.conf (\xampp\apache\conf\httpd.conf) , add the following line:
 
@@ -11,10 +74,116 @@ date.timezone = "Australia/Sydney"
 3. In my.ini (\xampp\mysql\bin\my.ini) add or replace (under [mysqld])
 
 default-time-zone = "Australia/Sydney"
+
+Now restart Apache
+
+------------------------------------
+--- set mysql to log all queries --- (only use on development machines as it will grow very quickly!) 
+------------------------------------
+
+add:
+
 log="mysql.log"
 
-Now restart Apache HTTP and MySQL server and you are done!
+under this, at the bottom
 
-----
+# The MySQL server
+[mysqld]
+...other code ...
+<line here>
 
-import aqm.sql for latest Database.
+in: C:\xampp\mysql\bin\my.ini
+
+log file will be here: C:\xampp\mysql\data\mysql.log
+
+----------------------
+---- phpdocumentor ---
+----------------------
+
+notes:
+-----
+http://www.phpdoc.org/docs/latest/getting-started/installing.html
+-----
+
+installation:
+
+[If using XAMPP]
+
+1. download zip:
+"https://github.com/phpDocumentor/phpDocumentor2/archive/develop.zip" 
+from
+https://github.com/phpDocumentor/phpDocumentor2
+
+2. extract to:
+
+C:\xampp\php\PEAR\phpDocumentor
+
+edit:
+"C:\xampp\php\PEAR\phpDocumentor\bin\phpdoc.bat"
+change last line from:
+""%PHPBIN%" "%PHP_PEAR_BIN_DIR%\phpdoc" %*"
+to
+"C:\xampp\php\php.exe" "C:\xampp\php\PEAR\phpDocumentor\bin\phpdoc"  %*
+
+-install graphviz-
+
+-run & done-
+
+[If using a normal installation / want to use PEAR installation]
+
+1. open a command prompt "cmd.exe" to php directory
+CD C:\xampp\php
+
+2.  pear channel-discover pear.phpdoc.org
+
+3. pear install phpdoc/phpDocumentor
+
+[install graphviz]
+
+[run & done]
+
+---------------------------
+----- install graphviz ----
+---------------------------
+
+1. download msi
+http://www.graphviz.org/Download_windows.php
+
+2. install
+
+3. add to system path
+from: http://stackoverflow.com/questions/28194072/dont-get-graphviz-and-phpdocumentor-to-work/28255807#28255807
+
+In order to get GraphViz running properly with a Windows based phpdoc installation, just put the GraphViz program directory (c:\some\path\graphviz\release\bin) to the Windows Path system variable.
+
+In order to do this, follow these steps (Win7, please provide your OS version if this doesn't apply to your situation):
+
+From the desktop, right-click My Computer and click Properties.
+In the System Properties window, click on the Advanced tab.
+In the Advanced section, click the Environment Variables button.
+In the Environment Variables window, highlight the Path variable in the Systems Variable section and click the Edit button.
+Different directories are separated with a semicolon:
+
+C:\Program Files;C:\Winnt;C:\Winnt\System32
+It will most likely look a bit different in your enviroment, so please just take this for an example. Just add the GraphViz Path at the end like this:
+
+C:\Program Files;C:\Winnt;C:\Winnt\System32;C:\somefolder\graphviz\release\bin
+
+4. reboot computer
+
+--------------------------
+---- run phpdocumentor ---
+--------------------------
+
+Command to run phpdocumentor
+
+cd C:\xampp\php\PEAR\phpDocumentor\bin
+
+phpdoc -d C:\xampp\htdocs\aqm -t C:\xampp\htdocs\aqm\phpdoc --ignore "not_synced/*,phpdoc/*,nbproject/*,.git/*"
+
+-d is input directory
+-t is output directory
+--ignore is the folders to ignore
+
+after broswe at website eg http://localhost/aqm/phpdoc
+ 
