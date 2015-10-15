@@ -186,4 +186,54 @@ phpdoc -d C:\xampp\htdocs\aqm -t C:\xampp\htdocs\aqm\phpdoc --ignore "not_synced
 --ignore is the folders to ignore
 
 after broswe at website eg http://localhost/aqm/phpdoc
- 
+
+--------------------------------------
+--- Delete all files in a folder -----
+--------------------------------------
+
+function Delete($path)
+{
+    if (is_dir($path) === true)
+    {
+        $files = array_diff(scandir($path), array('.', '..'));
+
+        foreach ($files as $file)
+        {
+            Delete(realpath($path) . '/' . $file);
+        }
+
+        return rmdir($path);
+    }
+
+    else if (is_file($path) === true)
+    {
+        return unlink($path);
+    }
+
+    return false;
+}
+
+//Delete("./");
+
+----------------------------------
+--- Extract a zip file in php ----
+----------------------------------
+
+
+// assuming file.zip is in the same directory as the executing script.
+$file = 'aqm.zip';
+
+// get the absolute path to $file
+$path = pathinfo(realpath($file), PATHINFO_DIRNAME);
+
+$zip = new ZipArchive;
+$res = $zip->open($file);
+if ($res === TRUE) {
+  // extract it to the path we determined above
+  $zip->extractTo("./");
+  $zip->close();
+  echo "WOOT! $file extracted to $path";
+} else {
+  echo "Doh! I couldn't open $file";
+}
+
