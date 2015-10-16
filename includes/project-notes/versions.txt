@@ -1,4 +1,9 @@
-###Version 5.7.1.1 - 13/10/2015 - Fixed bug dying on DB no connect & added install notes
+###Version 5.7.1.2 - 16/10/2015 - Fixed take-quiz displaying broken image icon on no image
+=Joshua
+Fixed take-quiz displaying broken image icon on no image
+(displays a "no image uploaded instead")
+
+###Version 5.7.1.1 - 16/10/2015 - Fixed bug dying on DB no connect & added install notes
 =Joshua
 - Changed template system to not die on dbd password error
 (no useful message was shown that was the actual error)

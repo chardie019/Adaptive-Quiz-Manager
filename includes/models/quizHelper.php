@@ -16,10 +16,10 @@ class quizHelper extends quizLogic {
     public static function returnWebImageFilePath ($quizId, $targetFileName = ""){
         $sharedQuizId = quizLogic::returnSharedQuizID($quizId);
         $target_dir = STYLES_QUIZ_IMAGES_LOCATION . "/$sharedQuizId/";
-        if ($targetFileName == ""){
-            return $target_dir;
-        }else if (is_null($targetFileName)){
+        if (is_null($targetFileName)){
             return NULL; //dont change it
+        } else if ($targetFileName === ""){
+            return $target_dir; 
         } else {
             return $target_dir . $targetFileName;
         }

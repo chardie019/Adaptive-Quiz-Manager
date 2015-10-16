@@ -12,11 +12,6 @@ class takeQuizLogic extends quizLogic {
      * @return array ['linkHtml'] & ['linkStatus'] set if one of teh input is set, else Not linked
      */
     public static function prepareViewPageGetAnswerData ($questionData) {
-        if (empty($questionData["IMAGE"])){
-            $questionData["IMAGE"] = "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="; //transparent gif
-        } else {
-            $questionData["IMAGE"] = quizHelper::returnWebImageFilePath($_SESSION["QUIZ_CURRENT_QUIZ_ID"], $questionData["IMAGE"]);
-        }
         $dbLogic = new dbLogic();
         $data = array(
             "PARENT_ID" => $questionData["CONNECTION_ID"]

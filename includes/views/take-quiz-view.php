@@ -10,11 +10,13 @@ $templateLogic->addCustomHeadersStart();
         width: 50%;
         float:right;
     }
+    .image-container p {
+        float: right;
+    }
     .question-details {
         /* fill teh rest of the left hand screen */
         overflow:hidden;
     }
-    
 </style>
 <?php
 $templateLogic->addCustomHeadersEnd();
@@ -37,7 +39,11 @@ $templateLogic->startBody();
 </p>
     <br />
     <div class="image-container">
-        <img alt="<?php echo($questionData["IMAGE_ALT"]) ?>" src="<?php echo($questionData["IMAGE"]) ?>" />
+        <?php if (isset($questionData["IMAGE"])) { ?>
+            <img alt="<?php echo($questionData["IMAGE_ALT"]) ?>" src="<?php echo($questionData["IMAGE"]) ?>" />
+        <?php } else { ?>
+            <p>No image uploaded</p>
+        <?php } ?>
     </div>
     <div class="question-details">
         <p>
